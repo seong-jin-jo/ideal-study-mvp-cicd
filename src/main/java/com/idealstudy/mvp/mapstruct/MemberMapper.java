@@ -2,16 +2,21 @@ package com.idealstudy.mvp.mapstruct;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+// unmappedTargetPolicy = ReportingPolicy.IGNORE: target class에 매핑되지 않는 필드가 있으면, null로 채운 후 따로 report하지 않음.
+// nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE: null 필드는 업데이트하지 않음.
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface MemberMapper {
 
-    // Mapper class에서 이
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
     MemberDto entityToDto(MemberEntity entity);
     MemberEntity dtoToEntity(MemberDto dto);
+
+    // @MappingTarget: 반환 대상 객체 지정
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromDto(MemberDto dto, @MappingTarget MemberEntity entity);
 }

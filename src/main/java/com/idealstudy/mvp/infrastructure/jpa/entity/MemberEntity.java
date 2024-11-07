@@ -6,6 +6,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,32 +37,4 @@ public class MemberEntity extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    /*
-    public static MemberEntity toEntity(MemberDto dto){
-
-        return MemberEntity.builder()
-                .id(dto.getId())
-                .password(dto.getPassword())
-                .phoneAddress(dto.getPhoneAddress())
-                .email(dto.getEmail())
-                .sex(dto.getSex())
-                .referralId(dto.getReferralId())
-                .role(dto.getRole())
-                .build();
-    }
-
-    public MemberDto toDto(MemberEntity entity) {
-
-        return MemberDto.builder()
-                .id(entity.getId())
-                .password(entity.getPassword())
-                .phoneAddress(entity.getPhoneAddress())
-                .email(entity.getEmail())
-                .sex(entity.getSex())
-                .referralId(entity.getReferralId())
-                .role(entity.getRole())
-                .build();
-    }
-    */
 }

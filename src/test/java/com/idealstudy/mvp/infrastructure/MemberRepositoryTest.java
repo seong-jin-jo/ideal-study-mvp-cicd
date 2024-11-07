@@ -4,11 +4,11 @@ import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Gender;
 import com.idealstudy.mvp.enums.member.Role;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -54,6 +54,27 @@ public class MemberRepositoryTest {
                 .size(10)
                 .build();
         System.out.println(memberRepository.findMembers(pageRequestDto));
+    }
+
+    @Test
+    @DisplayName("데이터 수정 테스트")
+    public void testUpdateMember() {
+
+        MemberDto dto = MemberDto.builder()
+                .id(1L)
+                .phoneAddress("010-5678-5678")
+                .build();
+
+        System.out.println(memberRepository.update(dto));
+    }
+
+    @Test
+    @DisplayName("데이터 삭제 테스트")
+    public void testDeleteMember() {
+
+        memberRepository.deleteById(1L);
+
+        Assertions.assertThat(memberRepository.findById(1L)).isNull();
     }
 
     @Test

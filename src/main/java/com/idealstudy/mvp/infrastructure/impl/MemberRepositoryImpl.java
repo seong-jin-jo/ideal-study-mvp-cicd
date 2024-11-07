@@ -7,6 +7,7 @@ import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.MemberJpaRepository;
 import com.idealstudy.mvp.mapstruct.MemberMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
+@Log4j2
 public class MemberRepositoryImpl implements MemberRepository {
 
     @Autowired
@@ -53,11 +55,20 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public MemberDto update(MemberDto dto) {
-        return null;
+
+        MemberEntity entity = memberJpaRepository.findById(dto.getId()).orElseThrow();
+        memberMapper.updateEntityFromDto(dto, entity);
+
+        log.info("update Entity: " + entity);
+
+        MemberEntity result = memberJpaRepository.save(entity);
+
+        return memberMapper.entityToDto(result);
     }
 
     @Override
     public void deleteById(Long id) {
 
+        memberJpaRepository.deleteById(id);
     }
 }
