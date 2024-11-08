@@ -6,10 +6,14 @@ import SignUpPage from './pages/auth/SignUpPage'
 import SignUpCompletePage from './pages/auth/SignUpCompletePage'
 import LoginPage from './pages/auth/LoginPage'
 
+import Header from './components/Header';
+import Footer from './components/Footer';
+
 const App = () => {
   return (
     <AuthProvider>
       <Router>
+      <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -17,6 +21,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
+      <Footer />
     </AuthProvider>
   );
 };

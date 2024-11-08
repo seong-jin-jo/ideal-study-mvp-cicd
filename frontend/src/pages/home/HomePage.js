@@ -1,14 +1,11 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
 
 const HomePage = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <div>
-      <Header />
       <main style={{ padding: '10px' }}>
         <h1>메인 페이지</h1>
         {isAuthenticated ? (
@@ -21,7 +18,6 @@ const HomePage = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };
