@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { signUpUser } from '../../services/auth/UserService.mjs';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // 로그인 함수 가져오기
@@ -8,10 +9,15 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    console.log('로그인 성공:', { username, password });
-    login();
-    navigate('/'); // 로그인시 메인 페이지로 이동
+  const handleLogin = async() => {
+    try{
+      const response = await signUpUser(username, password);
+      console.log('로그인 성공:', { response });
+      login(); // context 를 로그인상태로 등록
+      navigate('/'); // 로그인시 메인 페이지로 이동
+    }catch(error) {
+      console.log(error);
+    }
   };
 
   return (
