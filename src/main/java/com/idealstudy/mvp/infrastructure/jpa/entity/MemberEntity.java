@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "member")
 @Getter
-@Setter
+// @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,8 +15,9 @@ import lombok.*;
 public class MemberEntity extends BaseEntity{
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "char(36)")
+    private String userId;
 
     @Column(nullable = false)
     private String password;
@@ -23,7 +25,7 @@ public class MemberEntity extends BaseEntity{
     @Column(length = 15, nullable = false)
     private String phoneAddress;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)

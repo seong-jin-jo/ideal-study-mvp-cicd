@@ -30,11 +30,12 @@ public class MemberRepositoryImpl implements MemberRepository {
     public void create(MemberDto dto) {
 
         MemberEntity entity = memberMapper.dtoToEntity(dto);
+
         memberJpaRepository.save(entity);
     }
 
     @Override
-    public MemberDto findById(Long id) {
+    public MemberDto findById(String id) {
 
         Optional<MemberEntity> result = memberJpaRepository.findById(id);
 
@@ -44,7 +45,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public PageResultDto<MemberDto, MemberEntity> findMembers(PageRequestDto requestDto) {
 
-        Pageable pageable = requestDto.getPageable(Sort.by("id").ascending());
+        Pageable pageable = requestDto.getPageable(Sort.by("regDate").ascending());
 
         Page<MemberEntity> result = memberJpaRepository.findAll(pageable);
 
@@ -56,7 +57,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public MemberDto update(MemberDto dto) {
 
-        MemberEntity entity = memberJpaRepository.findById(dto.getId()).orElseThrow();
+        MemberEntity entity = memberJpaRepository.findById(dto.getUserId()).orElseThrow();
         memberMapper.updateEntityFromDto(dto, entity);
 
         log.info("update Entity: " + entity);
@@ -67,7 +68,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
 
         memberJpaRepository.deleteById(id);
     }

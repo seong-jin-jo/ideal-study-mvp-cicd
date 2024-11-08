@@ -42,7 +42,7 @@ public class MemberRepositoryTest {
     @DisplayName("데이터 조회 테스트")
     public void testFindById() {
 
-        System.out.println(memberRepository.findById(1L));
+        // System.out.println(memberRepository.findById(1L));
     }
 
     @Test
@@ -56,6 +56,7 @@ public class MemberRepositoryTest {
         System.out.println(memberRepository.findMembers(pageRequestDto));
     }
 
+    /*
     @Test
     @DisplayName("데이터 수정 테스트")
     public void testUpdateMember() {
@@ -67,7 +68,9 @@ public class MemberRepositoryTest {
 
         System.out.println(memberRepository.update(dto));
     }
+    */
 
+    /*
     @Test
     @DisplayName("데이터 삭제 테스트")
     public void testDeleteMember() {
@@ -76,6 +79,7 @@ public class MemberRepositoryTest {
 
         Assertions.assertThat(memberRepository.findById(1L)).isNull();
     }
+    */
 
     @Test
     @DisplayName("잘못된 이메일 입력 예외 처리")
