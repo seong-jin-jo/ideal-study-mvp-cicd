@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import ProfileCard from '../../components/user/ProfileCard';
-import { readUsers } from '../../services/auth/UserService.mjs';
+import { useParams } from 'react-router-dom';
+import { readUser } from '../../services/auth/UserService.mjs';
 
 const ProfilePage = () => {
-  const [profiles, setProfiles] = useState([]);
-  const location = useLocation();
+    const { id } = useParams();
+    const [user, setUser] = useState(null); // 유저 정보
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-            const data = await readUsers(location.pathname); // 데이터 자체를 반환받음
-            setProfiles(data); // 그대로 profiles에 설정
-          } catch (error) {
-            console.error('Error fetching profiles:', error);
-          }
-    };
-    fetchProfiles();
-  }, [location.pathname]);
+    useEffect( ()=>{
+        const fetchUserProfile = async () => {
+            try {
+              const data = await readUser(id);
+              setUser(data);
+            } catch (error) {
+              console.error('Error fetching user detail:', error);
+            }
+          };
+          fetchUserProfile();
+    },[id])
 
-  return (
-    <div className="profile-page">
-      <h2>{location.pathname === '/teachers' ? '선생님 목록입니다' : '학생 목록입니다'}</h2>
-      <div className="profile-grid">
-        {profiles.map((user) => (
-          <ProfileCard key={user.id} user={user} />
-        ))}
+    if (!user) return <p>Loading...</p>;
+
+    // 디버깅
+    console.log(id, user);
+
+    return (
+        <div className="user-profile">
+        <div className="profile-header">
+          <img className="profile-avatar" src={user.avatar} alt={`${user.name} 프로필`} />
+          <h2>{user.name}</h2>
+          <p className="profile-location">{user.location}</p>
+        </div>
+        <div className="profile-details">
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Phone:</strong> {user.phone}</p>
+          <p><strong>About:</strong> {user.about}</p>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default ProfilePage;

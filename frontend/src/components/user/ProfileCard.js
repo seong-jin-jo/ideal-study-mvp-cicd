@@ -1,13 +1,24 @@
 // 회원 목록에서 보이는 회원프로필카드
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const ProfileCard = ({ user }) => (
-  <div className="profile-card">
-    <img src={user.avatar} alt={`${user.name} 프로필`} />
-    <h3>{user.name}</h3>
-    <p>Email: {user.email}</p>
-    <p>Location: {user.location}</p>
-  </div>
-);
+const ProfileCard = ({ user }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/profile/${user.id}`); // 상세 조회 페이지로 이동
+  };
+
+  // 디버깅
+  console.log(user);
+
+  return(
+    <div className="profile-card" onClick={handleClick}>
+      <img src={user.avatar} alt={`${user.name} 프로필`} />
+      <h3>{user.name}</h3>
+      <p>Role: {user.role}</p>
+    </div>
+  )
+};
 
 export default ProfileCard;

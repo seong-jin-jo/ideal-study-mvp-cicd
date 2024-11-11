@@ -8,6 +8,7 @@ import LoginPage from './pages/auth/LoginPage'
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ProfileListPage from './pages/user/ProfileListPage';
 import ProfilePage from './pages/user/ProfilePage';
 
 const App = () => {
@@ -23,8 +24,9 @@ const App = () => {
           <Route path="/signup-complete" element={<SignUpCompletePage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user */}
-          <Route path="/teachers" element={<ProfilePage />} />
-          <Route path="/students" element={<ProfilePage />} />
+          <Route path="/teachers" element={<ProfileListPage />} />
+          <Route path="/students" element={<ProfileListPage />} />
+          <Route path="/profile/:id" element={<ProfilePage/>} />
         </Routes>
       </Router>
       <Footer />
