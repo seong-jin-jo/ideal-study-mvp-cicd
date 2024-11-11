@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS idealstudy;
+
+CREATE USER IF NOT EXISTS 'manager'@'%' IDENTIFIED BY 'manager';
+
+GRANT ALL PRIVILEGES ON idealstudy.* TO 'manager'@'%';
+
+FLUSH PRIVILEGES;

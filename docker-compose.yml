@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: idealstudy  # 배포용 데이터베이스 이름
+      MYSQL_USER: manager
+      MYSQL_PASSWORD: manager
+    ports:
+      - "3306:3306"
+    networks:
+      - idealstudy-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # init.sql 파일을 복사
+
+  server:
+    networks:
+      - idealstudy-network
+    container_name: server
+    build:
+      context: . # app-compose.yml 이 있는 경로
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+      - "19090:19090"  # Actuator 엔드포인트 포트 (운영환경)
+    depends_on:
+      - mysql-db
+
+networks:
+  idealstudy-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
