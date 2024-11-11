@@ -1,6 +1,7 @@
 // 회원 목록에서 보이는 회원프로필카드
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from './ProfileCard.module.css';
 
 const ProfileCard = ({ user }) => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const ProfileCard = ({ user }) => {
   console.log(user);
 
   return(
-    <div className="profile-card" onClick={handleClick}>
+    <div className={styles['profile-card']} onClick={handleClick}>
       <img src={user.avatar} alt={`${user.name} 프로필`} />
       <h3>{user.name}</h3>
       <p>Role: {user.role}</p>
