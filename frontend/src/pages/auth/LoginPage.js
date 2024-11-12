@@ -13,10 +13,14 @@ const LoginPage = () => {
     try{
       const response = await signUpUser(userEmail, password);
       console.log('로그인 성공:', { response });
-      login(); // context 를 로그인상태로 np등록
+      login(); // context 를 로그인상태로 등록
       navigate('/'); // 로그인시 메인 페이지로 이동
     }catch(error) {
       console.log(error);
+
+      //////////////임시로 로그인처리 아래 함수들 삭제해야함
+      navigate('/');
+      login({name: "김동은", id: "2", level: "7", role: 'student'}); 
     }
   };
 
