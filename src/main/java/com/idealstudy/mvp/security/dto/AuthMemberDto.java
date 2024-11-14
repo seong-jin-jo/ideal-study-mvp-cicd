@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.security;
+package com.idealstudy.mvp.security.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,14 +1,26 @@
 package com.idealstudy.mvp.config;
 
 import com.idealstudy.mvp.enums.member.Role;
+import com.idealstudy.mvp.error.ExceptionHandlerFilter;
+import com.idealstudy.mvp.security.filter.JwtAuthenticationFilter;
+import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,13 +30,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @Log4j2
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Autowired
+    private final JwtUtil jwtUtil;
+    @Autowired
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,25 +51,45 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-                                                       PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
 
-        return null;
+        List<AuthenticationProvider> providers = new ArrayList<>();
+
+        // UsernamePasswordAuthenticationToken 처리기
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        providers.add(daoAuthenticationProvider);
+
+        return new ProviderManager(providers);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    public ExceptionHandlerFilter exceptionHandlerFilter() {
+        return new ExceptionHandlerFilter();
+    }
 
-        http.authorizeHttpRequests(auth ->
-            auth
-                    // 정적 파일 허용
-                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-        );
-        setGuestPermission(http);
-        setUserPermission(http);
-        setAdminPermission(http);
-        setStudentPermission(http);
-        setTeacherPermission(http);
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
+        return filter;
+    }
+
+    // OAuth2LoginAuthenticationFilter(현재 라이브러리 버전 미지원) 생성 및 설정 필요
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+
+        // Configures HTTP Basic authentication.
+        http.httpBasic(Customizer.withDefaults());
+
+        // configuring of Session Management: stateless
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // Enables CSRF protection. This is activated by default when using EnableWebSecurity.
         // CSRF token 사용 시 POST 요청만 가능.
@@ -72,35 +111,35 @@ public class SecurityConfig {
                 }
         ));
 
-        // Configures HTTP Basic authentication.
-        http.httpBasic(Customizer.withDefaults());
+        // Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations
+        // (i.e. via URL patterns).
+        http.authorizeHttpRequests(auth ->
+            auth
+                    // 정적 파일 허용
+                    // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+        );
+        setGuestPermission(http);
+        setUserPermission(http);
+        setAdminPermission(http);
+        setStudentPermission(http);
+        setTeacherPermission(http);
 
-        // configuring of Session Management: stateless
-        http.sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // This is automatically applied when using EnableWebSecurity.
-        // The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
-        // cleaning up any rememberMe() authentication that was configured, clearing the SecurityContextHolder,
-        // and then redirect to "/login?success".
-        // The following customization to log out when the URL "/custom-logout" is invoked.
-        // Log out will remove the cookie named "JSESSIONID", not invalidate the HttpSession,
-        // clear the SecurityContextHolder, and upon completion redirect to "/".
+        // 추후 변경 필요
+        /*
+         The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
+         cleaning up any rememberMe() authentication that was configured,
+         clearing the SecurityContextHolder, and then redirect to "/login?success".
+         */
         http.logout(logout -> logout.deleteCookies("JSESSIONID")
                 .invalidateHttpSession(false)
                 .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/login?success")
         );
 
+        http.addFilterBefore(exceptionHandlerFilter(), LogoutFilter.class);
+
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-
-
-
-        return null;
     }
 
     private void setGuestPermission(HttpSecurity http) throws Exception {
@@ -113,41 +152,41 @@ public class SecurityConfig {
 
     private void setUserPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.getRole(),
-                        Role.STUDENT.getRole(),
-                        Role.TEACHER.getRole())
-                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ADMIN.getRole(),
-                        Role.STUDENT.getRole(),
-                        Role.TEACHER.getRole())
-                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ADMIN.getRole(),
-                        Role.STUDENT.getRole(),
-                        Role.TEACHER.getRole())
-                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.getRole(),
-                        Role.STUDENT.getRole(),
-                        Role.TEACHER.getRole())
-                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.getRole(),
-                        Role.STUDENT.getRole(),
-                        Role.TEACHER.getRole())
+                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
         );
     }
 
     private void setStudentPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/student/**").hasRole(Role.STUDENT.getRole())
+                .requestMatchers("/student/**").hasRole(Role.STUDENT.toString())
 
         );
     }
 
     private void setTeacherPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.getRole())
+                .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.toString())
         );
     }
 
     private void setAdminPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.getRole())
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ADMIN.getRole())
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.toString())
+                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ADMIN.toString())
         );
     }
 }

@@ -1,16 +1,19 @@
 package com.idealstudy.mvp.security.service;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
-import com.idealstudy.mvp.enums.member.MemberError;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
-import com.idealstudy.mvp.mapstruct.MemberMapper;
-import com.idealstudy.mvp.security.AuthMemberDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 @Log4j2
@@ -24,23 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         log.info("username: " + username);
 
-        MemberDto result = null;
-        try{
-            result = memberRepository.findByEmail(username);
-        } catch (NullPointerException e) {
-            throw new UsernameNotFoundException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
-        }
+        MemberDto member = memberRepository.findByEmail(username);
 
-        /*
-        AuthMemberDto authMemberDto = new AuthMemberDto(
-                result.getEmail(),
-                result.getPassword(),
-                result.isFromSocial(),
-                result.getRole().strea
-        );
-        */
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(member.getRole().toString()));
 
-
-        return null;
+        return new User(username, member.getPassword(), authorities);
     }
 }
