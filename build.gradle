@@ -42,6 +42,13 @@ dependencies {
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
 	// If you are using mapstruct in test code
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+
+	// for JWT
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+
 }
 
 tasks.named('test') {
