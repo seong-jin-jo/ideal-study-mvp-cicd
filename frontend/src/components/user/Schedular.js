@@ -3,7 +3,7 @@
 import React from 'react';
 import Button from '../Button';
 
-const Schedular = (isAuthenticated) => {
+const Schedular = ({isAuthenticated}) => {
     return (
         <div>
             <h3>스케쥴러</h3>

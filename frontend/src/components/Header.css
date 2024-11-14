@@ -1,0 +1,59 @@
+header {
+    padding: 15px 30px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 28px;
+    margin: 0;
+    color: #333;
+    font-weight: bold;
+}
+
+/* nav-left, nav-right 설정 */ 
+nav { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* 각 nav 영역 설정 */ 
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-left a {
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-left a:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #555;
+    gap: 10px;
+}
+
+.nav-right a {
+    color: #333;
+    font-weight: bold;
+}

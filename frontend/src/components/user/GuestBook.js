@@ -2,7 +2,7 @@
 import React from 'react';
 import Button from '../Button';
 
-const GuestBook = (isAuthenticated) => {
+const GuestBook = ({isAuthenticated}) => {
     return (
         <div>
             <h3>방명록</h3>    

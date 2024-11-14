@@ -19,7 +19,7 @@ const UserInfoSpace = (user, isAuthenticated) => {
           <p><strong>연락처:</strong> {user.phone}</p>
           <p><strong>레벨:</strong> {user.level}</p>
         </div>
-        { isAuthenticated && <Button>수정</Button> }
+        {/* { isAuthenticated && <Button>수정</Button> } */}
       </div>
     );
 };

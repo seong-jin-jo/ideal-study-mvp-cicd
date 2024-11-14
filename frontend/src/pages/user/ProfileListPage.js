@@ -10,12 +10,9 @@ const ProfileListPage = () => {
 
   useEffect(() => {
     const fetchProfiles = async () => {
-      try {
-            const data = await readUsers(location.pathname); // 데이터 자체를 반환받음
-            setProfiles(data); // 그대로 profiles에 설정
-          } catch (error) {
-            console.error('Error fetching profiles:', error);
-          }
+      const data = await readUsers(location.pathname); // 데이터 자체를 반환받음
+      setProfiles(data); // 그대로 profiles에 설정
+
     };
     fetchProfiles();
   }, [location.pathname]);
