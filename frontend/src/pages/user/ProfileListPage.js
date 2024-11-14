@@ -21,7 +21,7 @@ const ProfileListPage = () => {
   }, [location.pathname]);
 
   return (
-    <div className={styles['profile-page']}>
+    <div>
       <h2>{location.pathname === '/teachers' ? '선생님 목록입니다' : '학생 목록입니다'}</h2>
       <div className={styles['profile-grid']}>
         {profiles.map((user) => (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/Button';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -29,7 +30,8 @@ const SignUpPage = () => {
       />
       <br/>
       개인정보 수집 및 이용약관 동의 <input type="checkbox"/>
-      <br/><button onClick={handleSignUp}>회원가입</button>
+      <br/>
+      <Button onClick={handleSignUp}>회원가입</Button>
     </div>
   );
 };

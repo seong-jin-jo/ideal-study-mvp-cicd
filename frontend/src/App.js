@@ -14,11 +14,14 @@ import NotFound from './pages/NotFound';
 import OfficialProfilePage from './pages/teacher/OfficialProfilePage';
 import OfficialProfilePageUpdate from './pages/teacher/OfficialProfilePageUpdate';
 
+import './App.css';  // 스타일 파일 import
+
 const App = () => {
   return (
     <AuthProvider>
       <Router>
       <Header />
+      <div className="page-common">
         <Routes>
           {/* main */}
           <Route path="/" element={<HomePage />} />
@@ -36,6 +39,7 @@ const App = () => {
           {/* 일치하는 라우트가 없을 때 NotFound 컴포넌트 렌더링 */}
           <Route path="*" element={<NotFound/>} />
         </Routes>
+      </div>
       </Router>
       <Footer />
     </AuthProvider>

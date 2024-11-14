@@ -1,3 +1,12 @@
+/* 모든 페이지 공통속성 */
+.page-common {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* background-color: #f4f4f4; 예시로 배경색 추가 */
+  /* min-height: calc(100vh - 120px); Header와 Footer를 제외한 높이로 설정 */
+}
+
 .App {
   text-align: center;
 }

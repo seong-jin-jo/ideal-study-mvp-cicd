@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { signUpUser } from '../../services/UserService.mjs';
+import Button from '../../components/Button';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // 로그인 함수 가져오기
@@ -39,7 +40,7 @@ const LoginPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>로그인</button>
+      <Button onClick={handleLogin}>로그인</Button>
     </div>
   );
 };
