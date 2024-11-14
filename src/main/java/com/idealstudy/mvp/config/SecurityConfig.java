@@ -7,8 +7,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,36 +32,29 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                                                       PasswordEncoder passwordEncoder) {
+
+        return null;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
 
-        // The most basic example is to configure all URLs to require the role "ROLE_USER".
-        // The configuration below requires authentication to every URL and will grant access
-        // to both the user "admin" and "user".
         http.authorizeHttpRequests(auth ->
             auth
-                    .requestMatchers("/*").permitAll()
                     // 정적 파일 허용
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    
-                    .requestMatchers("/student/**").hasRole(Role.STUDENT.getRoleStr())
-                    .requestMatchers("/teacher/**").hasRole(Role.TEACHER.getRoleStr())
-                    .requestMatchers("/admin/**").hasRole(Role.ADMIN.getRoleStr())
         );
-
-        // The most basic configuration defaults to automatically generating a login page at the URL "/login",
-        // redirecting to "/login?error" for authentication failure.
-        http.formLogin(formLogin ->
-            formLogin
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .loginPage("/login")
-                    .failureUrl("/login?failed")
-                    .loginProcessingUrl("/login?process")
-        );
+        setGuestPermission(http);
+        setUserPermission(http);
+        setAdminPermission(http);
+        setStudentPermission(http);
+        setTeacherPermission(http);
 
         // Enables CSRF protection. This is activated by default when using EnableWebSecurity.
         // CSRF token 사용 시 POST 요청만 가능.
-        http.csrf(csrf -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         // CORS 활성화
         http.cors(customizer -> customizer.configurationSource( // HttpServletRequest를 기반으로 CORS 설정을 반환
@@ -73,6 +72,13 @@ public class SecurityConfig {
                 }
         ));
 
+        // Configures HTTP Basic authentication.
+        http.httpBasic(Customizer.withDefaults());
+
+        // configuring of Session Management: stateless
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         // This is automatically applied when using EnableWebSecurity.
         // The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
         // cleaning up any rememberMe() authentication that was configured, clearing the SecurityContextHolder,
@@ -87,5 +93,61 @@ public class SecurityConfig {
         );
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+
+
+
+        return null;
+    }
+
+    private void setGuestPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+        );
+    }
+
+    private void setUserPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.getRole(),
+                        Role.STUDENT.getRole(),
+                        Role.TEACHER.getRole())
+                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ADMIN.getRole(),
+                        Role.STUDENT.getRole(),
+                        Role.TEACHER.getRole())
+                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ADMIN.getRole(),
+                        Role.STUDENT.getRole(),
+                        Role.TEACHER.getRole())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.getRole(),
+                        Role.STUDENT.getRole(),
+                        Role.TEACHER.getRole())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.getRole(),
+                        Role.STUDENT.getRole(),
+                        Role.TEACHER.getRole())
+        );
+    }
+
+    private void setStudentPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/student/**").hasRole(Role.STUDENT.getRole())
+
+        );
+    }
+
+    private void setTeacherPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.getRole())
+        );
+    }
+
+    private void setAdminPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.getRole())
+                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ADMIN.getRole())
+        );
     }
 }

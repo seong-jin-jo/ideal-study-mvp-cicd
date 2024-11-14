@@ -1,9 +1,21 @@
 package com.idealstudy.mvp.enums.member;
 
 public enum Role {
-    STUDENT,
-    TEACHER,
-    ADMIN;
+
+    // It should not start with "ROLE_"
+    STUDENT("STUDENT"),
+    TEACHER("TEACHER"),
+    ADMIN("ADMIN");
+
+    private String role;
+
+    Role(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
 
     /*
     public static Role stringToEnum(String role) {

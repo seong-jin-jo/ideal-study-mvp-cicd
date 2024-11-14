@@ -31,13 +31,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
         }
 
+        /*
         AuthMemberDto authMemberDto = new AuthMemberDto(
                 result.getEmail(),
                 result.getPassword(),
                 result.isFromSocial(),
                 result.getRole().strea
         );
-
+        */
 
 
         return null;
