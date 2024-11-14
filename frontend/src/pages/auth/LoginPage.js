@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { signUpUser } from '../../services/auth/UserService.mjs';
+import { signUpUser } from '../../services/UserService.mjs';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // 로그인 함수 가져오기
@@ -20,7 +20,7 @@ const LoginPage = () => {
 
       //////////////임시로 로그인처리 아래 함수들 삭제해야함
       navigate('/');
-      login({name: "김동은", id: "2", level: "7", role: 'student'}); 
+      login({name: "김동은", id: "2", level: "7", role: 'teacher'}); 
     }
   };
 

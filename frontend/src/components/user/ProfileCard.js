@@ -7,7 +7,7 @@ const ProfileCard = ({ user }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/profile/${user.id}`); // 상세 조회 페이지로 이동
+    navigate(`/myPage/${user.id}`); // 상세 조회 페이지로 이동
   };
 
   // 디버깅

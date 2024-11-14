@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import { useParams } from 'react-router-dom';
-import { readUser } from '../../services/auth/UserService.mjs';
+import { readUser } from '../../services/UserService.mjs';
+import UserInfoSpace from '../../components/user/UserInfoSpace';
+import Photos from '../../components/user/Photos';
+import Schedular from '../../components/user/Schedular';
+import GuestBook from '../../components/user/GuestBook';
+
+import './ProfilePage.css';
+import Bio from '../../components/user/Bio';
 
 const ProfilePage = () => {
     const { id } = useParams();
     const [user, setUser] = useState(null); // 유저 정보
+    const { userInfo } = useContext(AuthContext);
 
     useEffect( ()=>{
         const fetchUserProfile = async () => {
@@ -21,22 +30,18 @@ const ProfilePage = () => {
     if (!user) return <p>Loading...</p>;
 
     // 디버깅
-    console.log(id, user);
+    console.log("userInfo.id", userInfo.id);
+    console.log("id", id);
 
     return (
-        <div className="user-profile">
-        <div className="profile-header">
-          <img className="profile-avatar" src={user.avatar} alt={`${user.name} 프로필`} />
-          <h2>{user.name}</h2>
-          <p className="profile-location">{user.location}</p>
+        <div className="profile-container">
+            <div className="section"><UserInfoSpace user={user} isAuthenticated={userInfo.id === id} /></div>
+            <div className="section"><Bio isAuthenticated={userInfo.id === id}/></div>
+            <div className="section"><Photos isAuthenticated={userInfo.id === id} /></div>
+            <div className="section"><Schedular isAuthenticated={userInfo.id === id} /></div>
+            <div className="section"><GuestBook isAuthenticated={userInfo.id === id} /></div>
         </div>
-        <div className="profile-details">
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Phone:</strong> {user.phone}</p>
-          <p><strong>About:</strong> {user.about}</p>
-        </div>
-      </div>
-    );
+    );    
 };
 
 export default ProfilePage;

@@ -36,8 +36,9 @@ export const readUser = async (userId) => {
       // 더미 데이터 반환
       const dummyData = {
         id: userId,
-        name: userId === 1 ? 'Alice' : 'Unknown',
-        role: userId === 1 ? 'teacher' : 'student'
+        name: userId === 1 ? '김대민' : 'Unknown',
+        role: userId === 1 ? '학생' : 'student',
+        level: 17
       };
 
       return dummyData;

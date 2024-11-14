@@ -27,12 +27,13 @@ const Header = () => {
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0'}}>
         <div>
           <Link to="/">홈</Link> | <Link to="/about">소개</Link> | <Link to="/teachers">강사목록</Link> | <Link to="/students">학생목록</Link>
-          {isAuthenticated && <> | <Link to={`/profile/${userInfo.id}`}>마이페이지</Link></>}
+          {isAuthenticated && <> | <Link to={`/myPage/${userInfo.id}`}>마이페이지</Link></>}
         </div>
         <div>
         {isAuthenticated ? (
           <div>
-             [{userInfo.role}] {userInfo.name} (Lv.{userInfo.level}) &nbsp;
+            {userInfo.role === 'teacher' && <> <Link to={`/officialPage/${userInfo.id}`}>강사공식페이지</Link></>}
+             &nbsp; [{userInfo.role}] {userInfo.name} (Lv.{userInfo.level}) &nbsp;
             <Button onClick={handleLogoutNavigate}>로그아웃</Button> {/* Button 컴포넌트 사용 */}
           </div>
         ) : (
