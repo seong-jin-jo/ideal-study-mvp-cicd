@@ -12,6 +12,8 @@ public interface MemberRepository {
 
     MemberDto findById(String id);
 
+    MemberDto findByEmail(String email);
+
     PageResultDto<MemberDto, MemberEntity> findMembers(PageRequestDto requestDto);
 
     MemberDto update(MemberDto dto);

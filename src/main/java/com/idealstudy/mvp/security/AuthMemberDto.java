@@ -9,9 +9,15 @@ import java.util.Collection;
 @Slf4j
 public class AuthMemberDto extends User {
 
+    private boolean fromSocial;
 
-
-    public AuthMemberDto(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public AuthMemberDto(String username, String password, boolean fromSocial,
+                         Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
+        this.fromSocial = fromSocial;
+    }
+
+    public boolean isFromSocial() {
+        return fromSocial;
     }
 }

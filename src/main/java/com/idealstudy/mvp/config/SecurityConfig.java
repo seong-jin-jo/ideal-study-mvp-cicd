@@ -57,8 +57,8 @@ public class SecurityConfig {
         // clear the SecurityContextHolder, and upon completion redirect to "/".
         http.logout(logout -> logout.deleteCookies("JSESSIONID")
                 .invalidateHttpSession(false)
-                .logoutUrl("/user-logout")
-                .logoutSuccessUrl("/")
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl("/login?success")
         );
 
         return http.build();

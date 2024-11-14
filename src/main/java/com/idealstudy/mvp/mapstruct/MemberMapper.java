@@ -2,6 +2,7 @@ package com.idealstudy.mvp.mapstruct;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
+import com.idealstudy.mvp.security.AuthMemberDto;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -19,4 +20,5 @@ public interface MemberMapper {
     // @MappingTarget: 반환 대상 객체 지정
     @Mapping(target = "userId", ignore = true)
     void updateEntityFromDto(MemberDto dto, @MappingTarget MemberEntity entity);
+
 }

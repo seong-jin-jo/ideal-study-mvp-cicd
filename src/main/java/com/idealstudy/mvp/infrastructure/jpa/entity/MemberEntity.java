@@ -4,10 +4,12 @@ import com.idealstudy.mvp.enums.member.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "member")
 @Getter
-// @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,9 @@ public class MemberEntity extends BaseEntity{
 
     @Column(nullable = false)
     private String password;
+
+    @Column
+    private String name;
 
     @Column(length = 15, nullable = false)
     private String phoneAddress;
@@ -39,4 +44,16 @@ public class MemberEntity extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    /* DB 원자성까지 엄격히 고려하는 경우.
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<Role> roleSet = new HashSet<>();
+
+    public void addRole(Role role) {
+        roleSet.add(role);
+    }
+     */
+
+    private boolean fromSocial;
 }

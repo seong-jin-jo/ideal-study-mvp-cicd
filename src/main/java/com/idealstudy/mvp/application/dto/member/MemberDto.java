@@ -7,10 +7,11 @@ import lombok.*;
 @Builder
 public class MemberDto {
 
-    // private Long id;
     private String userId;
 
     private String password;
+
+    private String name;
 
     private String phoneAddress;
 
@@ -23,4 +24,6 @@ public class MemberDto {
     private Integer level;
 
     private Role role;
+
+    private boolean fromSocial;
 }
