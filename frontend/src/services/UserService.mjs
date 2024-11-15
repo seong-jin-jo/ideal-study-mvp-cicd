@@ -30,12 +30,15 @@ export const readUser = async (userId) => {
     } catch (error) {
 
       console.error('회원조회 API 호출 오류 발생:', error);
-  
+      
+      // 디버깅
+      console.log("★",userId);
       // 더미 데이터 반환
       const dummyData = {
         id: userId,
-        name: userId === 1 ? 'Alice' : 'Unknown',
-        role: userId === 1 ? 'teacher' : 'student'
+        name: userId === 1 ? '김대민' : 'Unknown',
+        role: userId === 1 ? '학생' : 'student',
+        level: 17
       };
 
       return dummyData;

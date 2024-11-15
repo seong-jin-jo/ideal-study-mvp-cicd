@@ -8,13 +8,20 @@ import LoginPage from './pages/auth/LoginPage'
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ProfileListPage from './pages/user/ProfileListPage';
 import ProfilePage from './pages/user/ProfilePage';
+import NotFound from './pages/NotFound';
+import OfficialProfilePage from './pages/teacher/OfficialProfilePage';
+import OfficialProfilePageUpdate from './pages/teacher/OfficialProfilePageUpdate';
+
+import './App.css';  // 스타일 파일 import
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
       <Header />
+      <div className="page-common">
         <Routes>
           {/* main */}
           <Route path="/" element={<HomePage />} />
@@ -23,9 +30,16 @@ const App = () => {
           <Route path="/signup-complete" element={<SignUpCompletePage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user */}
-          <Route path="/teachers" element={<ProfilePage />} />
-          <Route path="/students" element={<ProfilePage />} />
+          <Route path="/teachers" element={<ProfileListPage />} />
+          <Route path="/students" element={<ProfileListPage />} />
+          <Route path="/myPage/:id" element={<ProfilePage/>} />
+          {/* teachers only */}
+          <Route path="/officialPage/:id" element={<OfficialProfilePage/>} />
+          <Route path="/officialPageUpdate" element={<OfficialProfilePageUpdate/>} />
+          {/* 일치하는 라우트가 없을 때 NotFound 컴포넌트 렌더링 */}
+          <Route path="*" element={<NotFound/>} />
         </Routes>
+      </div>
       </Router>
       <Footer />
     </AuthProvider>

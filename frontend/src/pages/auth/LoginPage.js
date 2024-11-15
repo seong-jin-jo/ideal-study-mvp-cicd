@@ -1,22 +1,27 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { signUpUser } from '../../services/auth/UserService.mjs';
+import { signUpUser } from '../../services/UserService.mjs';
+import Button from '../../components/Button';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // 로그인 함수 가져오기
-  const [username, setUsername] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async() => {
     try{
-      const response = await signUpUser(username, password);
+      const response = await signUpUser(userEmail, password);
       console.log('로그인 성공:', { response });
       login(); // context 를 로그인상태로 등록
       navigate('/'); // 로그인시 메인 페이지로 이동
     }catch(error) {
       console.log(error);
+
+      //////////////임시로 로그인처리 아래 함수들 삭제해야함
+      navigate('/');
+      login({name: "김동은", id: "2", level: "7", role: 'teacher'}); 
     }
   };
 
@@ -24,10 +29,10 @@ const LoginPage = () => {
     <div>
       <h2>로그인</h2>
       <input
-        type="text"
-        placeholder="아이디"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        type="email"
+        placeholder="이메일"
+        value={userEmail}
+        onChange={(e) => setUserEmail(e.target.value)}
       />
       <input
         type="password"
@@ -35,7 +40,7 @@ const LoginPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>로그인</button>
+      <Button onClick={handleLogin}>로그인</Button>
     </div>
   );
 };

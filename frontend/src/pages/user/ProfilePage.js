@@ -1,34 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import ProfileCard from '../../components/user/ProfileCard';
-import { readUsers } from '../../services/auth/UserService.mjs';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useParams } from 'react-router-dom';
+import { readUser } from '../../services/UserService.mjs';
+import { readBio } from '../../services/MyPageService.mjs';
+
+import UserInfoSpace from '../../components/user/UserInfoSpace';
+import Photos from '../../components/user/Photos';
+import Schedular from '../../components/user/Schedular';
+import GuestBook from '../../components/user/GuestBook';
+
+import './ProfilePage.css';
+import Bio from '../../components/user/Bio';
 
 const ProfilePage = () => {
-  const [profiles, setProfiles] = useState([]);
-  const location = useLocation();
+    const { id } = useParams();
+    const { userInfo } = useContext(AuthContext);
+    const [user, setUser] = useState(null); // 유저 정보
+    const [bio, setBio] = useState(null); // 유저 자기소개
+    
+    useEffect( ()=>{
+        const fetchUserProfile = async () => {
+            const data = await readUser(id);
+            setUser(data);
+        };
 
-  useEffect(() => {
-    const fetchProfiles = async () => {
-      try {
-            const data = await readUsers(location.pathname); // 데이터 자체를 반환받음
-            setProfiles(data); // 그대로 profiles에 설정
-          } catch (error) {
-            console.error('Error fetching profiles:', error);
-          }
-    };
-    fetchProfiles();
-  }, [location.pathname]);
+        const fetchReadBio = async() =>{
+            const data = await readBio(id);
+            setBio(data);
+        }
 
-  return (
-    <div className="profile-page">
-      <h2>{location.pathname === '/teachers' ? '선생님 목록입니다' : '학생 목록입니다'}</h2>
-      <div className="profile-grid">
-        {profiles.map((user) => (
-          <ProfileCard key={user.id} user={user} />
-        ))}
-      </div>
-    </div>
-  );
+        fetchUserProfile();
+        fetchReadBio();
+    },[id])
+
+    if (!user) return <p>Loading...</p>;
+
+    // 디버깅
+    console.log("userInfo.id", userInfo.id);
+    console.log("id", id);
+    console.log("[ProfilePage] Bio컴포넌트로 넘겨줄 bio",bio);
+
+    return (
+        <div className="profile-container">
+            <div className="section"><UserInfoSpace user={user} isAuthenticated={userInfo.id === id} /></div>
+            <div className="section"><Bio user={user} fetchedBio={bio} isAuthenticated={userInfo.id === id}/></div>
+            <div className="section unOpend"><Photos isAuthenticated={userInfo.id === id} /></div>
+            <div className="section unOpend"><Schedular isAuthenticated={userInfo.id === id} /></div>
+            <div className="section unOpend"><GuestBook isAuthenticated={userInfo.id === id} /></div>
+        </div>
+    );    
 };
 
 export default ProfilePage;

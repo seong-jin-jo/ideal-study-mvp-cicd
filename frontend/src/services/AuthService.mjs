@@ -10,11 +10,20 @@ const apiClient = axios.create({
  * 로그인
  */
 export const loginUser = async (username, password) => {
-  const response = await apiClient.post('/auth/login', {
-    username,
-    password,
-  });
-  return response.data;
+    try{
+      const response = await apiClient.post('/auth/login', {
+        username,
+        password,
+      });
+      return response.data;
+    }catch(error){
+      console.log(error);
+        
+      // 로그인실패시 임시로 더미 데이터 반환
+      const dummyData = { id: 1, name: '최예원', role: 'student', level: '3' }
+  
+      return dummyData;
+    }
 };
 
 /**
