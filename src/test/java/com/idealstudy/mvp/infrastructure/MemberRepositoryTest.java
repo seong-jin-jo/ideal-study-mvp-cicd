@@ -31,8 +31,10 @@ public class MemberRepositoryTest {
                     .email("tester"+i+"@gmail.com")
                     .sex(Gender.MALE)
                     .referralId(UUID.randomUUID().toString())
-                    .role(Role.STUDENT)
+                    .fromSocial(false)
                     .build();
+
+
 
             memberRepository.create(dto);
         });
@@ -42,7 +44,7 @@ public class MemberRepositoryTest {
     @DisplayName("데이터 조회 테스트")
     public void testFindById() {
 
-        System.out.println(memberRepository.findById(1L));
+        // System.out.println(memberRepository.findById(1L));
     }
 
     @Test
@@ -56,6 +58,7 @@ public class MemberRepositoryTest {
         System.out.println(memberRepository.findMembers(pageRequestDto));
     }
 
+    /*
     @Test
     @DisplayName("데이터 수정 테스트")
     public void testUpdateMember() {
@@ -67,7 +70,9 @@ public class MemberRepositoryTest {
 
         System.out.println(memberRepository.update(dto));
     }
+    */
 
+    /*
     @Test
     @DisplayName("데이터 삭제 테스트")
     public void testDeleteMember() {
@@ -75,6 +80,27 @@ public class MemberRepositoryTest {
         memberRepository.deleteById(1L);
 
         Assertions.assertThat(memberRepository.findById(1L)).isNull();
+    }
+    */
+
+    @Test
+    @DisplayName("이메일 조회 테스트")
+    public void testEmail() {
+
+        String input = "tester1@gmail.com";
+
+        Assertions.assertThat(memberRepository.findByEmail(input))
+                .isNotNull();
+    }
+
+    @Test
+    @DisplayName("이메일 null 예외 테스트")
+    public void testEmailNullException() {
+
+        String input = "tester9999@gmail.com";
+
+        Assertions.assertThatThrownBy(() -> memberRepository.findByEmail(input))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test

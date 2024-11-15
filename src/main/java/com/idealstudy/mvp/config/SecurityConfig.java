@@ -1,24 +1,50 @@
 package com.idealstudy.mvp.config;
 
 import com.idealstudy.mvp.enums.member.Role;
+import com.idealstudy.mvp.error.ExceptionHandlerFilter;
+import com.idealstudy.mvp.security.filter.JwtAuthenticationFilter;
+import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @Log4j2
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    // 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 예정
+    @Autowired
+    private final JwtUtil jwtUtil;
+    @Autowired
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -26,36 +52,52 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
 
-        // The most basic example is to configure all URLs to require the role "ROLE_USER".
-        // The configuration below requires authentication to every URL and will grant access
-        // to both the user "admin" and "user".
-        http.authorizeHttpRequests(auth ->
-            auth
-                    .requestMatchers("/*").permitAll()
-                    // 정적 파일 허용
-                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    
-                    .requestMatchers("/student/**").hasRole(Role.STUDENT.getRoleStr())
-                    .requestMatchers("/teacher/**").hasRole(Role.TEACHER.getRoleStr())
-                    .requestMatchers("/admin/**").hasRole(Role.ADMIN.getRoleStr())
-        );
+        List<AuthenticationProvider> providers = new ArrayList<>();
 
-        // The most basic configuration defaults to automatically generating a login page at the URL "/login",
-        // redirecting to "/login?error" for authentication failure.
-        http.formLogin(formLogin ->
-            formLogin
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .loginPage("/login")
-                    .failureUrl("/login?failed")
-                    .loginProcessingUrl("/login?process")
-        );
+        // UsernamePasswordAuthenticationToken 처리기
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        providers.add(daoAuthenticationProvider);
+
+        // JwtAuthenticationProvider가 들어갈 자리
+        
+        return new ProviderManager(providers);
+    }
+
+    @Bean
+    public ExceptionHandlerFilter exceptionHandlerFilter() {
+        return new ExceptionHandlerFilter();
+    }
+
+    // 추후 Spring Security에서 지원하는 JwtAuthenticationFilter로 대체될 예정
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
+        return filter;
+    }
+
+    // OAuth2LoginAuthenticationFilter 생성 및 설정 필요
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+
+        // Configures HTTP Basic authentication.
+        http.httpBasic(Customizer.withDefaults());
+
+        // configuring of Session Management: stateless
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // Enables CSRF protection. This is activated by default when using EnableWebSecurity.
         // CSRF token 사용 시 POST 요청만 가능.
-        http.csrf(csrf -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         // CORS 활성화
         http.cors(customizer -> customizer.configurationSource( // HttpServletRequest를 기반으로 CORS 설정을 반환
@@ -73,19 +115,91 @@ public class SecurityConfig {
                 }
         ));
 
-        // This is automatically applied when using EnableWebSecurity.
-        // The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
-        // cleaning up any rememberMe() authentication that was configured, clearing the SecurityContextHolder,
-        // and then redirect to "/login?success".
-        // The following customization to log out when the URL "/custom-logout" is invoked.
-        // Log out will remove the cookie named "JSESSIONID", not invalidate the HttpSession,
-        // clear the SecurityContextHolder, and upon completion redirect to "/".
+        // Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations
+        // (i.e. via URL patterns).
+        http.authorizeHttpRequests(auth ->
+            auth
+                    // 정적 파일 허용
+                    // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+        );
+        setGuestPermission(http);
+        setUserPermission(http);
+        setAdminPermission(http);
+        setStudentPermission(http);
+        setTeacherPermission(http);
+
+        // 추후 변경 필요
+        /*
+         The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
+         cleaning up any rememberMe() authentication that was configured,
+         clearing the SecurityContextHolder, and then redirect to "/login?success".
+         */
         http.logout(logout -> logout.deleteCookies("JSESSIONID")
                 .invalidateHttpSession(false)
-                .logoutUrl("/user-logout")
-                .logoutSuccessUrl("/")
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl("/login?success")
         );
 
+        /*
+         Allows adding a Filter before one of the known Filter classes.
+         The known Filter instances are either a Filter listed in HttpSecurityBuilder.addFilter(Filter)
+         or a Filter that has already been added using HttpSecurityBuilder.addFilterAfter(Filter, Class)
+         or HttpSecurityBuilder.addFilterBefore(Filter, Class).
+         */
+        http.addFilterBefore(exceptionHandlerFilter(), LogoutFilter.class);
+
         return http.build();
+    }
+
+    private void setGuestPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                // This matcher will use the same rules that Spring MVC uses for matching.
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+        );
+    }
+
+    private void setUserPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                // the roles that the user should have at least one of (i.e. ADMIN, USER, etc).
+                // Each role should not start with ROLE_ since it is automatically prepended already
+                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
+                        Role.STUDENT.toString(),
+                        Role.TEACHER.toString())
+        );
+    }
+
+    private void setStudentPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/student/**").hasRole(Role.STUDENT.toString())
+
+        );
+    }
+
+    private void setTeacherPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.toString())
+        );
+    }
+
+    private void setAdminPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.toString())
+                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ADMIN.toString())
+        );
     }
 }

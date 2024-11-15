@@ -3,6 +3,7 @@ package com.idealstudy.mvp.infrastructure.impl;
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.enums.member.MemberError;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.MemberJpaRepository;
@@ -30,21 +31,36 @@ public class MemberRepositoryImpl implements MemberRepository {
     public void create(MemberDto dto) {
 
         MemberEntity entity = memberMapper.dtoToEntity(dto);
+
         memberJpaRepository.save(entity);
     }
 
     @Override
-    public MemberDto findById(Long id) {
+    public MemberDto findById(String id) {
 
         Optional<MemberEntity> result = memberJpaRepository.findById(id);
 
-        return result.map(memberEntity -> memberMapper.entityToDto(memberEntity)).orElse(null);
+        if(result.isEmpty())
+            throw new NullPointerException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
+
+        return memberMapper.entityToDto(result.get());
+    }
+
+    @Override
+    public MemberDto findByEmail(String email) {
+
+        MemberEntity result = memberJpaRepository.findByEmail(email);
+
+        if(result == null)
+            throw new NullPointerException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
+
+        return memberMapper.entityToDto(result);
     }
 
     @Override
     public PageResultDto<MemberDto, MemberEntity> findMembers(PageRequestDto requestDto) {
 
-        Pageable pageable = requestDto.getPageable(Sort.by("id").ascending());
+        Pageable pageable = requestDto.getPageable(Sort.by("regDate").ascending());
 
         Page<MemberEntity> result = memberJpaRepository.findAll(pageable);
 
@@ -56,7 +72,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public MemberDto update(MemberDto dto) {
 
-        MemberEntity entity = memberJpaRepository.findById(dto.getId()).orElseThrow();
+        MemberEntity entity = memberJpaRepository.findById(dto.getUserId()).orElseThrow();
         memberMapper.updateEntityFromDto(dto, entity);
 
         log.info("update Entity: " + entity);
@@ -67,7 +83,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
 
         memberJpaRepository.deleteById(id);
     }

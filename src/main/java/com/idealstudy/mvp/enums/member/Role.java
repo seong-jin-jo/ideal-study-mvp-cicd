@@ -1,25 +1,38 @@
 package com.idealstudy.mvp.enums.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Role {
-    STUDENT("학생"),
-    TEACHER("강사"),
-    ADMIN("관리자");
 
-    private final String role;
+    // It should not start with "ROLE_"
+    STUDENT("STUDENT"),
+    TEACHER("TEACHER"),
+    ADMIN("ADMIN");
 
-    Role(String role){
+    private static final Map<String, Role> ENUM_STRING = new HashMap<>();
+
+    static {
+        for (Role role : values()) {
+            ENUM_STRING.put(role.role, role);
+        }
+    }
+
+    private String role;
+
+    Role(String role) {
         this.role = role;
     }
 
-    public String getRoleStr() {
+    public String toString() {
         return role;
     }
 
-    public static Role stringToEnum(String role) {
-        for(Role val : Role.values())
-            if(val.getRoleStr().equals(role))
-                return val;
-        
-        throw new IllegalArgumentException("알 수 없는 역할");
+    public static Role fromString(String text) {
+        Role role = ENUM_STRING.get(text.toUpperCase());
+        if (role == null) {
+            throw new IllegalArgumentException("No constant with text " + text + " found");
+        }
+        return role;
     }
 }
