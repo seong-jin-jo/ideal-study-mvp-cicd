@@ -14,8 +14,8 @@ const OfficialProfilePage = () => {
     // 컴포넌트 마운트 시 API 호출
     useEffect(() => {
         const fetchProfile = async () => {
-        const data = await ReadOfficialProfile(1); // 예시로 userId 1 전달
-        setProfileContent(data.content); // API 응답에서 content만 상태에 저장
+            const data = await ReadOfficialProfile(1); // 예시로 userId 1 전달
+            setProfileContent(data.content); // API 응답에서 content만 상태에 저장
         };
         
         fetchProfile();

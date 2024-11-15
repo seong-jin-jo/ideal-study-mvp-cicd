@@ -1,8 +1,9 @@
-import React, { useState ,useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import TinyMCEeditor from '../../components/WYSIWYG/TinyMCEeditor';
 import { UpdateOfficialProfile } from '../../services/OfficialProfileService.mjs';
+import Button from '../../components/Button';
 
 const OfficialProfilePageUpdate = () => {
     const location = useLocation(); // useLocation 훅을 사용하여 state에 접근
@@ -35,7 +36,7 @@ const OfficialProfilePageUpdate = () => {
         <div>
         <form onSubmit={handleSubmit}>
           <TinyMCEeditor onChange={handleEditorChange}/>
-          <button type="submit">제출</button>
+          <Button type="submit">제출</Button>
         </form>
       </div>
     );
