@@ -40,6 +40,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    // 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 예정
     @Autowired
     private final JwtUtil jwtUtil;
     @Autowired
@@ -63,6 +64,8 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         providers.add(daoAuthenticationProvider);
 
+        // JwtAuthenticationProvider가 들어갈 자리
+        
         return new ProviderManager(providers);
     }
 
@@ -71,6 +74,7 @@ public class SecurityConfig {
         return new ExceptionHandlerFilter();
     }
 
+    // 추후 Spring Security에서 지원하는 JwtAuthenticationFilter로 대체될 예정
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
@@ -78,7 +82,7 @@ public class SecurityConfig {
         return filter;
     }
 
-    // OAuth2LoginAuthenticationFilter(현재 라이브러리 버전 미지원) 생성 및 설정 필요
+    // OAuth2LoginAuthenticationFilter 생성 및 설정 필요
 
 
     @Bean
@@ -137,6 +141,12 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?success")
         );
 
+        /*
+         Allows adding a Filter before one of the known Filter classes.
+         The known Filter instances are either a Filter listed in HttpSecurityBuilder.addFilter(Filter)
+         or a Filter that has already been added using HttpSecurityBuilder.addFilterAfter(Filter, Class)
+         or HttpSecurityBuilder.addFilterBefore(Filter, Class).
+         */
         http.addFilterBefore(exceptionHandlerFilter(), LogoutFilter.class);
 
         return http.build();
@@ -144,6 +154,7 @@ public class SecurityConfig {
 
     private void setGuestPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
+                // This matcher will use the same rules that Spring MVC uses for matching.
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
@@ -152,6 +163,8 @@ public class SecurityConfig {
 
     private void setUserPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
+                // the roles that the user should have at least one of (i.e. ADMIN, USER, etc).
+                // Each role should not start with ROLE_ since it is automatically prepended already
                 .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.toString(),
                         Role.STUDENT.toString(),
                         Role.TEACHER.toString())

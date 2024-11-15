@@ -111,5 +111,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Sets the status code for this response.
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        // Sends a temporary redirect response to the client using the specified redirect location URL
+        // and clears the buffer.
+        // response.sendRedirect("/auth/login");
     }
 }
