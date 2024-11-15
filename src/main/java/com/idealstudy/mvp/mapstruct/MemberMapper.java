@@ -17,6 +17,7 @@ public interface MemberMapper {
     MemberEntity dtoToEntity(MemberDto dto);
 
     // @MappingTarget: 반환 대상 객체 지정
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     void updateEntityFromDto(MemberDto dto, @MappingTarget MemberEntity entity);
+
 }

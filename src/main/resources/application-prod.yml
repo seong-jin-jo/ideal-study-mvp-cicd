@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://baepo-host:3306/idealstudy_prod
+    username: prod_manager
+    password: prod_manager

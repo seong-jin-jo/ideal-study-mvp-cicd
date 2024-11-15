@@ -20,17 +20,51 @@ export const signUpUser = async (username, password) => {
 /**
  * 회원 조회
  */
-export const readUser = async (username, password) => {
-    const response = await apiClient.get('/api/users/{userId}');
-    return response.data;
+export const readUser = async (userId) => {
+    try {
+
+      // 실제 API 호출
+      const response = await apiClient.get(`/api/users/${userId}`);
+      return response.data;
+
+    } catch (error) {
+
+      console.error('회원조회 API 호출 오류 발생:', error);
+  
+      // 더미 데이터 반환
+      const dummyData = {
+        id: userId,
+        name: userId === 1 ? 'Alice' : 'Unknown',
+        role: userId === 1 ? 'teacher' : 'student'
+      };
+
+      return dummyData;
+    }
   };
 
 /**
  * 회원 목록 조회
  */
-export const readUsers = async (username, password) => {
-    const response = await apiClient.get('/api/users');
-    return response.data;
+export const readUsers = async (pathname) => {
+    try {
+      const response = await apiClient.get('/api/users');
+      return response.data;
+    } catch (error) {
+      console.error('회원목록조회 API 호출 오류 발생:', error);
+  
+      // 경로에 따라 더미 데이터 반환
+      const dummyData = pathname === '/teachers'
+        ? [
+            { id: 1, name: 'Alice', role: 'teacher' },
+            { id: 3, name: 'Charlie', role: 'teacher' }
+          ]
+        : [
+            { id: 2, name: 'Bob', role: 'student' },
+            { id: 4, name: 'David', role: 'student' }
+          ];
+  
+      return dummyData;
+    }
   };
 
 /**

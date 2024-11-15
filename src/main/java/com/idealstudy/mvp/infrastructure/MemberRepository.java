@@ -10,11 +10,13 @@ public interface MemberRepository {
 
     void create(MemberDto dto);
 
-    MemberDto findById(Long id);
+    MemberDto findById(String id);
+
+    MemberDto findByEmail(String email);
 
     PageResultDto<MemberDto, MemberEntity> findMembers(PageRequestDto requestDto);
 
     MemberDto update(MemberDto dto);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 }

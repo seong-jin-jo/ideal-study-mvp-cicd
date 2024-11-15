@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.21.138.60:3306/idealstudy
+#    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
+    username: manager
+    password: manager
