@@ -3,13 +3,14 @@ spring:
     name: mvp
 
   profiles:
-    active: dev  # 기본 프로파일을 'dev'로 설정
-
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://172.21.138.60:3306/idealstudy
-#    username: manager
-#    password: manager
+    group:
+      development:
+        - "dev"
+        - "private"
+      deployment:
+        - "prod"
+        - "private"
+    active: development
 
   jpa:
     hibernate:

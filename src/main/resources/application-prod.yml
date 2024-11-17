@@ -4,3 +4,7 @@ spring:
     url: jdbc:mysql://baepo-host:3306/idealstudy_prod
     username: prod_manager
     password: prod_manager
+
+server:
+  backend-domain-url: http://배포ip:8080
+  dev: false

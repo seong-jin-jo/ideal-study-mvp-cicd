@@ -5,3 +5,7 @@ spring:
 #    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
     username: manager
     password: manager
+
+server:
+  backend-domain-url: http://localhost:8080
+  dev: true
