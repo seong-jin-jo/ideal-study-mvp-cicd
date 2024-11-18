@@ -3,10 +3,10 @@ spring:
   datasource:
     url: jdbc:mysql://172.21.138.60:3306/idealstudy
     #    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
-  # redis 설정
-  data:
-    redis:
-      host: 172.21.138.60
+
+# redis 설정(커스텀)
+redis:
+  hostname: 172.21.138.60
 
 server:
   backend-domain-url: http://localhost:8080

@@ -2,6 +2,8 @@ package com.idealstudy.mvp.presentation.controller;
 
 import com.idealstudy.mvp.application.EmailService;
 import com.idealstudy.mvp.application.MemberService;
+import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.SignUpUserRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -63,24 +65,53 @@ public class MemberController {
     }
 
     @GetMapping("/api/users/{userId}")
-    public void findMember(@PathVariable String userId) {
+    public ResponseEntity<MemberDto> findMember(@PathVariable String userId) {
+        MemberDto dto = memberService.findById(userId);
+        if(dto != null)
+            return new ResponseEntity<MemberDto>(dto, HttpStatusCode.valueOf(200));
+        if(dto == null)
+            return new ResponseEntity<MemberDto>(dto, HttpStatusCode.valueOf(404));
 
+        return null;
     }
 
     // page number는 어떻게 표현할 생각?
     @GetMapping("/api/users")
-    public void findMemberList() {
+    public ResponseEntity<MemberPageResultDto> findMemberList() {
 
+        MemberPageResultDto dto = memberService.findMembers();
+        if(dto != null)
+            return new ResponseEntity<MemberPageResultDto>(dto, HttpStatusCode.valueOf(200));
+        if(dto == null)
+            return new ResponseEntity<MemberPageResultDto>(dto, HttpStatusCode.valueOf(404));
+
+        return null;
     }
 
     @DeleteMapping("/api/users/{userId}")
-    public void deleteMember(@PathVariable String userId) {
+    public ResponseEntity<String> deleteMember(@PathVariable String userId) {
 
+        boolean result = memberService.deleteMember(userId);
+
+        if( !result)
+            return new ResponseEntity<String>("회원탈퇴에 실패했습니다.", HttpStatusCode.valueOf(500));
+        if(result)
+            return new ResponseEntity<String>("성공적으로 회원탈퇴 되었습니다.", HttpStatusCode.valueOf(200));
+
+        return null;
     }
 
     @PatchMapping("/api/users/{userId}")
-    public void updateMember(@PathVariable String userId) {
+    public ResponseEntity<MemberDto> updateMember(@PathVariable String userId, @RequestBody MemberDto dto) {
+        dto.setUserId(userId);
+        MemberDto updateDto = memberService.updateMember(dto);
 
+        if(updateDto != null)
+            return new ResponseEntity<MemberDto>(updateDto, HttpStatusCode.valueOf(200));
+        if(updateDto == null)
+            return new ResponseEntity<MemberDto>(updateDto, HttpStatusCode.valueOf(404));
+
+        return null;
     }
 
     private ResponseEntity<String> sendEmail(String email) {

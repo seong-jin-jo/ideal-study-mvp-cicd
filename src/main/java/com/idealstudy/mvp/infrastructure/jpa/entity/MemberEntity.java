@@ -27,7 +27,7 @@ public class MemberEntity extends BaseEntity{
     @Column
     private String name;
 
-    @Column(length = 15, nullable = false)
+    @Column(length = 15, nullable = true)
     private String phoneAddress;
 
     @Column(length = 100, nullable = false, unique = true)
@@ -56,4 +56,10 @@ public class MemberEntity extends BaseEntity{
      */
 
     private boolean fromSocial;
+
+    @Column(columnDefinition = "TINYINT default 1")
+    private boolean isFirst;
+
+    @Column(columnDefinition = "TINYINT default 0")
+    private boolean isDeleted;
 }

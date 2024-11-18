@@ -1,17 +1,14 @@
 package com.idealstudy.mvp.application;
 
+import com.idealstudy.mvp.application.dto.PageRequestDto;
+import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.RedisRepository;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -31,7 +28,7 @@ public class MemberService {
         if( savedToken == null || !savedToken.equals(token))
             throw new IllegalArgumentException("유효한 토큰이 아님");
 
-        String password = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString().split("-")[0];
         memberRepository.create(MemberDto.builder()
                 .userId(email)
                 .password(password)
@@ -39,11 +36,34 @@ public class MemberService {
                 .fromSocial(false)
                 .role(role)
                 .build());
+        redisRepository.deleteToken(email);
 
         return password;
     }
 
+    public MemberDto findById(String userId) {
+        return memberRepository.findById(userId);
+    }
+
     public MemberDto findByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public MemberPageResultDto findMembers() {
+
+        PageRequestDto requestDto = new PageRequestDto(1, 9999);
+        return memberRepository.findMembers(requestDto);
+    }
+
+    public MemberDto updateMember(MemberDto dto) {
+        return memberRepository.update(dto);
+    }
+
+    public boolean deleteMember(String userId) {
+        memberRepository.deleteById(userId);
+        if(memberRepository.findById(userId) == null)
+            return false;
+
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package com.idealstudy.mvp.infrastructure.impl;
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.MemberError;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
@@ -58,7 +59,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public PageResultDto<MemberDto, MemberEntity> findMembers(PageRequestDto requestDto) {
+    public MemberPageResultDto findMembers(PageRequestDto requestDto) {
 
         Pageable pageable = requestDto.getPageable(Sort.by("regDate").ascending());
 
@@ -66,7 +67,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         Function<MemberEntity, MemberDto> fn = (entity -> memberMapper.entityToDto(entity));
 
-        return new PageResultDto<>(result, fn);
+        return memberMapper.toApplicationPageResult(new PageResultDto<>(result, fn));
     }
 
     @Override
@@ -83,8 +84,19 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void deleteById(String id) {
+    public boolean deleteById(String id) {
 
-        memberJpaRepository.deleteById(id);
+        MemberDto dto = null;
+        try {
+            dto = memberMapper.entityToDto(memberJpaRepository.findById(id).orElseThrow());
+            dto.setDeleted(true);
+            memberJpaRepository.save(memberMapper.dtoToEntity(dto));
+        } catch (Exception e) {
+            log.info(e + " : " + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
+
 }

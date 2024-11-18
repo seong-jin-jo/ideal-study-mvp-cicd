@@ -1,6 +1,8 @@
 package com.idealstudy.mvp.mapstruct;
 
+import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -20,4 +22,5 @@ public interface MemberMapper {
     @Mapping(target = "userId", ignore = true)
     void updateEntityFromDto(MemberDto dto, @MappingTarget MemberEntity entity);
 
+    MemberPageResultDto toApplicationPageResult(PageResultDto<MemberDto, MemberEntity> pageResultDto);
 }

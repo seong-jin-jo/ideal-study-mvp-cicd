@@ -40,8 +40,14 @@ public class EmailService {
 
     public boolean isEmailDuplication(String userEmail, MemberService memberService) {
         String token = redisRepository.getToken(userEmail);
-        MemberDto memberDto = memberService.findByEmail(userEmail);
-        return token != null || memberDto != null;
+        try {
+            MemberDto dto = memberService.findByEmail(userEmail);
+            if(dto != null)
+                return true;
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return token != null;
     }
 
     private void sendEmail(String userEmail, String token) throws Exception{
@@ -77,7 +83,7 @@ public class EmailService {
     private String getMailContents(String email, String token) {
 
         String authenticationUrl = backendDomainUrl + "/api/users/email-authentication"
-                + "?token=" + token + "?email=" + email;
+                + "?token=" + token + "&email=" + email;
 
         return  "<h3>이메일 인증</h3>" +
                 "<img src='cid:"+logoContentId+"'>" +

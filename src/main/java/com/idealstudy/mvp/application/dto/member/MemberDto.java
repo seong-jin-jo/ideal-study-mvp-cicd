@@ -26,4 +26,8 @@ public class MemberDto {
     private Role role;
 
     private boolean fromSocial;
+
+    private boolean isFirst;
+
+    private boolean isDeleted;
 }
