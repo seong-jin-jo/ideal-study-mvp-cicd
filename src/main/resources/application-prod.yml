@@ -1,9 +1,12 @@
 spring:
+  # mysql 설정
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://baepo-host:3306/idealstudy_prod
-    username: prod_manager
-    password: prod_manager
+    url: jdbc:mysql://배포ip:3306/idealstudy
+    #    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
+  # redis 설정
+  data:
+    redis:
+      host: 배포ip
 
 server:
   backend-domain-url: http://배포ip:8080

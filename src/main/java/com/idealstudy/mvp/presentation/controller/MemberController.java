@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.presentation.controller;
 
+import com.idealstudy.mvp.application.EmailService;
 import com.idealstudy.mvp.application.MemberService;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.SignUpUserRequestDto;
@@ -19,6 +20,9 @@ public class MemberController {
 
     @Autowired
     private final MemberService memberService;
+
+    @Autowired
+    private final EmailService emailService;
 
     /*
      1. 로컬 파트(@ 앞 부분)는 영문자, 숫자, 그리고 일부 특수 문자(_+&*-)를 허용
@@ -85,11 +89,11 @@ public class MemberController {
                 return new ResponseEntity<String>("잘못된 이메일 양식입니다.", HttpStatusCode.valueOf(400));
 
             log.info("입력받은 이메일: "+ email);
-            if(memberService.isEmailDuplication(email)) {
+            if(emailService.isEmailDuplication(email, memberService)) {
                 return new ResponseEntity<String>("현재 등록 중이거나 이미 등록된 이메일입니다.",
                         HttpStatusCode.valueOf(400));
             }
-            memberService.sendSignUpEmail(email);
+            emailService.sendSignUpEmail(email);
         } catch (Exception e) {
             log.error(e.toString() + ":: " + e.getMessage());
             return new ResponseEntity<String>("failed to send email", HttpStatusCode.valueOf(500));

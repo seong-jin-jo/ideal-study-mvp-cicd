@@ -1,9 +1,9 @@
 package com.idealstudy.mvp.application;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.RedisRepository;
-import com.idealstudy.mvp.infrastructure.dto.EmailTokenDto;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,67 +26,24 @@ public class MemberService {
     @Autowired
     private final RedisRepository redisRepository;
 
-    @Autowired
-    private final JavaMailSender mailSender;
+    public String addMember(String email, String token, Role role) throws IllegalArgumentException {
+        String savedToken = redisRepository.getToken(email);
+        if( savedToken == null || !savedToken.equals(token))
+            throw new IllegalArgumentException("유효한 토큰이 아님");
 
-    @Value("${server.backend-domain-url}")
-    private String backendDomainUrl;
+        String password = UUID.randomUUID().toString();
+        memberRepository.create(MemberDto.builder()
+                .userId(email)
+                .password(password)
+                .email(email)
+                .fromSocial(false)
+                .role(role)
+                .build());
 
-    // 이메일 이미지 첨부용(yml 등으로 빼도 됨)
-    private final String logoContentId = "logo";
-
-    public void sendSignUpEmail(String userEmail) throws Exception {
-
-        String token = UUID.randomUUID().toString();
-        redisRepository.addToken(userEmail, token);
-
-        sendEmail(userEmail, token);
+        return password;
     }
 
-    public boolean isEmailDuplication(String userEmail) {
-        EmailTokenDto emailTokenDto = redisRepository.getToken(userEmail);
-        MemberDto memberDto = memberRepository.findByEmail(userEmail);
-        return emailTokenDto != null || memberDto != null;
-    }
-
-    private void sendEmail(String userEmail, String token) throws Exception{
-        // Alternative way to prepare MimeMessage instances,
-        // instead of createMimeMessage() and send(MimeMessage) calls.
-        mailSender.send(new MimeMessagePreparator() {
-            // Prepare the given new MimeMessage instance.
-            @Override
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-                message.setFrom("noreply@idealstudy.com");
-                message.setTo(userEmail);
-                // Set the subject of the message, using the correct encoding.
-                message.setSubject("회원가입 인증 메일");
-                /*
-                 NOTE: Invoke addInline(java.lang.String, jakarta.activation.DataSource) after setText;
-                 else, mail readers might not be able to resolve inline references correctly.
-                 Will end up as "Content-ID" header in the body part, surrounded by angle brackets:
-                 for example, "myId" → "<myId>". Can be referenced in HTML source via src="cid:myId" expressions.
-                */
-                message.setText(getMailContents(token), true);
-                /*
-                 Add an inline element to the MimeMessage, taking the content from a jakarta.activation.DataSource.
-                 Note that the InputStream returned by the DataSource implementation needs to be a fresh one
-                 on each call, as JavaMail will invoke getInputStream() multiple times.
-                 */
-                message.addInline(logoContentId, new ClassPathResource("static/img/logo.webp"));
-            }
-        });
-    }
-
-    private String getMailContents(String token) {
-
-        String authenticationUrl = backendDomainUrl + "/api/users/email-authentication"
-                + "?token=" + token;
-
-        return  "<h3>이메일 인증</h3>" +
-                "<img src='cid:"+logoContentId+"'>" +
-                "<p>이상한 과외에 오신 것을 환영합니다.</p>" +
-                "<a href='"+authenticationUrl+"'>Click here to verify your email</a>";
+    public MemberDto findByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }
