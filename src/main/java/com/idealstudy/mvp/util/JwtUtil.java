@@ -3,6 +3,7 @@ package com.idealstudy.mvp.util;
 import com.idealstudy.mvp.enums.member.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.MacAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,10 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.SecretKey;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -26,35 +29,37 @@ public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
     // 사용자 권한 값의 KEY
-    public static final String AUTHORIZATION_KEY = "auth";
+    public static final String AUTHORIZATION_KEY = "role";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
-    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+    private final long TOKEN_TIME = 60 * 60 * 1000L; // 1시간
+    private final MacAlgorithm alg = Jwts.SIG.HS256;
 
-    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
-    private String secretKey;
-    private Key key;
+    private SecretKey key;
 
     @PostConstruct // 한 번만 받아와도 되는 값을 사용할때마다 요청을 새로하지 않기 위해
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
+        key = alg.key().build();
     }
 
     // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
     public String createToken(String username, Role role) {
         Date date = new Date();
-
-        return BEARER_PREFIX +
-                Jwts.builder()
-                        .setSubject(username) // 사용자 식별자값(ID)
-                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                        .setIssuedAt(date) // 발급일
-                        .signWith(key) // 암호화 알고리즘
-                        .compact();
+        try{
+            log.info("JWT 토큰 생성 시도");
+            return BEARER_PREFIX +
+                    Jwts.builder()
+                            .subject(username) // 사용자 식별자값(ID)
+                            .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                            .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                            .issuedAt(date) // 발급일
+                            .signWith(key, alg) // 암호화 알고리즘
+                            .compact();
+        } catch (Exception e) {
+            log.error(e + " : " + e.getMessage());
+            throw e;
+        }
     }
 
     // 2. jWT를 쿠키에 저장
@@ -84,7 +89,7 @@ public class JwtUtil {
     // 4. JWT 검증
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -100,7 +105,7 @@ public class JwtUtil {
 
     // 5. JWT에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token).getBody();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     // HttpServletRequest 에서 Cookie Value : JWT 가져오기

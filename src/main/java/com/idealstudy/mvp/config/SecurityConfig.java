@@ -3,6 +3,7 @@ package com.idealstudy.mvp.config;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.error.ExceptionHandlerFilter;
 import com.idealstudy.mvp.security.filter.JwtAuthenticationFilter;
+import com.idealstudy.mvp.security.filter.LoginAuthenticationFilter;
 import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -33,6 +34,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -79,11 +81,11 @@ public class SecurityConfig {
         return new ExceptionHandlerFilter();
     }
 
-    // 추후 Spring Security에서 지원하는 JwtAuthenticationFilter로 대체될 예정
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
+    public LoginAuthenticationFilter loginAuthenticationFilter() {
+        LoginAuthenticationFilter filter = new LoginAuthenticationFilter(authenticationManager(
+                userDetailsService, passwordEncoder()), jwtUtil);
+
         return filter;
     }
 
@@ -93,16 +95,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 
+        // Enables CSRF protection. This is activated by default when using EnableWebSecurity.
+        // CSRF token 사용 시 POST 요청만 가능.
+        http.csrf(AbstractHttpConfigurer::disable);
+
         // Configures HTTP Basic authentication.
-        http.httpBasic(Customizer.withDefaults());
+        // Disable Form type login.
+        http.httpBasic(Customizer.withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable);
 
         // configuring of Session Management: stateless
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Enables CSRF protection. This is activated by default when using EnableWebSecurity.
-        // CSRF token 사용 시 POST 요청만 가능.
-        http.csrf(AbstractHttpConfigurer::disable);
 
         if(isDev.equals("true")) {
             http.headers(headers -> headers
@@ -161,7 +165,7 @@ public class SecurityConfig {
          or HttpSecurityBuilder.addFilterBefore(Filter, Class).
          */
         http.addFilterBefore(exceptionHandlerFilter(), LogoutFilter.class);
-
+        http.addFilterBefore(loginAuthenticationFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
 

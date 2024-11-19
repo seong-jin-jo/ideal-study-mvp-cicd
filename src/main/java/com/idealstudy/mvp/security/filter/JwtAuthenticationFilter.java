@@ -1,7 +1,6 @@
 package com.idealstudy.mvp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.security.dto.UserLoginRequestDto;
 import com.idealstudy.mvp.security.dto.UserLoginResponseDto;
@@ -27,6 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+// frontend server와 BASIC 방식으로 통신해서 불필요해짐.
+@Deprecated
 @RequiredArgsConstructor
 @Slf4j(topic = "JwtAuthenticationFilter")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -47,7 +48,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("attempt authentication");
 
         try{
-            log.info("request.getInputStream() = " + request.getInputStream());
             UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
                     UserLoginRequestDto.class);
 
