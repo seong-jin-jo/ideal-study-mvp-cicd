@@ -1,4 +1,7 @@
 header {
+    position: sticky;
+    top: 0;
+
     padding: 15px 30px;
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -6,6 +9,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index : 10;
 }
 
 header h1 {
@@ -41,7 +45,7 @@ nav {
 }
 
 .nav-left a:hover {
-    background-color: #e0e0e0;
+    background-color: #53a9fa;
     color: #333;
 }
 

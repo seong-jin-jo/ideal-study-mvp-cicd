@@ -1,10 +1,20 @@
-/* 모든 페이지 공통속성 */
+/* 사이드바 + 페이지 */
 .page-common {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  /* background-color: #f4f4f4; 예시로 배경색 추가 */
-  /* min-height: calc(100vh - 120px); Header와 Footer를 제외한 높이로 설정 */
+  display: flex; /* 사이드바와 페이지 콘텐츠를 가로로 배치 */
+  margin-left : 20px; /* 화면 왼쪽에서 여백 추가 */
+  margin-top: 20px; /* 헤더 높이에서 여백 추가 */
+  margin-bottom: 20px; /* 푸터 높이에서 여백 추가 */
+  padding: 0px;
+  height: calc(100vh - 60px); /* 헤더 높이를 제외한 높이만큼 */
+  overflow: hidden; /* 페이지 콘텐츠가 너무 길어질 경우 스크롤 방지 */
+}
+
+/* 페이지 */
+.page-content {
+  flex-grow: 1;
+  padding-left: 20px; /* 콘텐츠와 사이드바 간 여백 */
+  overflow-y: auto; /* 페이지 콘텐츠가 길어지면 스크롤 가능 */
+  background-color: #fff;
 }
 
 .App {
