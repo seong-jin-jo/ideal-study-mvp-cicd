@@ -1,7 +1,6 @@
-package com.idealstudy.mvp.application;
+package com.idealstudy.mvp.application.service;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.Role;
@@ -9,6 +8,7 @@ import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,6 +23,9 @@ public class MemberService {
     @Autowired
     private final RedisRepository redisRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public String addMember(String email, String token, Role role) throws IllegalArgumentException {
         String savedToken = redisRepository.getToken(email);
         if( savedToken == null || !savedToken.equals(token))
@@ -31,9 +34,9 @@ public class MemberService {
         String password = UUID.randomUUID().toString().split("-")[0];
         memberRepository.create(MemberDto.builder()
                 .userId(email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .email(email)
-                .fromSocial(false)
+                .fromSocial(0)
                 .role(role)
                 .build());
         redisRepository.deleteToken(email);

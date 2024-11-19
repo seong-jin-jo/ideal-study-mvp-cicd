@@ -1,6 +1,7 @@
 package com.idealstudy.mvp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.security.dto.UserLoginRequestDto;
 import com.idealstudy.mvp.security.dto.UserLoginResponseDto;
@@ -10,10 +11,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,14 +27,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+@RequiredArgsConstructor
 @Slf4j(topic = "JwtAuthenticationFilter")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    @Autowired
     private final JwtUtil jwtUtil;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
 
     @PostConstruct
     void setup() {
@@ -46,6 +47,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("attempt authentication");
 
         try{
+            log.info("request.getInputStream() = " + request.getInputStream());
             UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
                     UserLoginRequestDto.class);
 
@@ -61,7 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     )
             );
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error(e + " : " + e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -82,6 +84,28 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                         .orElseThrow(() -> new IllegalStateException("No authority found"))
         );
 
+        issueJwtToken(username, role, response);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException {
+
+        log.info("인증 실패.");
+
+        // Sets the status code for this response.
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        throw new AccessDeniedException("인증에 실패하였습니다.");
+
+        // Sends a temporary redirect response to the client using the specified redirect location URL
+        // and clears the buffer.
+        // response.sendRedirect("/auth/login");
+    }
+
+    private void issueJwtToken(String username, Role role, HttpServletResponse response) throws IOException {
+
+        // 현재 sub 값이 email이 되는 구조임. userId를 넣고 싶으면 DB에서 값을 꺼내와야 하는데, Filter에서는 DB에 접근할 방법이 없음.
         String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
 
@@ -102,17 +126,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Flushes the stream.
         response.getWriter().flush();
-    }
-
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
-        log.info("인증 실패.");
-
-        // Sets the status code for this response.
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        // Sends a temporary redirect response to the client using the specified redirect location URL
-        // and clears the buffer.
-        // response.sendRedirect("/auth/login");
     }
 }

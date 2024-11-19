@@ -55,11 +55,12 @@ public class MemberEntity extends BaseEntity{
     }
      */
 
-    private boolean fromSocial;
+    @Column(columnDefinition = "TINYINT")
+    private int fromSocial;
 
     @Column(columnDefinition = "TINYINT default 1")
-    private boolean isFirst;
+    private int init;
 
     @Column(columnDefinition = "TINYINT default 0")
-    private boolean isDeleted;
+    private int deleted;
 }

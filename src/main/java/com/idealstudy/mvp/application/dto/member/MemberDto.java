@@ -25,9 +25,29 @@ public class MemberDto {
 
     private Role role;
 
-    private boolean fromSocial;
+    private int fromSocial;
 
-    private boolean isFirst;
+    private int init;
 
-    private boolean isDeleted;
+    private int deleted;
+
+    public boolean fromSocial() {
+        return fromSocial == 1;
+    }
+
+    public boolean isFirst() {
+        return init == 1;
+    }
+
+    public boolean isDeleted() {
+        return deleted == 1;
+    }
+
+    public void setFirst(boolean b) {
+        init = b ? 1 : 0;
+    }
+
+    public void setDeleted(boolean b) {
+        deleted = b ? 1 : 0;
+    }
 }

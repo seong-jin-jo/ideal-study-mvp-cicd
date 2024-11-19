@@ -1,7 +1,7 @@
 package com.idealstudy.mvp.presentation.controller;
 
-import com.idealstudy.mvp.application.EmailService;
-import com.idealstudy.mvp.application.MemberService;
+import com.idealstudy.mvp.application.service.EmailService;
+import com.idealstudy.mvp.application.service.MemberService;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.Role;

@@ -31,10 +31,8 @@ public class MemberRepositoryTest {
                     .email("tester"+i+"@gmail.com")
                     .sex(Gender.MALE)
                     .referralId(UUID.randomUUID().toString())
-                    .fromSocial(false)
+                    .fromSocial(0)
                     .build();
-
-
 
             memberRepository.create(dto);
         });

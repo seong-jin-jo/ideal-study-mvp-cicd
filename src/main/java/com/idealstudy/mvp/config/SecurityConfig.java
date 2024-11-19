@@ -168,6 +168,7 @@ public class SecurityConfig {
     private void setGuestPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // This matcher will use the same rules that Spring MVC uses for matching.
+                .requestMatchers(HttpMethod.GET, "/").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()

@@ -12,6 +12,7 @@ import com.idealstudy.mvp.mapstruct.MemberMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -27,10 +28,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Autowired
     private MemberMapper memberMapper;
 
-
     @Override
     public void create(MemberDto dto) {
 
+        dto.setFirst(true);
         MemberEntity entity = memberMapper.dtoToEntity(dto);
 
         memberJpaRepository.save(entity);
