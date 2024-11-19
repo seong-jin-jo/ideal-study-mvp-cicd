@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +47,9 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     @Autowired
     private final UserDetailsService userDetailsService;
+
+    @Value("${server.dev}")
+    private String isDev;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -99,6 +104,13 @@ public class SecurityConfig {
         // CSRF token 사용 시 POST 요청만 가능.
         http.csrf(AbstractHttpConfigurer::disable);
 
+        if(isDev.equals("true")) {
+            http.headers(headers -> headers
+                    // Disables Strict Transport Security
+                    .httpStrictTransportSecurity(HeadersConfigurer.HstsConfig::disable)
+            );
+        }
+
         // CORS 활성화
         http.cors(customizer -> customizer.configurationSource( // HttpServletRequest를 기반으로 CORS 설정을 반환
                 new CorsConfigurationSource() { // CORS 설정을 직접 정의하는 익명 클래스
@@ -122,6 +134,7 @@ public class SecurityConfig {
                     // 정적 파일 허용
                     // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
         );
         setGuestPermission(http);
         setUserPermission(http);
@@ -155,9 +168,11 @@ public class SecurityConfig {
     private void setGuestPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // This matcher will use the same rules that Spring MVC uses for matching.
+                .requestMatchers(HttpMethod.GET, "/").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/email-authentication").permitAll()
         );
     }
 
