@@ -101,7 +101,13 @@ public class MemberController {
         return null;
     }
 
-    @PatchMapping("/api/users/{userId}")
+    @GetMapping("/api/users/update/{userId}")
+    public ResponseEntity<String> updateMemberView() {
+
+        return new ResponseEntity<>("회원 정보 조회 페이지", HttpStatusCode.valueOf(200));
+    }
+
+    @PatchMapping("/api/users/update/{userId}")
     public ResponseEntity<MemberDto> updateMember(@PathVariable String userId, @RequestBody MemberDto dto) {
         dto.setUserId(userId);
         MemberDto updateDto = memberService.updateMember(dto);

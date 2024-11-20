@@ -1,7 +1,8 @@
 package com.idealstudy.mvp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealstudy.mvp.enums.member.Role;
+import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.security.dto.UserDetailsImpl;
 import com.idealstudy.mvp.security.dto.UserLoginRequestDto;
 import com.idealstudy.mvp.security.dto.UserLoginResponseDto;
 import com.idealstudy.mvp.util.JwtUtil;
@@ -19,18 +20,14 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// frontend server와 BASIC 방식으로 통신해서 불필요해짐.
-@Deprecated
 @RequiredArgsConstructor
-@Slf4j(topic = "JwtAuthenticationFilter")
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@Slf4j
+public class JsonLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
     private final JwtUtil jwtUtil;
@@ -42,16 +39,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         log.info("attempt authentication");
-
-        try{
+        log.info("form content type : " + request.getContentType());
+        try {
             UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
                     UserLoginRequestDto.class);
+            log.info(requestDto.toString());
 
             return getAuthenticationManager().authenticate(
+
                     /*
                      This constructor can be safely used by any code that wishes to create
                      a UsernamePasswordAuthenticationToken, as the AbstractAuthenticationToken.isAuthenticated()
@@ -59,37 +57,31 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                      */
                     new UsernamePasswordAuthenticationToken(
                             requestDto.username(),
-                            requestDto.password()
+                            requestDto.password(),
+                            null
                     )
             );
+            // TODO : 필터 레벨에서 동일한 양식의 에러 응답을 하려면 에러 처리 필터를 만든 후, 필터 순서를 가장 앞에 둔 다음,
+            //  직접 ObjectMapper로 json으로 직렬화 하시면 됩니다..!
         } catch (IOException e) {
-            log.error(e + " : " + e.getMessage());
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-        
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+
         log.info("인증 성공. 인가 작업 수행");
 
         // Many of the authentication providers will create a UserDetails object as the principal.
-        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        String username = userDetails.getUsername();
-        Role role = Role.fromString(
-                userDetails.getAuthorities().stream().findFirst()
-                        .map(GrantedAuthority::getAuthority)
-                        .orElseThrow(() -> new IllegalStateException("No authority found"))
-        );
-
-        issueJwtToken(username, role, response);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
+        MemberDto dto = userDetails.getMemberDto();
+        issueJwtToken(dto, response);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
         log.info("인증 실패.");
 
@@ -97,19 +89,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         throw new AccessDeniedException("인증에 실패하였습니다.");
-
-        // Sends a temporary redirect response to the client using the specified redirect location URL
-        // and clears the buffer.
-        // response.sendRedirect("/auth/login");
     }
 
-    private void issueJwtToken(String username, Role role, HttpServletResponse response) throws IOException {
+    private void issueJwtToken(MemberDto dto, HttpServletResponse response) throws IOException {
 
-        // 현재 sub 값이 email이 되는 구조임. userId를 넣고 싶으면 DB에서 값을 꺼내와야 하는데, Filter에서는 DB에 접근할 방법이 없음.
-        String token = jwtUtil.createToken(username, role);
-        jwtUtil.addJwtToCookie(token, response);
+        String token = jwtUtil.createToken(dto);
 
-        UserLoginResponseDto responseDto = UserLoginResponseDto.create(username, token);
+        UserLoginResponseDto responseDto = UserLoginResponseDto.create(dto.getUserId(), token);
         // Sets the content type of the response being sent to the client, if the response has not been committed yet.
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         /*

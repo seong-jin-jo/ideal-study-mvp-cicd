@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.util;
 
+import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -62,6 +63,24 @@ public class JwtUtil {
         }
     }
 
+    public String createToken(MemberDto dto) {
+        Date date = new Date();
+        try{
+            log.info("JWT 토큰 생성 시도");
+            return BEARER_PREFIX +
+                    Jwts.builder()
+                            .subject(dto.getUserId()) // 사용자 식별자값(ID)
+                            .claim(AUTHORIZATION_KEY, dto.getRole()) // 사용자 권한
+                            .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                            .issuedAt(date) // 발급일
+                            .signWith(key, alg) // 암호화 알고리즘
+                            .compact();
+        } catch (Exception e) {
+            log.error(e + " : " + e.getMessage());
+            throw e;
+        }
+    }
+
     // 2. jWT를 쿠키에 저장
     public void addJwtToCookie(String token, HttpServletResponse res) {
         token = URLEncoder.encode(token, StandardCharsets.UTF_8)
@@ -77,13 +96,11 @@ public class JwtUtil {
         res.addCookie(cookie);
     }
 
-    // 3. Cookie 의 Value에 있던 JWT 토큰을 Substring(자른다)
-    public String substringToken(String tokenValue) {
-        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
-        }
-        log.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
+    public void addJwtToHeader(String token, HttpServletResponse res) {
+        token = URLEncoder.encode(token, StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+        res.addHeader(AUTHORIZATION_HEADER,BEARER_PREFIX + token);
     }
 
     // 4. JWT 검증
@@ -105,6 +122,7 @@ public class JwtUtil {
 
     // 5. JWT에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token) {
+        token = substringToken(token);
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
@@ -123,4 +141,14 @@ public class JwtUtil {
         }
         return null;
     }
+
+    // 3. Cookie 의 Value에 있던 JWT 토큰을 Substring(자른다)
+    private String substringToken(String tokenValue) {
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            return tokenValue.substring(7);
+        }
+        log.error("Not Found Token");
+        throw new NullPointerException("Not Found Token");
+    }
+
 }

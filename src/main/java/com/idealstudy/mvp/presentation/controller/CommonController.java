@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class CommonController {
 
     @Autowired
@@ -40,11 +42,24 @@ public class CommonController {
              Calling this method sets the status code to SC_FOUND 302 (Found).
              This method can accept relative URLs.
              */
-            response.sendRedirect("/api/users/"+dto.getUserId());
+            response.sendRedirect("/api/users/update/"+dto.getUserId());
             return new ResponseEntity<>("최초 로그인입니다.", HttpStatusCode.valueOf(302));
         }
 
         return new ResponseEntity<>(HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/check-first-login")
+    public ResponseEntity<String> checkFirst() {
+
+        // JwtAuthenticationProvider로부터 HttpServletRequest에 token decode 정보(즉, MemberDto 객체)를 심어둬야 한다.
+        String id = "";
+
+        boolean isFirst = memberService.findById(id).isFirst();
+        if(isFirst)
+            return new ResponseEntity<String>("true", HttpStatusCode.valueOf(200));
+        else
+            return new ResponseEntity<String>("false", HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/favicon.ico")

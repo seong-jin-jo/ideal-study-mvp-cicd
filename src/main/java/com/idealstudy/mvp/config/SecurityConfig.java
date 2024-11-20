@@ -2,8 +2,9 @@ package com.idealstudy.mvp.config;
 
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.error.ExceptionHandlerFilter;
-import com.idealstudy.mvp.security.filter.JwtAuthenticationFilter;
-import com.idealstudy.mvp.security.filter.LoginAuthenticationFilter;
+import com.idealstudy.mvp.security.filter.FormLoginAuthenticationFilter;
+import com.idealstudy.mvp.security.filter.BasicLoginAuthenticationFilter;
+import com.idealstudy.mvp.security.filter.JsonLoginAuthenticationFilter;
 import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,7 +24,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -33,8 +33,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -71,7 +71,7 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         providers.add(daoAuthenticationProvider);
 
-        // JwtAuthenticationProvider가 들어갈 자리
+        // JwtAuthenticationProvider가 들어갈 자리(JWT token 처리기)
         
         return new ProviderManager(providers);
     }
@@ -82,10 +82,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public LoginAuthenticationFilter loginAuthenticationFilter() {
-        LoginAuthenticationFilter filter = new LoginAuthenticationFilter(authenticationManager(
+    public JsonLoginAuthenticationFilter jsonLoginAuthenticationFilter() {
+        JsonLoginAuthenticationFilter filter = new JsonLoginAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
+        return filter;
+    }
+
+    // @Bean
+    public BasicLoginAuthenticationFilter loginAuthenticationFilter() {
+        BasicLoginAuthenticationFilter filter = new BasicLoginAuthenticationFilter(authenticationManager(
                 userDetailsService, passwordEncoder()), jwtUtil);
 
+        return filter;
+    }
+
+    // @Bean
+    public FormLoginAuthenticationFilter formLoginAuthenticationFilter() {
+        FormLoginAuthenticationFilter filter = new FormLoginAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
         return filter;
     }
 
@@ -99,10 +113,10 @@ public class SecurityConfig {
         // CSRF token 사용 시 POST 요청만 가능.
         http.csrf(AbstractHttpConfigurer::disable);
 
-        // Configures HTTP Basic authentication.
+        // Disable HTTP Basic authentication.
         // Disable Form type login.
-        http.httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable);
+        http.httpBasic(AbstractHttpConfigurer::disable)
+               .formLogin(AbstractHttpConfigurer::disable);
 
         // configuring of Session Management: stateless
         http.sessionManagement(session -> session
@@ -139,6 +153,7 @@ public class SecurityConfig {
                     // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                     .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
+                    .requestMatchers("/error").permitAll()
         );
         setGuestPermission(http);
         setUserPermission(http);
@@ -165,7 +180,9 @@ public class SecurityConfig {
          or HttpSecurityBuilder.addFilterBefore(Filter, Class).
          */
         http.addFilterBefore(exceptionHandlerFilter(), LogoutFilter.class);
-        http.addFilterBefore(loginAuthenticationFilter(), BasicAuthenticationFilter.class);
+        // http.addFilterBefore(loginAuthenticationFilter(), BasicAuthenticationFilter.class);
+        // http.addFilterBefore(formLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jsonLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -177,6 +194,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/email-authentication").permitAll()
+                .requestMatchers(HttpMethod.GET, "/auth/loginView.html").permitAll()
         );
     }
 
