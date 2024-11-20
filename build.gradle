@@ -35,7 +35,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// lombok과 mapstruct를 같이 쓰는 경우
-	annotationProcessor "org.projectlombok:lombok-mapstruct-binding"
+//	annotationProcessor "org.projectlombok:lombok-mapstruct-binding"
 
 	// https://mvnrepository.com/artifact/org.mapstruct/mapstruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'

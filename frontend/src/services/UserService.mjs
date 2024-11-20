@@ -9,12 +9,15 @@ const apiClient = axios.create({
 /**
  * 회원 생성(가입)
  */
-export const signUpUser = async (username, password) => {
-  const response = await apiClient.post('/api/users/sign-up', {
-    username,
-    password,
-  });
-  return response.data;
+export const signUpUser = async (email) => {
+  try{
+    const response = await apiClient.post('/api/users/sign-up', {
+      email
+    });
+    return response.data;
+  }catch(err){
+    console.error("회원가입 실패", err);
+  }
 };
 
 /**
@@ -35,10 +38,13 @@ export const readUser = async (userId) => {
       console.log("★",userId);
       // 더미 데이터 반환
       const dummyData = {
-        id: userId,
-        name: userId === 1 ? '김대민' : 'Unknown',
-        role: userId === 1 ? '학생' : 'student',
-        level: 17
+        name : "조성진",
+        phone : "010-1234-5678",
+        email : "dummy@naver.com",
+        school : "하버드대학교 컴퓨터공학과",
+        gender : "트렌스젠더",
+        grade : "1등급",
+        level : 7
       };
 
       return dummyData;
@@ -73,15 +79,39 @@ export const readUsers = async (pathname) => {
 /**
  * 회원 수정(업데이트)
  */
-export const updateUser = async (username, password) => {
-    const response = await apiClient.get('/api/users/{userId}');
-    return response.data;
+export const updateUser = async (accountData) => {
+    try{
+      const response = await apiClient.post('/api/users/{userId}', {
+        accountData
+      });
+
+      if (response.ok) {
+        alert('내용이 제출되었습니다!');
+      } else {
+        alert('제출 실패');
+      }
+
+    }catch(error){
+      console.error('회원수정 API 호출 오류 발생:', error);
+
+      const dummyData = {
+        name : "조성진이다",
+        password: "1234",
+        phone : "010-1234-5678",
+        email : "dummy@naver.com",
+        school : "하버드대학교 컴퓨터공학과",
+        gender : "트렌스젠더",
+        grade : "1등급",
+        level : 17
+      }
+    return dummyData;
+    }
   };
 
 /**
  * 회원 삭제
  */
-export const deleteUser = async (username, password) => {
+export const deleteUser = async (username) => {
     const response = await apiClient.get('/api/users/{userId}');
     return response.data;
   };
