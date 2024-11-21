@@ -1,12 +1,12 @@
 spring:
-  # mysql 설정
+  # mysql 연결설정
   datasource:
-    url: jdbc:mysql://배포ip:3306/idealstudy
-    #    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
-  # redis 설정
-  data:
-    redis:
-      host: 배포ip
+    url: jdbc:mysql://mysql-db:3306/idealstudy
+
+# redis 연결설정 (RedisConfig 에서 커스텀하게 들어감)
+redis:
+  hostname: redis-db  # redis 컨테이너의 서비스 이름을 지정
+  port: 6379          # 기본 Redis 포트
 
 server:
   backend-domain-url: http://배포ip:8080
