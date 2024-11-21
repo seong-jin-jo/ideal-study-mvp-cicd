@@ -4,8 +4,10 @@ import com.idealstudy.mvp.application.service.EmailService;
 import com.idealstudy.mvp.application.service.MemberService;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
+import com.idealstudy.mvp.enums.HttpResponse;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.SignUpUserRequestDto;
+import com.idealstudy.mvp.util.HttpResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class MemberController {
         if(response != null)
             return response;
 
-        return new ResponseEntity<String>("success to send email", HttpStatusCode.valueOf(200));
+        return HttpResponseUtil.responseString(HttpResponse.SUCCESS_EMAIL);
     }
 
     @GetMapping("/api/users/email-authentication")

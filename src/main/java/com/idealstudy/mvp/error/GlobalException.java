@@ -1,15 +1,15 @@
 package com.idealstudy.mvp.error;
 
-import com.idealstudy.mvp.enums.ResultCase;
+import com.idealstudy.mvp.enums.HttpResponse;
 import lombok.Getter;
 
 @Getter
 public class GlobalException extends RuntimeException{
 
-    private final ResultCase resultCase;
+    private final HttpResponse httpResponse;
 
-    public GlobalException(ResultCase resultCase) {
-        super(resultCase.getMsg());
-        this.resultCase = resultCase;
+    public GlobalException(HttpResponse httpResponse) {
+        super(httpResponse.getMsg());
+        this.httpResponse = httpResponse;
     }
 }

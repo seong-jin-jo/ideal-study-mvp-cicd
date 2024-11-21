@@ -4,14 +4,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public enum ResultCase {
+public enum HttpResponse {
 
-    SAMPLE(HttpStatus.OK, "샘플 테스트");
+    SUCCESS_EMAIL(HttpStatus.OK, "success to send email"),
+
+    ;
 
     private final HttpStatus httpStatus;
     private final String msg;
 
-    ResultCase(HttpStatus httpStatus, String msg){
+    HttpResponse(HttpStatus httpStatus, String msg){
         this.httpStatus = httpStatus;
         this.msg = msg;
     }
