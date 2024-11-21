@@ -117,7 +117,7 @@ public class JwtUtil {
 
         return  JwtPayloadDto.builder()
                         .sub(claims.getSubject())
-                        .role(Role.fromString(claims.get("role", String.class)))
+                        .role(Role.stringToRole(claims.get("role", String.class)))
                         .exp(claims.getExpiration())
                         .iat(claims.getIssuedAt())
                         .build();

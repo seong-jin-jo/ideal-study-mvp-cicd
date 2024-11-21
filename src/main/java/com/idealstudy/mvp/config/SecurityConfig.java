@@ -21,6 +21,10 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -95,6 +99,26 @@ public class SecurityConfig {
         return filter;
     }
 
+    @Bean
+    static RoleHierarchy roleHierarchy() {
+
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role(Role.ADMIN.toString()).implies(Role.GUEST.toString(),
+                        Role.STUDENT.toString(), Role.STUDENT.toString(), Role.PARENTS.toString())
+                .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
+                .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
+                .role(Role.PARENTS.toString()).implies(Role.GUEST.toString())
+                .build();
+    }
+
+    @Bean
+    static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }
+
     // @Bean
     public BasicLoginAuthenticationFilter loginAuthenticationFilter() {
         BasicLoginAuthenticationFilter filter = new BasicLoginAuthenticationFilter(authenticationManager(
@@ -129,20 +153,38 @@ public class SecurityConfig {
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        setHsts(http);
+
+        setCors(http);
+
+        // 경로 별 권한 설정
+        setAuthorizeHttpRequests(http);
+
+        // 로그아웃 설정(추후 변경 필요)
+        setLogout(http);
+
+        registerFilters(http);
+        return http.build();
+    }
+
+    private void setHsts(HttpSecurity http) throws Exception {
         if(isDev.equals("true")) {
             http.headers(headers -> headers
                     // Disables Strict Transport Security
                     .httpStrictTransportSecurity(HeadersConfigurer.HstsConfig::disable)
             );
         }
+    }
 
-        // CORS 활성화
+    private void setCors(HttpSecurity http) throws Exception {
         http.cors(customizer -> customizer.configurationSource( // HttpServletRequest를 기반으로 CORS 설정을 반환
                 new CorsConfigurationSource() { // CORS 설정을 직접 정의하는 익명 클래스
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) { // CORS 정책을 정의
-                        CorsConfiguration config = new CorsConfiguration(); // corsConfiguration 객체를 생성하여 CORS 설정을 담을 컨테이너로 사용
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // CORS 요청을 허용할 출처
+                        // corsConfiguration 객체를 생성하여 CORS 설정을 담을 컨테이너로 사용
+                        CorsConfiguration config = new CorsConfiguration();
+                        // CORS 요청을 허용할 출처
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                         config.setAllowedMethods(Collections.singletonList("*")); // CORS 요청을 허용할 메서드
                         config.setAllowCredentials(true); // CORS 쿠키나 인증정보를 포함한 요청 허용
                         config.setAllowedHeaders(Collections.singletonList("*")); // CORS 요청을 허용할 헤더
@@ -151,24 +193,31 @@ public class SecurityConfig {
                     }
                 }
         ));
+    }
+    
+    private void setAuthorizeHttpRequests(HttpSecurity http) throws Exception {
 
         // Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations
         // (i.e. via URL patterns).
         http.authorizeHttpRequests(auth ->
-            auth
-                    // 정적 파일 허용
-                    // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
-                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
-                    .requestMatchers("/error").permitAll()
+                auth
+                        // 정적 파일 허용
+                        // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
+                        .requestMatchers("/error").permitAll()
         );
+
+        // Method Security 방식으로 변경
+        /*
         setGuestPermission(http);
-        setUserPermission(http);
-        setAdminPermission(http);
         setStudentPermission(http);
         setTeacherPermission(http);
+        setAuthorizeHttpRequests(http);
+        */
+    }
 
-        // 추후 변경 필요
+    private void setLogout(HttpSecurity http) throws Exception {
         /*
          The default is that accessing the URL "/logout" will log the user out by invalidating the HTTP Session,
          cleaning up any rememberMe() authentication that was configured,
@@ -179,7 +228,9 @@ public class SecurityConfig {
                 .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/login?success")
         );
+    }
 
+    private void registerFilters(HttpSecurity http) {
         /*
          Allows adding a Filter before one of the known Filter classes.
          The known Filter instances are either a Filter listed in HttpSecurityBuilder.addFilter(Filter)
@@ -191,9 +242,10 @@ public class SecurityConfig {
         // http.addFilterBefore(formLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jsonLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtParserFilter(), JsonLoginAuthenticationFilter.class);
-        return http.build();
     }
 
+
+    @Deprecated
     private void setGuestPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // This matcher will use the same rules that Spring MVC uses for matching.
@@ -206,6 +258,7 @@ public class SecurityConfig {
         );
     }
 
+    @Deprecated
     private void setUserPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // the roles that the user should have at least one of (i.e. ADMIN, USER, etc).
@@ -228,6 +281,7 @@ public class SecurityConfig {
         );
     }
 
+    @Deprecated
     private void setStudentPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/student/**").hasRole(Role.STUDENT.toString())
@@ -235,12 +289,14 @@ public class SecurityConfig {
         );
     }
 
+    @Deprecated
     private void setTeacherPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.toString())
         );
     }
 
+    @Deprecated
     private void setAdminPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.toString())

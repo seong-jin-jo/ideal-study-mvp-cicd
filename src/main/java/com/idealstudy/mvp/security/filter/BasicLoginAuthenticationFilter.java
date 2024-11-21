@@ -36,7 +36,7 @@ public class BasicLoginAuthenticationFilter extends BasicAuthenticationFilter {
         // Many of the authentication providers will create a UserDetails object as the principal.
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         String username = userDetails.getUsername();
-        Role role = Role.fromString(
+        Role role = Role.stringToRole(
                 userDetails.getAuthorities().stream().findFirst()
                         .map(GrantedAuthority::getAuthority)
                         .orElseThrow(() -> new IllegalStateException("No authority found"))
