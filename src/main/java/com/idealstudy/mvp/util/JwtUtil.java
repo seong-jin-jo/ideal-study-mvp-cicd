@@ -66,7 +66,7 @@ public class JwtUtil {
             return BEARER_PREFIX +
                     Jwts.builder()
                             .subject(dto.getUserId()) // 사용자 식별자값(ID)
-                            .claim(AUTHORIZATION_KEY, dto.getRole()) // 사용자 권한
+                            .claim(AUTHORIZATION_KEY, dto.getRole().toString()) // 사용자 권한
                             .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                             .issuedAt(date) // 발급일
                             .signWith(key, alg) // 암호화 알고리즘

@@ -5,7 +5,6 @@ import java.util.Map;
 
 public enum Role {
 
-    // It should not start with "ROLE_"
     GUEST("GUEST"),
     STUDENT("STUDENT"),
     TEACHER("TEACHER"),
@@ -20,7 +19,7 @@ public enum Role {
         }
     }
 
-    private String role;
+    private final String role;
 
     Role(String role) {
         this.role = role;
@@ -28,7 +27,7 @@ public enum Role {
 
     @Override
     public String toString() {
-        return role;
+        return this.role;
     }
 
     public static Role stringToRole(String text) {

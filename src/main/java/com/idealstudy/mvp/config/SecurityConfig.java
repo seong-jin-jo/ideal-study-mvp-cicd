@@ -29,11 +29,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.annotation.AnnotationTemplateExpressionDefaults;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +47,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @Log4j2
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -103,11 +106,11 @@ public class SecurityConfig {
     static RoleHierarchy roleHierarchy() {
 
         return RoleHierarchyImpl.withDefaultRolePrefix()
-                .role(Role.ADMIN.toString()).implies(Role.GUEST.toString(),
-                        Role.STUDENT.toString(), Role.STUDENT.toString(), Role.PARENTS.toString())
                 .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
                 .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
                 .role(Role.PARENTS.toString()).implies(Role.GUEST.toString())
+                .role(Role.ADMIN.toString()).implies(
+                        Role.STUDENT.toString(), Role.STUDENT.toString(), Role.PARENTS.toString())
                 .build();
     }
 
@@ -117,6 +120,11 @@ public class SecurityConfig {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
+    }
+
+    @Bean
+    static AnnotationTemplateExpressionDefaults templateExpressionDefaults() {
+        return new AnnotationTemplateExpressionDefaults();
     }
 
     // @Bean

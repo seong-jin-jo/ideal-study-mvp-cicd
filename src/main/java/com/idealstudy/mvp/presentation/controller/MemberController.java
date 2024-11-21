@@ -7,6 +7,7 @@ import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.HttpResponse;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.SignUpUserRequestDto;
+import com.idealstudy.mvp.security.annotation.ForAdmin;
 import com.idealstudy.mvp.util.HttpResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,7 @@ public class MemberController {
         return new ResponseEntity<String>(password, HttpStatusCode.valueOf(200));
     }
 
+    @ForAdmin
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<MemberDto> findMember(@PathVariable String userId) {
         MemberDto dto = memberService.findById(userId);
