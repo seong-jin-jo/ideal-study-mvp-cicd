@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Deprecated
 @RequiredArgsConstructor
 @Slf4j(topic = "jwt parser")
 public class JwtParserFilter extends OncePerRequestFilter {
@@ -25,10 +26,10 @@ public class JwtParserFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         if(jwtUtil.isTokenExist(request)) {
-            JwtPayloadDto payload = jwtUtil.getUserInfoFromToken(request);
+            JwtPayloadDto payload = jwtUtil.getPayloadFromToken(jwtUtil.getUserInfoFromToken(request));
             request.setAttribute("jwtPayload", payload);
         }
 
-        filterChain.doFilter(request, response);
+        doFilter(request, response, filterChain);
     }
 }

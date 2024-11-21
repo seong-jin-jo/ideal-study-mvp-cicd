@@ -1,8 +1,9 @@
-package com.idealstudy.mvp.security.dto;
+package com.idealstudy.mvp.security.userDetailsImpl;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +14,8 @@ import java.util.Collection;
 
 @Getter
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+@Slf4j
+public class MemberDetails implements UserDetails {
 
     @Autowired
     private final MemberDto memberDto;
@@ -21,6 +23,7 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
+        log.info("현재 유저의 권한: " + memberDto.getRole().toString());
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(memberDto.getRole().toString());
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();

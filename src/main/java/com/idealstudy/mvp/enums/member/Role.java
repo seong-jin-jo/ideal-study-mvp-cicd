@@ -1,40 +1,25 @@
 package com.idealstudy.mvp.enums.member;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum Role {
 
-    GUEST("GUEST"),
-    STUDENT("STUDENT"),
-    TEACHER("TEACHER"),
-    PARENTS("PARENTS"),
-    ADMIN("ADMIN");
-
-    private static final Map<String, Role> ENUM_STRING = new HashMap<>();
-
-    static {
-        for (Role role : values()) {
-            ENUM_STRING.put(role.role, role);
-        }
-    }
-
-    private final String role;
-
-    Role(String role) {
-        this.role = role;
-    }
+    ROLE_GUEST,
+    ROLE_STUDENT,
+    ROLE_TEACHER,
+    ROLE_PARENTS,
+    ROLE_ADMIN;
 
     @Override
     public String toString() {
-        return this.role;
+        return this.name();
     }
 
     public static Role stringToRole(String text) {
-        Role role = ENUM_STRING.get(text.toUpperCase());
-        if (role == null) {
-            throw new IllegalArgumentException("No constant with text " + text + " found");
+        try{
+            return Role.valueOf(text.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("No constant with text " + text.toUpperCase() + " found");
+        } catch (NullPointerException e) {
+            throw new NullPointerException("EnumClass or name is null");
         }
-        return role;
     }
 }

@@ -7,7 +7,8 @@ import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.HttpResponse;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.SignUpUserRequestDto;
-import com.idealstudy.mvp.security.annotation.ForAdmin;
+import com.idealstudy.mvp.security.annotation.ForStudent;
+import com.idealstudy.mvp.security.annotation.ForUser;
 import com.idealstudy.mvp.util.HttpResponseUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,12 @@ public class MemberController {
 
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
+    // 더미 데이터 생성용 엔드포인트
+    @GetMapping("/create-dummies")
+    public void createDummy() {
+        memberService.createDummies();
+    }
+
     // 어떤 JSON 값을 보내주면 좋을지 다시 생각해봐야 함.
     @PostMapping("/api/users/sign-up")
     public ResponseEntity<String> signUp(@RequestBody SignUpUserRequestDto dto) {
@@ -58,7 +65,7 @@ public class MemberController {
         String password = null;
         try {
             // 현재 학생 회원가입만 가능
-            password = memberService.addMember(email, token, Role.STUDENT);
+            password = memberService.addMember(email, token, Role.ROLE_STUDENT);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(), HttpStatusCode.valueOf(400));
@@ -67,10 +74,11 @@ public class MemberController {
         return new ResponseEntity<String>(password, HttpStatusCode.valueOf(200));
     }
 
-    @ForAdmin
+    @ForUser
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<MemberDto> findMember(@PathVariable String userId) {
         MemberDto dto = memberService.findById(userId);
+        log.info("당신의 정보: " + dto);
         if(dto != null)
             return new ResponseEntity<MemberDto>(dto, HttpStatusCode.valueOf(200));
         if(dto == null)
@@ -92,6 +100,7 @@ public class MemberController {
         return null;
     }
 
+    @ForUser
     @DeleteMapping("/api/users/{userId}")
     public ResponseEntity<String> deleteMember(@PathVariable String userId) {
 
@@ -105,12 +114,7 @@ public class MemberController {
         return null;
     }
 
-    @GetMapping("/api/users/update/{userId}")
-    public ResponseEntity<String> updateMemberView() {
-
-        return new ResponseEntity<>("회원 정보 조회 페이지", HttpStatusCode.valueOf(200));
-    }
-
+    @ForUser
     @PatchMapping("/api/users/update/{userId}")
     public ResponseEntity<MemberDto> updateMember(@PathVariable String userId, @RequestBody MemberDto dto) {
         dto.setUserId(userId);
