@@ -1,7 +1,7 @@
 package com.idealstudy.mvp.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealstudy.mvp.enums.ResultCase;
+import com.idealstudy.mvp.enums.HttpResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,17 +23,17 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (GlobalException e) {
-            setErrorResponse(response, e.getResultCase());
+            setErrorResponse(response, e.getHttpResponse());
         }
     }
 
-    private void setErrorResponse(HttpServletResponse response, ResultCase resultCase) {
-        response.setStatus(resultCase.getHttpStatus().value()); // HttpStatus 설정
+    private void setErrorResponse(HttpServletResponse response, HttpResponse httpResponse) {
+        response.setStatus(httpResponse.getHttpStatus().value()); // HttpStatus 설정
         response.setContentType(MediaType.APPLICATION_JSON_VALUE); // Content-Type : application/json
         response.setCharacterEncoding(StandardCharsets.UTF_8.name()); // charset : UTF8
 
         try {
-            String responseJson = objectMapper.writeValueAsString(resultCase);
+            String responseJson = objectMapper.writeValueAsString(httpResponse);
             response.getWriter().write(responseJson);
         } catch (IOException e) {
             e.printStackTrace();

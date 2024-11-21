@@ -1,9 +1,7 @@
 package com.idealstudy.mvp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
-import com.idealstudy.mvp.security.dto.UserLoginRequestDto;
 import com.idealstudy.mvp.security.dto.UserLoginResponseDto;
 import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.annotation.PostConstruct;
@@ -27,9 +25,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+@Deprecated
 @RequiredArgsConstructor
-@Slf4j(topic = "JwtAuthenticationFilter")
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@Slf4j(topic = "로그인 필터")
+public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
     private final JwtUtil jwtUtil;
@@ -45,27 +44,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throws AuthenticationException {
 
         log.info("attempt authentication");
+        log.info("form content type : " + request.getContentType());
 
-        try{
-            log.info("request.getInputStream() = " + request.getInputStream());
-            UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
-                    UserLoginRequestDto.class);
-
-            return getAuthenticationManager().authenticate(
-                    /*
-                     This constructor can be safely used by any code that wishes to create
-                     a UsernamePasswordAuthenticationToken, as the AbstractAuthenticationToken.isAuthenticated()
-                     will return false.
-                     */
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.username(),
-                            requestDto.password()
-                    )
-            );
-        } catch (IOException e) {
-            log.error(e + " : " + e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
+        return getAuthenticationManager().authenticate(
+                /*
+                 This constructor can be safely used by any code that wishes to create
+                 a UsernamePasswordAuthenticationToken, as the AbstractAuthenticationToken.isAuthenticated()
+                 will return false.
+                 */
+                new UsernamePasswordAuthenticationToken(
+                        request.getParameter("username"),
+                        request.getParameter("password")
+                )
+        );
     }
 
     @Override
@@ -78,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Many of the authentication providers will create a UserDetails object as the principal.
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         String username = userDetails.getUsername();
-        Role role = Role.fromString(
+        Role role = Role.stringToRole(
                 userDetails.getAuthorities().stream().findFirst()
                         .map(GrantedAuthority::getAuthority)
                         .orElseThrow(() -> new IllegalStateException("No authority found"))
@@ -97,10 +88,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         throw new AccessDeniedException("인증에 실패하였습니다.");
-
-        // Sends a temporary redirect response to the client using the specified redirect location URL
-        // and clears the buffer.
-        // response.sendRedirect("/auth/login");
     }
 
     private void issueJwtToken(String username, Role role, HttpServletResponse response) throws IOException {
