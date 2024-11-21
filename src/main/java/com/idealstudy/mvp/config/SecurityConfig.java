@@ -5,6 +5,7 @@ import com.idealstudy.mvp.error.ExceptionHandlerFilter;
 import com.idealstudy.mvp.security.filter.FormLoginAuthenticationFilter;
 import com.idealstudy.mvp.security.filter.BasicLoginAuthenticationFilter;
 import com.idealstudy.mvp.security.filter.JsonLoginAuthenticationFilter;
+import com.idealstudy.mvp.security.filter.JwtParserFilter;
 import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -85,6 +86,12 @@ public class SecurityConfig {
     public JsonLoginAuthenticationFilter jsonLoginAuthenticationFilter() {
         JsonLoginAuthenticationFilter filter = new JsonLoginAuthenticationFilter(jwtUtil);
         filter.setAuthenticationManager(authenticationManager(userDetailsService, passwordEncoder()));
+        return filter;
+    }
+
+    @Bean
+    public JwtParserFilter jwtParserFilter() {
+        JwtParserFilter filter = new JwtParserFilter(jwtUtil);
         return filter;
     }
 
@@ -183,6 +190,7 @@ public class SecurityConfig {
         // http.addFilterBefore(loginAuthenticationFilter(), BasicAuthenticationFilter.class);
         // http.addFilterBefore(formLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jsonLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtParserFilter(), JsonLoginAuthenticationFilter.class);
         return http.build();
     }
 

@@ -2,25 +2,20 @@ package com.idealstudy.mvp.util;
 
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
+import com.idealstudy.mvp.security.dto.JwtPayloadDto;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -45,6 +40,7 @@ public class JwtUtil {
     }
 
     // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
+    @Deprecated
     public String createToken(String username, Role role) {
         Date date = new Date();
         try{
@@ -82,6 +78,7 @@ public class JwtUtil {
     }
 
     // 2. jWT를 쿠키에 저장
+    @Deprecated
     public void addJwtToCookie(String token, HttpServletResponse res) {
         token = URLEncoder.encode(token, StandardCharsets.UTF_8)
                 .replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
@@ -96,15 +93,47 @@ public class JwtUtil {
         res.addCookie(cookie);
     }
 
-    public void addJwtToHeader(String token, HttpServletResponse res) {
-        token = URLEncoder.encode(token, StandardCharsets.UTF_8)
-                .replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+    // 5. JWT에서 사용자 정보 가져오기
+    @Deprecated
+    public Claims getUserInfoFromToken(String token) {
+        token = substringToken(token);
 
-        res.addHeader(AUTHORIZATION_HEADER,BEARER_PREFIX + token);
+        if(validateToken(token)) {
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isTokenExist(HttpServletRequest req) {
+        String token = req.getHeader(AUTHORIZATION_HEADER);
+        return !(token == null);
+    }
+
+    // Http Header에서 JwtToken의 payload를 가져옴.
+    public JwtPayloadDto getUserInfoFromToken(HttpServletRequest req) {
+        String token = substringToken(req.getHeader(AUTHORIZATION_HEADER));
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+
+        return  JwtPayloadDto.builder()
+                        .sub(claims.getSubject())
+                        .role(Role.fromString(claims.get("role", String.class)))
+                        .exp(claims.getExpiration())
+                        .iat(claims.getIssuedAt())
+                        .build();
+    }
+
+    // 3. Cookie 의 Value에 있던 JWT 토큰을 Substring(자른다)
+    private String substringToken(String tokenValue) {
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            return tokenValue.substring(7);
+        }
+        log.error("Not Found Token");
+        throw new NullPointerException("Not Found Token");
     }
 
     // 4. JWT 검증
-    public boolean validateToken(String token) {
+    private boolean validateToken(String token) {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
@@ -119,36 +148,4 @@ public class JwtUtil {
         }
         return false;
     }
-
-    // 5. JWT에서 사용자 정보 가져오기
-    public Claims getUserInfoFromToken(String token) {
-        token = substringToken(token);
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
-    }
-
-    // HttpServletRequest 에서 Cookie Value : JWT 가져오기
-    public String getTokenFromRequest(HttpServletRequest req) {
-        Cookie[] cookies = req.getCookies();
-        // TODO : early return 같은 패턴으로 depth를 줄여보는 것도 좋을 것 같습니다!
-        // TODO : 설정 -> tools -> save in action 에서 위의 3개 (코드 서식 다시 지정, import 문 최적화, 코드 재정렬) 체크하고 적용하면 포맷이 알아서 맞춰집니다!
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    // Encode 되어 넘어간 Value 다시 Decode
-                    return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                }
-            }
-        }
-        return null;
-    }
-
-    // 3. Cookie 의 Value에 있던 JWT 토큰을 Substring(자른다)
-    private String substringToken(String tokenValue) {
-        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
-        }
-        log.error("Not Found Token");
-        throw new NullPointerException("Not Found Token");
-    }
-
 }
