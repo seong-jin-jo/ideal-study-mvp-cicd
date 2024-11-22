@@ -14,9 +14,10 @@ export const signUpUser = async (email) => {
     const response = await apiClient.post('/api/users/sign-up', {
       email
     });
+    console.log("회원가입 API 성공:", response)
     return response.data;
   }catch(err){
-    console.error("회원가입 실패", err);
+    console.error("회원가입 API 실패", err);
   }
 };
 
@@ -28,6 +29,7 @@ export const readUser = async (userId) => {
 
       // 실제 API 호출
       const response = await apiClient.get(`/api/users/${userId}`);
+      console.log("회원조회 API 성공:", response);
       return response.data;
 
     } catch (error) {
@@ -57,6 +59,8 @@ export const readUser = async (userId) => {
 export const readUsers = async (pathname) => {
     try {
       const response = await apiClient.get('/api/users');
+
+      console.log("회원목록조회 API 성공:", response)
       return response.data;
     } catch (error) {
       console.error('회원목록조회 API 호출 오류 발생:', error);

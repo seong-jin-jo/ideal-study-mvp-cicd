@@ -12,6 +12,7 @@ const apiClient = axios.create({
 export const ReadOfficialProfile = async (userId) => {
     try {
       const response = await apiClient.get('/api/officialProfile/{userId}');
+      console.log("공식프로필 조회 API 성공:", response);
       return response.data;
     } catch (error) {
       console.error('공식프로필조회 API 호출 오류 발생:', error);

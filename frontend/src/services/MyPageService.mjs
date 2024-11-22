@@ -12,9 +12,10 @@ const apiClient = axios.create({
 export const readBio = async (username, password) => {
   try {
   const response = await apiClient.get('/api/mypage/{userId}/bio');
+  console.log("마이페이지 자기소개조회 API 성공:", response)
   return response.data;
   }catch(err){
-    console.error('공식프로필조회 API 호출 오류 발생:', err);
+    console.error('마이페이지 자기소개조회 API 호출 오류 발생:', err);
   
       // 임시로 더미데이터 반환
       const data = {

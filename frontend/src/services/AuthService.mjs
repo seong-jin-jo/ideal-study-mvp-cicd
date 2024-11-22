@@ -15,6 +15,7 @@ export const loginUser = async (username, password) => {
         username,
         password,
       });
+      console.log("로그인 API 성공:", response)
       return response.data;
     }catch(error){
       console.log(error);
@@ -31,5 +32,6 @@ export const loginUser = async (username, password) => {
  */
 export const logoutUser = async (username, password) => {
     const response = await apiClient.get('/auth/logout/{userId}');
-      return response.data;
+    console.log("로그아웃 API 성공:", response)
+    return response.data;
 }
