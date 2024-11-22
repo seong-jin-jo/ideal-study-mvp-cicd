@@ -10,6 +10,7 @@ const apiClient = axios.create({
  * 회원 생성(가입)
  */
 export const signUpUser = async (email) => {
+  console.log("회원가입 API 시도:", email)
   try{
     const response = await apiClient.post('/api/users/sign-up', {
       email
@@ -25,6 +26,7 @@ export const signUpUser = async (email) => {
  * 회원 조회
  */
 export const readUser = async (userId) => {
+    console.log("회원조회 API 시도:", userId)
     try {
 
       // 실제 API 호출
@@ -34,7 +36,7 @@ export const readUser = async (userId) => {
 
     } catch (error) {
 
-      console.error('회원조회 API 호출 오류 발생:', error);
+      console.error('회원조회 API 실패:', error);
       
       // 디버깅
       console.log("★",userId);
@@ -57,13 +59,14 @@ export const readUser = async (userId) => {
  * 회원 목록 조회
  */
 export const readUsers = async (pathname) => {
+    console.log("회원목록조회 API 시도:", pathname)
     try {
       const response = await apiClient.get('/api/users');
 
       console.log("회원목록조회 API 성공:", response)
       return response.data;
     } catch (error) {
-      console.error('회원목록조회 API 호출 오류 발생:', error);
+      console.error('회원목록조회 API 실패:', error);
   
       // 경로에 따라 더미 데이터 반환
       const dummyData = pathname === '/teachers'
@@ -84,10 +87,12 @@ export const readUsers = async (pathname) => {
  * 회원 수정(업데이트)
  */
 export const updateUser = async (accountData) => {
+    console.error('회원수정 API 시도:', accountData);
     try{
       const response = await apiClient.post('/api/users/{userId}', {
         accountData
       });
+      console.error('회원수정 API 성공:', response);
 
       if (response.ok) {
         alert('내용이 제출되었습니다!');
@@ -96,7 +101,7 @@ export const updateUser = async (accountData) => {
       }
 
     }catch(error){
-      console.error('회원수정 API 호출 오류 발생:', error);
+      console.error('회원수정 API 실패:', error);
 
       const dummyData = {
         name : "조성진이다",
@@ -116,6 +121,12 @@ export const updateUser = async (accountData) => {
  * 회원 삭제
  */
 export const deleteUser = async (username) => {
+  console.log("회원수정 API 호출 시도:", username)
+  try{
     const response = await apiClient.get('/api/users/{userId}');
+    console.log("회원수정 API 호출 성공:", response)
     return response.data;
-  };
+  }catch(err){
+    console.log("회원수정 API 호출 실패:", err)
+  }
+};
