@@ -9,5 +9,5 @@ redis:
   port: 6379          # 기본 Redis 포트
 
 server:
-  backend-domain-url: http://localhost:8080 # 이메일 인증시 리다이렉트될 주소 TODO: 향후 도메인으로 변경
+  backend-domain-url: http://배포ip:8080
   dev: false
