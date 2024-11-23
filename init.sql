@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS member (
 -- 멤버 데이터 삽입
 INSERT INTO member (user_id, password, name, phone_address, email, sex, referral_id, level, role, from_social, init, deleted)
 VALUES
-    (UUID(), 'password1', '홍길동', '010-1234-5678', 'hong@example.com', 'MALE', NULL, 1, 'GUEST', 0, 1, 0),
+    (UUID(), 'password1', '홍길동', '010-1234-5678', 'hongil@example.com', 'MALE', NULL, 1, 'GUEST', 0, 1, 0),
     (UUID(), 'password2', '김철수', '010-2345-6789', 'kim@example.com', 'MALE', NULL, 2, 'ADMIN', 0, 1, 0),
     (UUID(), 'password3', '이영희', '010-3456-7890', 'lee@example.com', 'FEMALE', NULL, 1, 'GUEST', 0, 1, 0),
     (UUID(), 'password4', '박지은', '010-4567-8901', 'park@example.com', 'FEMALE', NULL, 1, 'GUEST', 1, 1, 0),
