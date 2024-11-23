@@ -1,0 +1,39 @@
+# 로키의 로그 저장 방식 설정
+
+auth_enabled: false  # 인증을 사용하지 않음 누구나 접근 가능
+
+server:
+  http_listen_port: 3100  # Loki의 HTTP 서버가 리스닝할 포트 설정 (3100번)
+
+ingester: # 로키의 데이터 수집 방식 결정
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory  # 메모리 내에서 상태 저장 (배포 환경에서는 변경할 수 있음)
+      replication_factor: 1  # 데이터 복제 비율 (여기선 1로 설정)
+
+schema_config: # 로그 데이터의 저장 및 인덱싱 방식
+  configs:
+    - from: 2022-01-01
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h  # 로그 인덱스가 24시간마다 새로 생성됨
+
+storage_config: # 로그 데이터를 저장하는 위치를 설정
+  boltdb_shipper:
+    active_index_directory: /tmp/loki/boltdb-shipper-active
+    cache_location: /tmp/loki/boltdb-shipper-cache
+    shared_store: filesystem
+  filesystem:
+    directory: /tmp/loki/chunks  # 로그 파일 저장 위치
+
+limits_config:
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h  # 최대 7일 전의 로그는 거부
+
+chunk_store_config:
+  max_look_back_period: 0  # 로그 조회시 최대 기간 설정
