@@ -41,9 +41,12 @@ services:
     ports:
       - "8080:8080"
       - "19090:19090"  # Actuator 엔드포인트 포트 (운영환경)
-    depends_on: # mysql, redis 컨테이너 '시작'후 서버 띄움. '준비' 후 띄우려면 wait-for-it 해야함
+    environment:
+      - SPRING_PROFILES_ACTIVE=deployment
+    depends_on:
       - mysql-db
       - redis-db
+    restart: unless-stopped # 실패 시 재시작
 
 networks:
   idealstudy-network:

@@ -183,8 +183,8 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) { // CORS 정책을 정의
                         // corsConfiguration 객체를 생성하여 CORS 설정을 담을 컨테이너로 사용
                         CorsConfiguration config = new CorsConfiguration();
-                        // CORS 요청을 허용할 출처
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // CORS 요청을 허용할 출처
                         config.setAllowedMethods(Collections.singletonList("*")); // CORS 요청을 허용할 메서드
                         config.setAllowCredentials(true); // CORS 쿠키나 인증정보를 포함한 요청 허용
                         config.setAllowedHeaders(Collections.singletonList("*")); // CORS 요청을 허용할 헤더
@@ -206,6 +206,8 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .anyRequest().permitAll() // 모든 요청을 허용
+                        // TODO : 향후 .authenticated() 으로 바꿔야됨 아무것도 안쓰면 시큐리티는 모든 경로에 대해 인증요구
         );
 
         // Method Security 방식으로 변경
