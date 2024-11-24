@@ -50,7 +50,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 예정
+    // TODO: 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 수 있음
     @Autowired
     private final JwtUtil jwtUtil;
     @Autowired
@@ -102,7 +102,7 @@ public class SecurityConfig {
         return filter;
     }
 
-    @Bean
+    // @Bean
     public JwtParserFilter jwtParserFilter() {
         JwtParserFilter filter = new JwtParserFilter(jwtUtil);
         return filter;
@@ -148,7 +148,7 @@ public class SecurityConfig {
         return filter;
     }
 
-    // OAuth2LoginAuthenticationFilter 생성 및 설정 필요
+    // TODO: OAuth2LoginAuthenticationFilter 생성 및 설정 필요
 
 
     @Bean
