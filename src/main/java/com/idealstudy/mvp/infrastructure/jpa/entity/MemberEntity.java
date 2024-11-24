@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "member")
 @Getter
+@Setter  // for Writer accessor
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

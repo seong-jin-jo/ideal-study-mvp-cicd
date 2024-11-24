@@ -1,8 +1,9 @@
-package com.idealstudy.mvp.security.dto;
+package com.idealstudy.mvp.security.userDetailsImpl;
 
-import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.security.dto.JwtPayloadDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,52 +11,43 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+@Slf4j
+public class JwtDetails implements UserDetails {
 
     @Autowired
-    private final MemberDto memberDto;
+    private final String token;
 
+    @Autowired
+    private final JwtPayloadDto payload;
+
+    // Returns the authorities granted to the user. Cannot return null.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(memberDto.getRole().toString());
+        log.info("현재 유저의 권한: " + payload.getRole().toString());
 
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(payload.getRole().toString());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
-
+        authorities.add(authority);
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return memberDto.getPassword();
+        return "";
     }
 
     @Override
     public String getUsername() {
-        return memberDto.getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+        return "";
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+        return new Date().before(payload.getExp());
     }
 }

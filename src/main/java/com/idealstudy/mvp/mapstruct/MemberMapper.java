@@ -9,8 +9,10 @@ import org.mapstruct.factory.Mappers;
 
 // unmappedTargetPolicy = ReportingPolicy.IGNORE: target class에 매핑되지 않는 필드가 있으면, null로 채운 후 따로 report하지 않음.
 // nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE: null 필드는 업데이트하지 않음.
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface MemberMapper {
 
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
