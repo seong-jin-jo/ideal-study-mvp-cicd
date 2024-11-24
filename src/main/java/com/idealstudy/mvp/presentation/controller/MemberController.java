@@ -46,7 +46,6 @@ public class MemberController {
         memberService.createDummies();
     }
 
-    // 어떤 JSON 값을 보내주면 좋을지 다시 생각해봐야 함.
     @PostMapping("/api/users/sign-up")
     public ResponseEntity<String> signUp(@RequestBody SignUpUserRequestDto dto) {
 
@@ -64,7 +63,7 @@ public class MemberController {
 
         String password = null;
         try {
-            // 현재 학생 회원가입만 가능
+            // TODO: 다른 권한에 대해서도 회원가입이 가능하도록 해야 함.
             password = memberService.addMember(email, token, Role.ROLE_STUDENT);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
@@ -77,6 +76,8 @@ public class MemberController {
     @ForUser
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<MemberDto> findMember(@PathVariable String userId) {
+        
+        log.info("개인 정보 조회");
         MemberDto dto = memberService.findById(userId);
         log.info("당신의 정보: " + dto);
         if(dto != null)
@@ -118,6 +119,7 @@ public class MemberController {
     @PatchMapping("/api/users/update/{userId}")
     public ResponseEntity<MemberDto> updateMember(@PathVariable String userId, @RequestBody MemberDto dto) {
         dto.setUserId(userId);
+        log.info("변경 희망하는 MemberDto: " + dto);
         MemberDto updateDto = memberService.updateMember(dto);
 
         if(updateDto != null)
