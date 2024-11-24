@@ -7,6 +7,7 @@ import java.util.Collection;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
+    // Creates a token with the supplied array of authorities.
     public JwtAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
     }

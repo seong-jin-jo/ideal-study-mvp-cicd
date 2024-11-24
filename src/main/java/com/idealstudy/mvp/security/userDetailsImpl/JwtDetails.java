@@ -24,6 +24,7 @@ public class JwtDetails implements UserDetails {
     @Autowired
     private final JwtPayloadDto payload;
 
+    // Returns the authorities granted to the user. Cannot return null.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

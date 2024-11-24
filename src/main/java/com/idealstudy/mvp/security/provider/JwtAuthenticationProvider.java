@@ -6,6 +6,7 @@ import com.idealstudy.mvp.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
@@ -24,6 +25,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         try {
             jwtUtil.validateToken(jwtDetails.getToken());
+            if( !jwtDetails.isCredentialsNonExpired())
+                throw new BadCredentialsException("token이 만료되었습니다.");
         } catch (Exception e) {
             authentication.setAuthenticated(false);
             throw new AuthenticationException(e.getMessage()) {
