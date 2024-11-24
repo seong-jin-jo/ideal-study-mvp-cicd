@@ -32,13 +32,7 @@ public class MemberService {
             throw new IllegalArgumentException("유효한 토큰이 아님");
 
         String password = UUID.randomUUID().toString().split("-")[0];
-        memberRepository.create(MemberDto.builder()
-                .userId(email)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .fromSocial(0)
-                .role(role)
-                .build());
+        addMember(email, role, password);
         redisRepository.deleteToken(email);
 
         return password;
@@ -68,5 +62,24 @@ public class MemberService {
             return false;
 
         return true;
+    }
+
+    public void createDummies() {
+
+        addMember("student@gmail.com", Role.ROLE_STUDENT, "1234");
+        addMember("teacher@gmail.com", Role.ROLE_TEACHER, "1234");
+        addMember("parents@gmail.com", Role.ROLE_PARENTS, "1234");
+        addMember("admin@gmail.com", Role.ROLE_ADMIN, "1234");
+    }
+
+    private void addMember(String email, Role role, String password) {
+
+        memberRepository.create(MemberDto.builder()
+                .userId(email)
+                .password(passwordEncoder.encode(password))
+                .email(email)
+                .fromSocial(0)
+                .role(role)
+                .build());
     }
 }

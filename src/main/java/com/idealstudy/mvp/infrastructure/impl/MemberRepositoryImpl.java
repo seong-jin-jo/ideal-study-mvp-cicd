@@ -12,7 +12,6 @@ import com.idealstudy.mvp.mapstruct.MemberMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -76,8 +75,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         MemberEntity entity = memberJpaRepository.findById(dto.getUserId()).orElseThrow();
         memberMapper.updateEntityFromDto(dto, entity);
-
-        log.info("update Entity: " + entity);
 
         MemberEntity result = memberJpaRepository.save(entity);
 

@@ -1,8 +1,6 @@
 version: '3.8'
 
 services:
-
-  # MySQL 컨테이너
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
@@ -19,18 +17,6 @@ services:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # init.sql 파일을 복사
 
-  # redis 컨테이너
-  redis-db:
-    networks:
-      - idealstudy-network
-    image: redis:7.0
-    container_name: redis-db
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-
-  # 스프링부트 서버 컨테이너
   server:
     networks:
       - idealstudy-network
@@ -41,9 +27,8 @@ services:
     ports:
       - "8080:8080"
       - "19090:19090"  # Actuator 엔드포인트 포트 (운영환경)
-    depends_on: # mysql, redis 컨테이너 '시작'후 서버 띄움. '준비' 후 띄우려면 wait-for-it 해야함
+    depends_on:
       - mysql-db
-      - redis-db
 
 networks:
   idealstudy-network:
@@ -51,5 +36,4 @@ networks:
 
 volumes:
   mysql-data:
-  redis-data:
     driver: local

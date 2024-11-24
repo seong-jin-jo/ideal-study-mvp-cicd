@@ -66,7 +66,7 @@ public class JwtUtil {
             return BEARER_PREFIX +
                     Jwts.builder()
                             .subject(dto.getUserId()) // 사용자 식별자값(ID)
-                            .claim(AUTHORIZATION_KEY, dto.getRole()) // 사용자 권한
+                            .claim(AUTHORIZATION_KEY, dto.getRole().toString()) // 사용자 권한
                             .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                             .issuedAt(date) // 발급일
                             .signWith(key, alg) // 암호화 알고리즘
@@ -93,6 +93,23 @@ public class JwtUtil {
         res.addCookie(cookie);
     }
 
+    // 4. JWT 검증
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token, 만료된 JWT token 입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+        }
+        return false;
+    }
+
     // 5. JWT에서 사용자 정보 가져오기
     @Deprecated
     public Claims getUserInfoFromToken(String token) {
@@ -111,16 +128,19 @@ public class JwtUtil {
     }
 
     // Http Header에서 JwtToken의 payload를 가져옴.
-    public JwtPayloadDto getUserInfoFromToken(HttpServletRequest req) {
-        String token = substringToken(req.getHeader(AUTHORIZATION_HEADER));
+    public String getUserInfoFromToken(HttpServletRequest req) {
+        return substringToken(req.getHeader(AUTHORIZATION_HEADER));
+    }
+
+    public JwtPayloadDto getPayloadFromToken(String token) {
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 
         return  JwtPayloadDto.builder()
-                        .sub(claims.getSubject())
-                        .role(Role.stringToRole(claims.get("role", String.class)))
-                        .exp(claims.getExpiration())
-                        .iat(claims.getIssuedAt())
-                        .build();
+                .sub(claims.getSubject())
+                .role(Role.stringToRole(claims.get("role", String.class)))
+                .exp(claims.getExpiration())
+                .iat(claims.getIssuedAt())
+                .build();
     }
 
     // 3. Cookie 의 Value에 있던 JWT 토큰을 Substring(자른다)
@@ -132,20 +152,5 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    // 4. JWT 검증
-    private boolean validateToken(String token) {
-        try {
-            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-        }
-        return false;
-    }
+
 }

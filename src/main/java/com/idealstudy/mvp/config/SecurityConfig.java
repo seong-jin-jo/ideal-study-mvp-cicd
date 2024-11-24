@@ -2,10 +2,8 @@ package com.idealstudy.mvp.config;
 
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.error.ExceptionHandlerFilter;
-import com.idealstudy.mvp.security.filter.FormLoginAuthenticationFilter;
-import com.idealstudy.mvp.security.filter.BasicLoginAuthenticationFilter;
-import com.idealstudy.mvp.security.filter.JsonLoginAuthenticationFilter;
-import com.idealstudy.mvp.security.filter.JwtParserFilter;
+import com.idealstudy.mvp.security.filter.*;
+import com.idealstudy.mvp.security.provider.JwtAuthenticationProvider;
 import com.idealstudy.mvp.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -29,11 +27,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.annotation.AnnotationTemplateExpressionDefaults;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,11 +45,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @Log4j2
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 예정
+    // TODO: 추후 Spring Security에서 제공하는 Jwt 라이브러리로 대체될 수 있음
     @Autowired
     private final JwtUtil jwtUtil;
     @Autowired
@@ -76,8 +77,9 @@ public class SecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         providers.add(daoAuthenticationProvider);
 
-        // JwtAuthenticationProvider가 들어갈 자리(JWT token 처리기)
-        
+        // JWT token 처리기(Not OAuth2.0 token)
+        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(jwtUtil);
+        providers.add(jwtAuthenticationProvider);
         return new ProviderManager(providers);
     }
 
@@ -94,6 +96,13 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        filter.setAuthenticationManager(authenticationManager(null, null));
+        return filter;
+    }
+
+    // @Bean
     public JwtParserFilter jwtParserFilter() {
         JwtParserFilter filter = new JwtParserFilter(jwtUtil);
         return filter;
@@ -103,11 +112,11 @@ public class SecurityConfig {
     static RoleHierarchy roleHierarchy() {
 
         return RoleHierarchyImpl.withDefaultRolePrefix()
-                .role(Role.ADMIN.toString()).implies(Role.GUEST.toString(),
-                        Role.STUDENT.toString(), Role.STUDENT.toString(), Role.PARENTS.toString())
-                .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
-                .role(Role.STUDENT.toString()).implies(Role.GUEST.toString())
-                .role(Role.PARENTS.toString()).implies(Role.GUEST.toString())
+                .role(Role.ROLE_STUDENT.toString()).implies(Role.ROLE_GUEST.toString())
+                .role(Role.ROLE_STUDENT.toString()).implies(Role.ROLE_GUEST.toString())
+                .role(Role.ROLE_PARENTS.toString()).implies(Role.ROLE_GUEST.toString())
+                .role(Role.ROLE_ADMIN.toString()).implies(
+                        Role.ROLE_STUDENT.toString(), Role.ROLE_STUDENT.toString(), Role.ROLE_PARENTS.toString())
                 .build();
     }
 
@@ -117,6 +126,11 @@ public class SecurityConfig {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
+    }
+
+    @Bean
+    static AnnotationTemplateExpressionDefaults templateExpressionDefaults() {
+        return new AnnotationTemplateExpressionDefaults();
     }
 
     // @Bean
@@ -134,7 +148,7 @@ public class SecurityConfig {
         return filter;
     }
 
-    // OAuth2LoginAuthenticationFilter 생성 및 설정 필요
+    // TODO: OAuth2LoginAuthenticationFilter 생성 및 설정 필요
 
 
     @Bean
@@ -197,24 +211,20 @@ public class SecurityConfig {
     
     private void setAuthorizeHttpRequests(HttpSecurity http) throws Exception {
 
-        // Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations
-        // (i.e. via URL patterns).
         http.authorizeHttpRequests(auth ->
                 auth
-                        // 정적 파일 허용
-                        // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
-                        .requestMatchers("/error").permitAll()
+                        .anyRequest().permitAll()
         );
 
-        // Method Security 방식으로 변경
         /*
+        setMetadataPermission(http);
+
         setGuestPermission(http);
-        setStudentPermission(http);
-        setTeacherPermission(http);
-        setAuthorizeHttpRequests(http);
-        */
+
+        if(isDev.equals("true"))
+            setTestPermission(http);
+
+         */
     }
 
     private void setLogout(HttpSecurity http) throws Exception {
@@ -241,20 +251,36 @@ public class SecurityConfig {
         // http.addFilterBefore(loginAuthenticationFilter(), BasicAuthenticationFilter.class);
         // http.addFilterBefore(formLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jsonLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(jwtParserFilter(), JsonLoginAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationFilter(), JsonLoginAuthenticationFilter.class);
     }
 
+    private void setMetadataPermission(HttpSecurity http) throws Exception {
+        // Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations
+        // (i.e. via URL patterns).
+        http.authorizeHttpRequests(auth ->
+                auth
+                        // 정적 파일 허용
+                        // PathRequest: Factory that can be used to create a RequestMatcher for commonly used paths.
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
+        );
+    }
 
-    @Deprecated
     private void setGuestPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 // This matcher will use the same rules that Spring MVC uses for matching.
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/offcialProfile/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/email-authentication").permitAll()
-                .requestMatchers(HttpMethod.GET, "/auth/loginView.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+        );
+    }
+
+    private void setTestPermission(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/create-dummies").permitAll()
         );
     }
 
@@ -263,28 +289,28 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 // the roles that the user should have at least one of (i.e. ADMIN, USER, etc).
                 // Each role should not start with ROLE_ since it is automatically prepended already
-                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ADMIN.toString(),
-                        Role.STUDENT.toString(),
-                        Role.TEACHER.toString())
-                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
-                        Role.STUDENT.toString(),
-                        Role.TEACHER.toString())
-                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ADMIN.toString(),
-                        Role.STUDENT.toString(),
-                        Role.TEACHER.toString())
-                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
-                        Role.STUDENT.toString(),
-                        Role.TEACHER.toString())
-                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ADMIN.toString(),
-                        Role.STUDENT.toString(),
-                        Role.TEACHER.toString())
+                .requestMatchers(HttpMethod.POST, "/auth/logout").hasAnyRole(Role.ROLE_ADMIN.toString(),
+                        Role.ROLE_STUDENT.toString(),
+                        Role.ROLE_TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole(Role.ROLE_ADMIN.toString(),
+                        Role.ROLE_STUDENT.toString(),
+                        Role.ROLE_TEACHER.toString())
+                .requestMatchers(HttpMethod.PATCH, "/api/users/*").hasAnyRole(Role.ROLE_ADMIN.toString(),
+                        Role.ROLE_STUDENT.toString(),
+                        Role.ROLE_TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ROLE_ADMIN.toString(),
+                        Role.ROLE_STUDENT.toString(),
+                        Role.ROLE_TEACHER.toString())
+                .requestMatchers(HttpMethod.GET, "/api/mypage/**").hasAnyRole(Role.ROLE_ADMIN.toString(),
+                        Role.ROLE_STUDENT.toString(),
+                        Role.ROLE_TEACHER.toString())
         );
     }
 
     @Deprecated
     private void setStudentPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/student/**").hasRole(Role.STUDENT.toString())
+                .requestMatchers("/student/**").hasRole(Role.ROLE_STUDENT.toString())
 
         );
     }
@@ -292,15 +318,15 @@ public class SecurityConfig {
     @Deprecated
     private void setTeacherPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/oficialProfile/*").hasRole(Role.TEACHER.toString())
+                .requestMatchers("/api/oficialProfile/*").hasRole(Role.ROLE_TEACHER.toString())
         );
     }
 
     @Deprecated
     private void setAdminPermission(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ADMIN.toString())
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ADMIN.toString())
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole(Role.ROLE_ADMIN.toString())
+                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole(Role.ROLE_ADMIN.toString())
         );
     }
 }

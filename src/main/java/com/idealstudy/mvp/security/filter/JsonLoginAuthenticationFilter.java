@@ -2,7 +2,7 @@ package com.idealstudy.mvp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
-import com.idealstudy.mvp.security.dto.UserDetailsImpl;
+import com.idealstudy.mvp.security.userDetailsImpl.MemberDetails;
 import com.idealstudy.mvp.security.dto.UserLoginRequestDto;
 import com.idealstudy.mvp.security.dto.UserLoginResponseDto;
 import com.idealstudy.mvp.util.JwtUtil;
@@ -75,7 +75,7 @@ public class JsonLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
         log.info("인증 성공. 인가 작업 수행");
 
         // Many of the authentication providers will create a UserDetails object as the principal.
-        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
+        MemberDetails userDetails = (MemberDetails) authResult.getPrincipal();
         MemberDto dto = userDetails.getMemberDto();
         issueJwtToken(dto, response);
     }
