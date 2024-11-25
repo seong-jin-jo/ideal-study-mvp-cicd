@@ -9,6 +9,7 @@ const apiClient = axios.create({
 /**
  * 회원 생성(가입)
  */
+
 export const signUpUser = async (email) => {
   console.log("회원가입 API 시도:", email)
   try{
@@ -42,13 +43,10 @@ export const readUser = async (userId) => {
       console.log("★",userId);
       // 더미 데이터 반환
       const dummyData = {
-        name : "조성진",
-        phone : "010-1234-5678",
-        email : "dummy@naver.com",
-        school : "하버드대학교 컴퓨터공학과",
-        gender : "트렌스젠더",
-        grade : "1등급",
-        level : 7
+        id: userId,
+        name: userId === 1 ? '김대민' : 'Unknown',
+        role: userId === 1 ? '학생' : 'student',
+        level: 17
       };
 
       return dummyData;
@@ -86,6 +84,7 @@ export const readUsers = async (pathname) => {
 /**
  * 회원 수정(업데이트)
  */
+
 export const updateUser = async (accountData) => {
     console.error('회원수정 API 시도:', accountData);
     try{
@@ -120,9 +119,8 @@ export const updateUser = async (accountData) => {
 /**
  * 회원 삭제
  */
-export const deleteUser = async (username) => {
-  console.log("회원수정 API 호출 시도:", username)
-  try{
+export const deleteUser = async (username, password) => {
+
     const response = await apiClient.get('/api/users/{userId}');
     console.log("회원수정 API 호출 성공:", response)
     return response.data;
