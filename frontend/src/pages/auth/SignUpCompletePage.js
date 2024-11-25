@@ -10,11 +10,6 @@ const SignUpCompletePage = () => {
       <Link to="/login">
         <Button>로그인 페이지로 이동</Button>
       </Link>
-
-      {/* 디버깅 */}
-      <br/><br/>
-      --- 이메일 클릭시 이 페이지로 이동하며 임시비밀번호가 보임 ----
-      <h3>임시비밀번호: { }</h3>
     </div>
   );
 };

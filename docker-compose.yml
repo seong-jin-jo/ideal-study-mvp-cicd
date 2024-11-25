@@ -1,8 +1,6 @@
 version: '3.8'
 
 services:
-
-  # MySQL 컨테이너
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
@@ -19,18 +17,6 @@ services:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # init.sql 파일을 복사
 
-  # redis 컨테이너
-  redis-db:
-    networks:
-      - idealstudy-network
-    image: redis:7.0
-    container_name: redis-db
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-
-  # 스프링부트 서버 컨테이너
   server:
     networks:
       - idealstudy-network
@@ -81,6 +67,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+
 
 networks:
   idealstudy-network:

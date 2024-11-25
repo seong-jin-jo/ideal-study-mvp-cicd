@@ -16,7 +16,6 @@ import OfficialProfilePageUpdate from './pages/teacher/OfficialProfilePageUpdate
 
 import './App.css';  // 스타일 파일 import
 import Sidebar from './components/Sidebar';
-import AccountSettings from './pages/auth/AccountSettings';
 
 const App = () => {
   return (
@@ -33,7 +32,6 @@ const App = () => {
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/signup-complete" element={<SignUpCompletePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/accountSettings/:id" element={<AccountSettings/>} />
             {/* user */}
             <Route path="/teachers" element={<ProfileListPage />} />
             <Route path="/students" element={<ProfileListPage />} />

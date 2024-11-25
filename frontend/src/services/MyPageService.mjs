@@ -10,11 +10,13 @@ const apiClient = axios.create({
  * 자기소개 조회
  */
 export const readBio = async (username, password) => {
+  console.log("마이페이지 자기소개조회 API 시도:", username, password)
   try {
   const response = await apiClient.get('/api/mypage/{userId}/bio');
+  console.log("마이페이지 자기소개조회 API 성공:", response)
   return response.data;
   }catch(err){
-    console.error('공식프로필조회 API 호출 오류 발생:', err);
+    console.error('마이페이지 자기소개조회 API 실패:', err);
   
       // 임시로 더미데이터 반환
       const data = {
@@ -29,10 +31,13 @@ export const readBio = async (username, password) => {
  * 자기소개 수정 - 수정내용 반환필요
  */
 export const updateBio = async (userId, bio) => {
+  console.log('자기소개 업데이트 API 호출 시도:', userId, bio);
   try {
     const response = await apiClient.put(`/api/mypage/${userId}/bio`, {
        bio 
     });
+
+    console.log('자기소개 업데이트 API 호출 성공:', response);
 
     if (response.ok) {
       alert('내용이 제출되었습니다!');
@@ -42,7 +47,7 @@ export const updateBio = async (userId, bio) => {
 
     return response.data;
   } catch (err) {
-    console.error('자기소개 업데이트 API 호출 오류 발생:', err);
+    console.error('자기소개 업데이트 API 실패:', err);
 
     // 임시로 더미데이터 반환
     const data = {
