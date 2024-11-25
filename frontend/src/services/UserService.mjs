@@ -7,9 +7,20 @@ const apiClient = axios.create({
   });
 
 /**
+ * 더미데이터 생성
+ */
+export const makeDummyUser = async () => {
+  try{
+    const response = await apiClient.get('/create-dummies');
+    console.log("더미데이터 생성완료")
+    return response.data;
+  }catch(error){
+    console.log("더미데이터 생성실패", error)
+  }
+}
+/**
  * 회원 생성(가입)
  */
-
 export const signUpUser = async (email) => {
   console.log("회원가입 API 시도:", email)
   try{
@@ -120,7 +131,7 @@ export const updateUser = async (accountData) => {
  * 회원 삭제
  */
 export const deleteUser = async (username, password) => {
-
+  try{
     const response = await apiClient.get('/api/users/{userId}');
     console.log("회원수정 API 호출 성공:", response)
     return response.data;
