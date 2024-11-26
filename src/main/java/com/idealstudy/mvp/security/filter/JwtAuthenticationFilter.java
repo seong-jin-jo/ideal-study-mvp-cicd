@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         // request 보안 설정이 우선 적용되고, permitAll이 아닌 나머지에 대해서 filter에 걸리기를 기대함.
-        super("/**");
+        super("/api/**");
         this.jwtUtil = jwtUtil;
     }
 

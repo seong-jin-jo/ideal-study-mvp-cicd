@@ -77,7 +77,11 @@ public class JsonLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
         // Many of the authentication providers will create a UserDetails object as the principal.
         MemberDetails userDetails = (MemberDetails) authResult.getPrincipal();
         MemberDto dto = userDetails.getMemberDto();
-        issueJwtToken(dto, response);
+        try {
+            issueJwtToken(dto, response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -91,7 +95,7 @@ public class JsonLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
         throw new AccessDeniedException("인증에 실패하였습니다.");
     }
 
-    private void issueJwtToken(MemberDto dto, HttpServletResponse response) throws IOException {
+    private void issueJwtToken(MemberDto dto, HttpServletResponse response) throws Exception {
 
         String token = jwtUtil.createToken(dto);
 

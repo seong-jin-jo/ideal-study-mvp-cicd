@@ -36,7 +36,7 @@ public class CommonController {
         return new ResponseEntity<>(payload, HttpStatusCode.valueOf(200));
     }
 
-    @GetMapping("/check-first-login")
+    @GetMapping("/api/check-first-login")
     public ResponseEntity<String> checkFirst() {
 
         // JwtAuthenticationProvider로부터 HttpServletRequest에 token decode 정보(즉, MemberDto 객체)를 심어둬야 한다.
