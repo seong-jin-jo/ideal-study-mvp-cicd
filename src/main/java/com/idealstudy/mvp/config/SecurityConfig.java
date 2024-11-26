@@ -182,7 +182,8 @@ public class SecurityConfig {
     }
 
     private void setHsts(HttpSecurity http) throws Exception {
-        if(isDev.equals("true")) {
+        // if(isDev.equals("true")) {
+        if(true) {
             http.headers(headers -> headers
                     // Disables Strict Transport Security
                     .httpStrictTransportSecurity(HeadersConfigurer.HstsConfig::disable)
