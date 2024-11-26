@@ -10,7 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "teacher")
 public class TeacherEntity extends BaseEntity {

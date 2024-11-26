@@ -14,7 +14,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "classroom")
 public class ClassroomEntity extends BaseEntity {
