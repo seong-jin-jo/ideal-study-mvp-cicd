@@ -1,7 +1,6 @@
-package com.idealstudy.mvp.application.dto.classroom;
+package com.idealstudy.mvp.presentation.dto.classroom;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import com.idealstudy.mvp.infrastructure.jpa.entity.member.TeacherEntity;
 import lombok.Data;
 
 @Data

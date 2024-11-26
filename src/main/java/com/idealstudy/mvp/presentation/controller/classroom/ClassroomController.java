@@ -1,6 +1,6 @@
 package com.idealstudy.mvp.presentation.controller.classroom;
 
-import com.idealstudy.mvp.application.dto.classroom.ClassroomRequestDto;
+import com.idealstudy.mvp.presentation.dto.classroom.ClassroomRequestDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.application.service.classroom.ClassroomService;
 import java.util.List;

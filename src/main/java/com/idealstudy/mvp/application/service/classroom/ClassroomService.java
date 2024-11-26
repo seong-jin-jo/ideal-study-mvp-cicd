@@ -1,9 +1,9 @@
 package com.idealstudy.mvp.application.service.classroom;
 
-import com.idealstudy.mvp.application.dto.classroom.ClassroomRequestDto;
+import com.idealstudy.mvp.presentation.dto.classroom.ClassroomRequestDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
+import com.idealstudy.mvp.infrastructure.ClassroomRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import com.idealstudy.mvp.infrastructure.jpa.repository.ClassroomJpaRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ClassroomService {
 
-    private final ClassroomJpaRepository classroomRepository;
+    private final ClassroomRepository classroomRepository;
 
     public ClassroomResponseDto createClassroom(ClassroomRequestDto request) {
         ClassroomEntity savedClassroom = classroomRepository.save(request.toEntity());

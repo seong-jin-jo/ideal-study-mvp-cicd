@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.infrastructure.jpa.repository;
+package com.idealstudy.mvp.infrastructure.jpa.repository.classroom;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
