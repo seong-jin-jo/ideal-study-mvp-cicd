@@ -11,7 +11,7 @@ const ProfileListPage = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       const data = await readUsers(location.pathname); // 데이터 자체를 반환받음
-      setProfiles(data); // 그대로 profiles에 설정
+      setProfiles(data.dtoList); // 그대로 profiles에 설정
 
     };
     fetchProfiles();
@@ -22,7 +22,7 @@ const ProfileListPage = () => {
       <h2>{location.pathname === '/teachers' ? '선생님 목록입니다' : '학생 목록입니다'}</h2>
       <div className={styles['profile-grid']}>
         {profiles.map((user) => (
-          <ProfileCard key={user.id} user={user} />
+          <ProfileCard key={user.userId} user={user} />
         ))}
       </div>
     </div>
