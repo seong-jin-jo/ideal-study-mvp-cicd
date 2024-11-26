@@ -6,7 +6,7 @@ import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
 import com.idealstudy.mvp.enums.member.MemberError;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
-import com.idealstudy.mvp.infrastructure.jpa.entity.MemberEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.member.MemberEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.MemberJpaRepository;
 import com.idealstudy.mvp.mapstruct.MemberMapper;
 import lombok.extern.log4j.Log4j2;
