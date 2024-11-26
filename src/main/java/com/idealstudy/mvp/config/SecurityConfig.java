@@ -59,6 +59,9 @@ public class SecurityConfig {
     @Value("${server.dev}")
     private String isDev;
 
+    @Value("${server.https}")
+    private String isHttps;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -113,7 +116,7 @@ public class SecurityConfig {
 
         return RoleHierarchyImpl.withDefaultRolePrefix()
                 .role(Role.ROLE_STUDENT.toString()).implies(Role.ROLE_GUEST.toString())
-                .role(Role.ROLE_STUDENT.toString()).implies(Role.ROLE_GUEST.toString())
+                .role(Role.ROLE_TEACHER.toString()).implies(Role.ROLE_GUEST.toString())
                 .role(Role.ROLE_PARENTS.toString()).implies(Role.ROLE_GUEST.toString())
                 .role(Role.ROLE_ADMIN.toString()).implies(
                         Role.ROLE_STUDENT.toString(), Role.ROLE_STUDENT.toString(), Role.ROLE_PARENTS.toString())
@@ -167,6 +170,7 @@ public class SecurityConfig {
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        // https only
         setHsts(http);
 
         setCors(http);
@@ -182,8 +186,7 @@ public class SecurityConfig {
     }
 
     private void setHsts(HttpSecurity http) throws Exception {
-        // if(isDev.equals("true")) {
-        if(true) {
+        if(isDev.equals("true") || isHttps.equals("false")) {
             http.headers(headers -> headers
                     // Disables Strict Transport Security
                     .httpStrictTransportSecurity(HeadersConfigurer.HstsConfig::disable)

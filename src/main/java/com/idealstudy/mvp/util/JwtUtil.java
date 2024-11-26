@@ -4,8 +4,6 @@ import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.security.dto.JwtPayloadDto;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.MacAlgorithm;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,48 +27,62 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 1시간
-    private final MacAlgorithm alg = Jwts.SIG.HS256;
+    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 1시간
+    private static final SecretKey key = Jwts.SIG.HS256.key().build();
 
-    private SecretKey key;
-
+    /*
     @PostConstruct // 한 번만 받아와도 되는 값을 사용할때마다 요청을 새로하지 않기 위해
     public void init() {
         key = alg.key().build();
     }
+     */
 
-    // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
     @Deprecated
     public String createToken(String username, Role role) {
         Date date = new Date();
         try{
-            log.info("JWT 토큰 생성 시도");
-            return BEARER_PREFIX +
-                    Jwts.builder()
-                            .subject(username) // 사용자 식별자값(ID)
-                            .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                            .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                            .issuedAt(date) // 발급일
-                            .signWith(key, alg) // 암호화 알고리즘
-                            .compact();
+            String token = Jwts.builder()
+                    .subject(username) // 사용자 식별자값(ID)
+                    .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                    .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                    .issuedAt(date) // 발급일
+                    .signWith(key) // 암호화 알고리즘
+                    .compact();
+
+            validateToken(token);
+
+            return BEARER_PREFIX + token;
+
         } catch (Exception e) {
             log.error(e + " : " + e.getMessage());
             throw e;
         }
     }
 
-    public String createToken(MemberDto dto) {
+    // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
+    public String createToken(MemberDto dto) throws Exception {
         Date date = new Date();
+        log.info("발급시간: " + date.toString());
         try{
-            log.info("JWT 토큰 생성 시도");
-            return BEARER_PREFIX +
-                    Jwts.builder()
-                            .subject(dto.getUserId()) // 사용자 식별자값(ID)
-                            .claim(AUTHORIZATION_KEY, dto.getRole().toString()) // 사용자 권한
-                            .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
-                            .issuedAt(date) // 발급일
-                            .signWith(key, alg) // 암호화 알고리즘
-                            .compact();
+            log.info("JWT 토큰 생성");
+            String token = Jwts.builder()
+                    .header().type("JWT").and()  // typ
+                    .subject(dto.getUserId()) // 사용자 식별자값(ID)
+                    .claim(AUTHORIZATION_KEY, dto.getRole().toString()) // 사용자 권한
+                    .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                    .issuedAt(date) // 발급일
+                    .signWith(key) // signature
+                    .compact();
+
+            /*
+            log.info("생성 시 사용된 키: " + Encoders.BASE64.encode(key.getEncoded()));
+            log.info("생성된 토큰값: " + token);
+             */
+
+            validateToken(token);
+            
+            return BEARER_PREFIX + token;
+
         } catch (Exception e) {
             log.error(e + " : " + e.getMessage());
             throw e;
@@ -96,6 +108,12 @@ public class JwtUtil {
     // 4. JWT 검증
     public boolean validateToken(String token) {
         try {
+            log.info("생성된 토큰 검증");
+            /*
+            log.info("검증 시 사용된 키: " + Encoders.BASE64.encode(key.getEncoded()));
+            log.info("검증할 토큰값: " + token);
+             */
+
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
@@ -106,6 +124,8 @@ public class JwtUtil {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+        } catch (Exception e) {
+            log.error(e + " : " + e.getMessage());
         }
         return false;
     }
@@ -133,6 +153,8 @@ public class JwtUtil {
     }
 
     public JwtPayloadDto getPayloadFromToken(String token) {
+
+        validateToken(token);
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 
         return  JwtPayloadDto.builder()
