@@ -3,6 +3,7 @@ package com.idealstudy.mvp.application.service.member;
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
+import com.idealstudy.mvp.enums.member.Gender;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.RedisRepository;
@@ -64,6 +65,7 @@ public class MemberService {
         return true;
     }
 
+    @Deprecated
     public void createDummies() {
 
         addMember("student@gmail.com", Role.ROLE_STUDENT, "1234");
@@ -80,6 +82,7 @@ public class MemberService {
                 .email(email)
                 .fromSocial(0)
                 .role(role)
+                .sex(Gender.MALE)
                 .build());
     }
 }

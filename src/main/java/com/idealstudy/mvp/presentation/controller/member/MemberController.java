@@ -4,6 +4,7 @@ import com.idealstudy.mvp.application.service.member.EmailService;
 import com.idealstudy.mvp.application.service.member.MemberService;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
 import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
+import com.idealstudy.mvp.application.service.OfficialProfileService;
 import com.idealstudy.mvp.enums.HttpResponse;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.member.SignUpUserRequestDto;
@@ -29,6 +30,9 @@ public class MemberController {
     @Autowired
     private final EmailService emailService;
 
+    @Autowired
+    private final OfficialProfileService officialProfileService;
+
     /*
      1. 로컬 파트(@ 앞 부분)는 영문자, 숫자, 그리고 일부 특수 문자(_+&*-)를 허용
      2. 도메인 파트(@ 뒷 부분)는 영문자, 숫자, 하이픈(-)을 허용
@@ -39,13 +43,13 @@ public class MemberController {
 
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
-    // 더미 데이터 생성용 엔드포인트
-    @GetMapping("/create-dummies")
+    @Deprecated
+    // @GetMapping("/create-dummies")
     public void createDummy() {
         memberService.createDummies();
     }
 
-    @PostMapping("/api/users/sign-up")
+    @PostMapping("/users/sign-up")
     public ResponseEntity<String> signUp(@RequestBody SignUpUserRequestDto dto) {
 
         ResponseEntity<String> response = sendEmail(dto.getEmail());
@@ -55,7 +59,7 @@ public class MemberController {
         return HttpResponseUtil.responseString(HttpResponse.SUCCESS_EMAIL);
     }
 
-    @GetMapping("/api/users/email-authentication")
+    @GetMapping("/users/email-authentication")
     public ResponseEntity<String> emailAuthentication(@RequestParam String token, @RequestParam String email) {
         log.info("사용자 email: " + email);
         log.info("사용자 토큰값: " + token);
@@ -64,6 +68,8 @@ public class MemberController {
         try {
             // TODO: 다른 권한에 대해서도 회원가입이 가능하도록 해야 함.
             password = memberService.addMember(email, token, Role.ROLE_STUDENT);
+
+            officialProfileService.create();
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(), HttpStatusCode.valueOf(400));
@@ -88,7 +94,7 @@ public class MemberController {
     }
 
     // page number는 어떻게 표현할 생각?
-    @GetMapping("/api/users")
+    @GetMapping("/users")
     public ResponseEntity<MemberPageResultDto> findMemberList() {
 
         MemberPageResultDto dto = memberService.findMembers();
