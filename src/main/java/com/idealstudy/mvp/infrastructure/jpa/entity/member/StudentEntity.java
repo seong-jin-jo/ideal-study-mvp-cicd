@@ -2,6 +2,7 @@ package com.idealstudy.mvp.infrastructure.jpa.entity.member;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,13 +14,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "student")
+@DiscriminatorValue("S")
 public class StudentEntity extends MemberEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "char(36)")
-    private String studentId; // 학생 ID
 
     // Classroom과 N:M 관계
     @ManyToMany(mappedBy = "students")
