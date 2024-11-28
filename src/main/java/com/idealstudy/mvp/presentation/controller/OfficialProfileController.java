@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.presentation.controller;
 
+import com.idealstudy.mvp.application.dto.OfficialProfileDto;
 import com.idealstudy.mvp.application.service.OfficialProfileService;
 import com.idealstudy.mvp.security.annotation.ForTeacher;
 import lombok.RequiredArgsConstructor;
