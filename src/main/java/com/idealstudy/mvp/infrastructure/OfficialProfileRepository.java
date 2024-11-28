@@ -5,7 +5,9 @@ import com.idealstudy.mvp.application.dto.OfficialProfileDto;
 
 public interface OfficialProfileRepository {
 
-    void create();
+    void create(String teacherId);
 
-    OfficialProfileDto findById(Long id);
+    OfficialProfileDto findByTeacherId(String teacherId);
+
+    void update(String teacherId, String contents);
 }
