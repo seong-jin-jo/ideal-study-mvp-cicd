@@ -27,8 +27,8 @@ export const readClasses = async () => {
   } catch (error) {
     console.error('클래스 목록 조회 API 실패:', error);
     return [
-      { id: 'dummy-1', title: '더미 클래스 1', description: 'API 실패로 생성된 더미 데이터 1' },
-      { id: 'dummy-2', title: '더미 클래스 2', description: 'API 실패로 생성된 더미 데이터 2' },
+      { id: 'dummy-1', title: '한석원의 60일 지옥 부트캠프', description: '하루 18시간 공부할 학생들만 참여가능' },
+      { id: 'dummy-2', title: '현우진의 노베이스 부트캠프', description: '인생 조진거같다 싶으면 드루와 갱생시켜줌' },
     ]; // 더미 데이터 반환
   }
 };
@@ -46,8 +46,9 @@ export const readClassById = async (classId) => {
     console.error('클래스 상세 조회 API 실패:', error);
     return {
       id: classId,
-      title: `더미 클래스 제목 (${classId})`,
-      description: 'API 실패로 생성된 더미 데이터 상세 정보',
+      title: `한석원의 60일 지옥의 수학 부트캠프`,
+      description: '9등급도 60일만에 1등급을 만들어주는 수업',
+      thumbnail: 'temp'
     }; // 더미 데이터 반환
   }
 };
