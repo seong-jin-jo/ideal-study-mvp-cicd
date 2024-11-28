@@ -1,20 +1,17 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.member;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.List;
+
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
-@Entity
+@Entity(name = "Teacher")
+@Table(name = "TEACHER")
 @DiscriminatorValue("T")
 public class TeacherEntity extends MemberEntity {
 
