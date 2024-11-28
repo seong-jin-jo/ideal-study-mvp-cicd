@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ClassroomCard from '../../components/classroom/ClassroomCard';
 import { readClasses } from '../../services/ClassroomService.mjs';
 
+import './ClassroomListPage.css';
+
 const ClassroomList = () => {
   const [classrooms, setClassrooms] = useState([]);
 
@@ -17,7 +19,7 @@ const ClassroomList = () => {
   return (
     <div>
       <h1>클래스 목록</h1>
-      <div className="classroom-list">
+      <div className="classroom-grid">
         {classrooms.map((classroom) => (
           <ClassroomCard key={classroom.id} classroom={classroom} />
         ))}
