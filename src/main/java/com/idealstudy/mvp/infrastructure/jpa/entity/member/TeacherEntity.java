@@ -1,6 +1,5 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.member;
 
-import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "teacher")
-public class TeacherEntity extends BaseEntity {
+public class TeacherEntity extends MemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
