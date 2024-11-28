@@ -16,11 +16,21 @@ public class OfficialProfileRepositoryImpl implements OfficialProfileRepository 
     private final OfficialProfileJpaRepository officialProfileJpaRepository;
 
     @Override
-    public void create() {
+    public void create(String teacherId) {
 
     }
 
     @Override
+    public OfficialProfileDto findByTeacherId(String teacherId) {
+        return null;
+    }
+
+    @Override
+    public void update(String teacherId, String contents) {
+
+    }
+
+    // @Override
     public OfficialProfileDto findById(Long id) {
         OfficialProfileEntity entity = officialProfileJpaRepository.findById(id).orElseThrow();
         return entity.toDto();
