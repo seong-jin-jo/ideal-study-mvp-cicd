@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
-import { signUpUser } from '../../services/UserService.mjs';
+import { signUpUser } from '../../services/user/UserService.mjs';
 
 const SignUpPage = () => {
   // const [username, setUsername] = useState('');

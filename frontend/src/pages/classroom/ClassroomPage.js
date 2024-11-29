@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { readClassById } from '../../services/ClassroomService.mjs';
+import { readClassById } from '../../services/classroom/ClassroomService.mjs';
 import LikeButton from '../../components/LikeButton';
 import ClassInfo from './ClassInfo';
 import ClassEnrollment from './Enrollment/Enrollment';

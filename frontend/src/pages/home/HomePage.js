@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { makeDummyUser } from '../../services/UserService.mjs';
+import { makeDummyUser } from '../../services/user/UserService.mjs';
 import Button from '../../components/Button';
 
 const HomePage = () => {
