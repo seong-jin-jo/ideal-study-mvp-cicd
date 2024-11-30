@@ -1,8 +1,7 @@
 package com.idealstudy.mvp.application.service.member;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.member.MemberDto;
-import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
+import com.idealstudy.mvp.application.dto.member.*;
 import com.idealstudy.mvp.enums.member.Gender;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
@@ -54,7 +53,11 @@ public class MemberService {
     }
 
     public MemberDto updateMember(MemberDto dto) {
-        return memberRepository.update(dto);
+
+
+
+        // return memberRepository.update(dto);
+        return null;
     }
 
     public boolean deleteMember(String userId) {
@@ -76,13 +79,41 @@ public class MemberService {
 
     private void addMember(String email, Role role, String password) {
 
-        memberRepository.create(MemberDto.builder()
-                .userId(email)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .fromSocial(0)
-                .role(role)
-                .sex(Gender.MALE)
-                .build());
+        if(role == Role.ROLE_TEACHER)
+            memberRepository.create((TeacherDto) TeacherDto.builder()
+                    .userId(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .fromSocial(0)
+                    .role(role)
+                    .sex(Gender.MALE)
+                    .build());
+        if(role == Role.ROLE_STUDENT)
+            memberRepository.create((StudentDto) StudentDto.builder()
+                    .userId(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .fromSocial(0)
+                    .role(role)
+                    .sex(Gender.MALE)
+                    .build());
+        if(role == Role.ROLE_PARENTS)
+            memberRepository.create((ParentsDto) ParentsDto.builder()
+                    .userId(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .fromSocial(0)
+                    .role(role)
+                    .sex(Gender.MALE)
+                    .build());
+        if(role == Role.ROLE_ADMIN)
+            memberRepository.create((AdminDto) AdminDto.builder()
+                    .userId(UUID.randomUUID().toString())
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .fromSocial(0)
+                    .role(role)
+                    .sex(Gender.MALE)
+                    .build());
     }
 }

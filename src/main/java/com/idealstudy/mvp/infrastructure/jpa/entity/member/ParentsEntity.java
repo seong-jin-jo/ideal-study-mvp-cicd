@@ -1,15 +1,28 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.member;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Entity(name = "Parents")
 @Table(name = "PARENTS")
 @DiscriminatorValue("P")
+@SuperBuilder
+@Getter
+@Setter
 public class ParentsEntity extends MemberEntity {
 
-    // nothing
+    // PARENTS - STUDENT 다대다 단방향 비식별 관계
+    @ManyToMany
+    @JoinTable( name = "PARENTS_STUDENT",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID")
+    )
+    private List<StudentEntity> students;
 }

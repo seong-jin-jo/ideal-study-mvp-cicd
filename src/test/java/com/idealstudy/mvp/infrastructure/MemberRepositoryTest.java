@@ -25,6 +25,7 @@ public class MemberRepositoryTest {
     @DisplayName("더미 데이터 삽입")
     public void setup() {
 
+        /*
         IntStream.rangeClosed(1, 50).forEach(i -> {
 
             MemberDto dto = MemberDto.builder()
@@ -38,6 +39,8 @@ public class MemberRepositoryTest {
 
             memberRepository.create(dto);
         });
+
+         */
     }
 
     @Test

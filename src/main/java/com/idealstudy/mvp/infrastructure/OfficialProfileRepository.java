@@ -9,5 +9,5 @@ public interface OfficialProfileRepository {
 
     OfficialProfileDto findByTeacherId(String teacherId);
 
-    void update(String teacherId, String contents);
+    void update(OfficialProfileDto dto);
 }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface OfficialProfileJpaRepository extends JpaRepository<OfficialProfileEntity, Long> {
+public interface OfficialProfileJpaRepository extends JpaRepository<OfficialProfileEntity, String> {
 
-    Optional<OfficialProfileEntity> findByTeacherId(String teacherId);
+
 }

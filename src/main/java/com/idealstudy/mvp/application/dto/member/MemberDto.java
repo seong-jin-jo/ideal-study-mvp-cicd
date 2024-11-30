@@ -2,10 +2,11 @@ package com.idealstudy.mvp.application.dto.member;
 
 import com.idealstudy.mvp.enums.member.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-public class MemberDto {
+@SuperBuilder
+public abstract class MemberDto {
 
     private String userId;
 

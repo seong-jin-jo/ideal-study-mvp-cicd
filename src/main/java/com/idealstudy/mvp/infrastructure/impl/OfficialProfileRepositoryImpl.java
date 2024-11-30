@@ -21,39 +21,25 @@ public class OfficialProfileRepositoryImpl implements OfficialProfileRepository 
 
         String initContent = "<p>최초 프로필 생성됨</p>";
         
-        OfficialProfileEntity officialProfileEntity = OfficialProfileEntity.builder()
+        OfficialProfileEntity entity = OfficialProfileEntity.builder()
+                .id(teacherId)
                 .content(initContent)
                 .build();
 
-        /*
-
-         */
-        TeacherEntity teacherEntity = (TeacherEntity) TeacherEntity.builder()
-                .userId(teacherId)
-                .build();
-
-
-
-        officialProfileJpaRepository.save(null);
+        officialProfileJpaRepository.save(entity);
     }
 
     @Override
     public OfficialProfileDto findByTeacherId(String teacherId) {
 
-        OfficialProfileEntity entity = officialProfileJpaRepository.findByTeacherId(teacherId).orElseThrow();
+        OfficialProfileEntity entity = officialProfileJpaRepository.findById(teacherId).orElseThrow();
 
-        return null;
+        return entity.toDto();
     }
 
     @Override
-    public void update(String teacherId, String contents) {
+    public void update(OfficialProfileDto dto) {
 
-    }
-
-    // @Override
-    public OfficialProfileDto findById(Long id) {
-        OfficialProfileEntity entity = officialProfileJpaRepository.findById(id).orElseThrow();
-
-        return entity.toDto();
+        officialProfileJpaRepository.save(OfficialProfileEntity.toEntity(dto));
     }
 }
