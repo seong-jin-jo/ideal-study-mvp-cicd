@@ -16,8 +16,8 @@ public interface MemberMapper {
 
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
-    // MemberDto entityToDto(MemberEntity entity);
-    // MemberEntity dtoToEntity(MemberDto dto);
+    MemberDto entityToDto(MemberEntity entity);
+    MemberEntity dtoToEntity(MemberDto dto);
 
     TeacherEntity dtoToEntity(TeacherDto dto);
     ParentsEntity dtoToEntity(ParentsDto dto);

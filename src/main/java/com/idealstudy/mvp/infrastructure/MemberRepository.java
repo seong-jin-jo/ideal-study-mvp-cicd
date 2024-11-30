@@ -6,6 +6,7 @@ import com.idealstudy.mvp.application.dto.member.*;
 
 public interface MemberRepository {
 
+
     void create(TeacherDto dto);
     void create(ParentsDto dto);
     void create(StudentDto dto);
@@ -17,6 +18,7 @@ public interface MemberRepository {
 
     MemberPageResultDto findMembers(PageRequestDto requestDto);
 
+    MemberDto update(MemberDto dto);
     TeacherDto update(TeacherDto dto);
     ParentsDto update(ParentsDto dto);
     StudentDto update(StudentDto dto);

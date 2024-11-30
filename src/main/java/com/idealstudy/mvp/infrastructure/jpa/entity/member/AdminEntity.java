@@ -16,4 +16,8 @@ import lombok.experimental.SuperBuilder;
 public class AdminEntity extends MemberEntity{
 
     // nothing
+
+    public AdminEntity() {
+
+    }
 }

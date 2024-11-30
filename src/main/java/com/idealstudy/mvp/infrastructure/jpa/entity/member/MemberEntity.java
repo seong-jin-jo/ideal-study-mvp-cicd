@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Setter  // for Writer accessor
 @SuperBuilder
 @ToString
-public abstract class MemberEntity extends BaseEntity {
+public class MemberEntity extends BaseEntity {
 
     // 주의: UUID를 직접 KEY로 사용하는 것은 성능적으로 문제가 있다고 한다.
     // 참고문헌 : https://planetscale.com/blog/the-problem-with-using-a-uuid-primary-key-in-mysql#best-ways-to-use-a-uuid-primary-key-with-mysql
@@ -80,4 +80,7 @@ public abstract class MemberEntity extends BaseEntity {
     // @Column(columnDefinition = "TINYINT default 0")
     private int deleted;
 
+    public MemberEntity() {
+        super();
+    }
 }

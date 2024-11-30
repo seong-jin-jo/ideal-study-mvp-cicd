@@ -28,4 +28,7 @@ public class StudentEntity extends MemberEntity {
     @ManyToMany(mappedBy = "students")
     private List<ClassroomEntity> classrooms; // 참여한 수업 목록
 
+    public StudentEntity() {
+        super();
+    }
 }

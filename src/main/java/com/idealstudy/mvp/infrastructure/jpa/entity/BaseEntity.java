@@ -40,4 +40,7 @@ public class BaseEntity {
     @Column(name = "deleted_by")
     private String deletedBy; // 삭제자
 
+    public BaseEntity() {
+
+    }
 }

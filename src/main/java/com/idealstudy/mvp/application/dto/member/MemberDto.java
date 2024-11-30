@@ -6,7 +6,8 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public abstract class MemberDto {
+@ToString
+public class MemberDto {
 
     private String userId;
 

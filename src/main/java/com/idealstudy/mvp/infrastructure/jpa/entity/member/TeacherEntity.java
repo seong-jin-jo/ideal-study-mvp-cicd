@@ -32,27 +32,7 @@ public class TeacherEntity extends MemberEntity {
     private List<ClassroomEntity> classrooms; // 참여한 클래스 목록
 
 
-    /* 기존 엔티티 객체로 새 엔티티 객체 생성 불가
-    public TeacherEntity(MemberEntity parent, String univ, SchoolRegister status, String subject) {
+    public TeacherEntity() {
 
-        super.setUserId(parent.getUserId());
-        super.setPassword(parent.getPassword());
-        super.setName(parent.getName());
-        super.setPhoneAddress(parent.getPhoneAddress());
-        super.setEmail(parent.getEmail());
-        super.setSex(parent.getSex());
-        super.setReferralId(parent.getReferralId());
-        super.setLevel(parent.getLevel());
-        super.setRole(parent.getRole());
-        super.setIntroduction(parent.getIntroduction());
-        super.setProfile(parent.getProfile());
-        super.setFromSocial(parent.getFromSocial());
-        super.setInit(parent.getInit());
-        super.setDeleted(parent.getDeleted());
-
-        this.univ = univ;
-        this.status = status;
-        this.subject=subject;
     }
-     */
 }

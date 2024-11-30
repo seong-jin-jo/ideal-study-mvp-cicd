@@ -21,8 +21,12 @@ public class ParentsEntity extends MemberEntity {
     // PARENTS - STUDENT 다대다 단방향 비식별 관계
     @ManyToMany
     @JoinTable( name = "PARENTS_STUDENT",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID")
+            joinColumns = @JoinColumn(name = "PARENTS_ID", referencedColumnName = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "USER_ID")
     )
     private List<StudentEntity> students;
+
+    public ParentsEntity() {
+
+    }
 }
