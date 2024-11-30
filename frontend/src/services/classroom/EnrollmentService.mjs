@@ -9,7 +9,6 @@ export const createEnrollment = async (enrollmentData) => {
       return response.data;
     } catch (err) {
       console.error("수업 신청 실패:", err);
-      throw err;
     }
   };
   
@@ -39,7 +38,7 @@ export const createEnrollment = async (enrollmentData) => {
     }
   };
   
-  // 수업 신청 상세 조회
+  // 수업 신청 상세 조회 (userId, classId 로 검색해야됨)
   export const readEnrollment = async (enrollmentId) => {
     console.log(`수업 신청 상세 조회 시도: enrollmentId=${enrollmentId}`);
     try {
@@ -48,7 +47,15 @@ export const createEnrollment = async (enrollmentData) => {
       return response.data;
     } catch (err) {
       console.error("수업 신청 상세 조회 실패:", err);
-      throw err;
+
+      // 실패 시 기본 형식에 맞는 더미 데이터 반환
+      return {
+        currentGrade: '',
+        targetGrade: '',
+        concerns: '',
+        goals: '',
+        requests: '',
+      };
     }
   };
   
