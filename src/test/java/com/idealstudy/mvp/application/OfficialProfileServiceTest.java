@@ -35,25 +35,8 @@ public class OfficialProfileServiceTest {
 
     @BeforeEach
     public void createDummyTeacher() {
-        String univ = "한국대학교";
-        SchoolRegister schoolRegister = SchoolRegister.GRADUATION;
-        String subject = "수학";
 
-        TeacherDto dto = TeacherDto.builder()
-                .userId(TEACHER_ID)
-                .password("abcd1234")
-                .phoneAddress("010-1234-1234")
-                .email("testteacher@gmail.com")
-                .role(Role.ROLE_TEACHER)
-                .sex(Gender.MALE)
-                .referralId(UUID.randomUUID().toString())
-                .fromSocial(0)
-                .univ(univ)
-                .status(schoolRegister)
-                .subject(subject)
-                .build();
-
-        memberRepository.create(dto);
+        memberRepository.createDummyTeacher(TEACHER_ID);
     }
 
     @Test

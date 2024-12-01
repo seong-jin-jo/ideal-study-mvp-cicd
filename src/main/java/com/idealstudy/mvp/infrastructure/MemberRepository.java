@@ -2,10 +2,36 @@ package com.idealstudy.mvp.infrastructure;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.member.*;
+import com.idealstudy.mvp.enums.member.Gender;
+import com.idealstudy.mvp.enums.member.Role;
+import com.idealstudy.mvp.enums.member.SchoolRegister;
+
+import java.util.UUID;
 
 
 public interface MemberRepository {
 
+    default void createDummyTeacher(String userId) {
+        String univ = "한국대학교";
+        SchoolRegister schoolRegister = SchoolRegister.GRADUATION;
+        String subject = "수학";
+
+        TeacherDto dto = TeacherDto.builder()
+                .userId(userId)
+                .password("abcd1234")
+                .phoneAddress("010-1234-1234")
+                .email("testteacher@gmail.com")
+                .role(Role.ROLE_TEACHER)
+                .sex(Gender.MALE)
+                .referralId(UUID.randomUUID().toString())
+                .fromSocial(0)
+                .univ(univ)
+                .status(schoolRegister)
+                .subject(subject)
+                .build();
+
+        create(dto);
+    }
 
     void create(TeacherDto dto);
     void create(ParentsDto dto);

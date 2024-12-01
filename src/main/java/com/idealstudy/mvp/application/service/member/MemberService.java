@@ -54,10 +54,7 @@ public class MemberService {
 
     public MemberDto updateMember(MemberDto dto) {
 
-
-
-        // return memberRepository.update(dto);
-        return null;
+        return memberRepository.update(dto);
     }
 
     public boolean deleteMember(String userId) {
