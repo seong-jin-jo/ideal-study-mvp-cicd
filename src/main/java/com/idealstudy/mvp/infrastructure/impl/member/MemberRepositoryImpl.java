@@ -58,11 +58,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     }
 
-    @Override
-    public void create(AdminDto dto) {
-
-    }
-
     /**
      * MEMBER table에 저장된 데이터에 한해서만 조회하는 메소드
      * @param id
@@ -78,6 +73,28 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         return memberMapper.entityToDto(result.get());
     }
+
+    @Override
+    public TeacherDto findTeacherById(String id) {
+
+        Optional<TeacherEntity> result = teacherJpaRepository.findById(id);
+
+        if(result.isEmpty())
+            throw new NullPointerException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
+
+        return memberMapper.entityToDto(result.get());
+    }
+
+    @Override
+    public ParentsDto findParentsById(String id) {
+        return null;
+    }
+
+    @Override
+    public StudentDto findStudentById(String id) {
+        return null;
+    }
+
 
     @Override
     public MemberDto findByEmail(String email) {
@@ -114,11 +131,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public StudentDto update(StudentDto dto) {
-        return null;
-    }
-
-    @Override
-    public AdminDto update(AdminDto dto) {
         return null;
     }
 

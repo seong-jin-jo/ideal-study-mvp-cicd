@@ -106,6 +106,7 @@ public class MemberService {
                     .role(role)
                     .sex(Gender.MALE)
                     .build());
+        /*
         if(role == Role.ROLE_ADMIN)
             memberRepository.create((AdminDto) AdminDto.builder()
                     .userId(UUID.randomUUID().toString())
@@ -115,5 +116,7 @@ public class MemberService {
                     .role(role)
                     .sex(Gender.MALE)
                     .build());
+
+         */
     }
 }

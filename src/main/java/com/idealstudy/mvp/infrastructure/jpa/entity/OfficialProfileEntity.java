@@ -15,6 +15,7 @@ import lombok.*;
 public class OfficialProfileEntity {
 
     @Id
+    @Column(name = "USER_ID")
     private String id;
 
     // HTML 데이터를 저장
@@ -23,7 +24,7 @@ public class OfficialProfileEntity {
     
     // TEACHER와 일대일 단방향 식별 관계
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private TeacherEntity teacher;
 
