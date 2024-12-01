@@ -2,6 +2,9 @@ package com.idealstudy.mvp.infrastructure;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.member.MemberDto;
+import com.idealstudy.mvp.application.dto.member.MemberPageResultDto;
+import com.idealstudy.mvp.application.dto.member.StudentDto;
+import com.idealstudy.mvp.application.dto.member.TeacherDto;
 import com.idealstudy.mvp.enums.member.Gender;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.infrastructure.jpa.entity.member.MemberEntity;
@@ -10,78 +13,74 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
 
 @SpringBootTest
+@Transactional
 public class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
 
-    @Deprecated
     @Test
-    @DisplayName("더미 데이터 삽입")
-    public void setup() {
-
-        IntStream.rangeClosed(1, 50).forEach(i -> {
-
-            MemberDto dto = MemberDto.builder()
-                    .password("abcd1234")
-                    .phoneAddress("010-1234-1234")
-                    .email("tester"+i+"@gmail.com")
-                    .sex(Gender.MALE)
-                    .referralId(UUID.randomUUID().toString())
-                    .fromSocial(0)
-                    .build();
-
-            memberRepository.create(dto);
-        });
-    }
-
-    @Test
-    @DisplayName("데이터 조회 테스트")
+    @DisplayName("회원 데이터 조회 테스트")
     public void testFindById() {
 
-        // System.out.println(memberRepository.findById(1L));
+        String teacherId = "98a10847-ad7e-11ef-8e5c-0242ac140002";
+
+        MemberDto dto = memberRepository.findById(teacherId);
+
+        Assertions.assertThat(dto.getRole()).isEqualTo(Role.ROLE_TEACHER);
     }
 
     @Test
-    @DisplayName("데이터 목록 조회 테스트")
+    @DisplayName("회원 데이터 목록 조회 테스트")
     public void testFindMembers() {
 
         PageRequestDto pageRequestDto = PageRequestDto.builder()
                 .page(1)
                 .size(10)
                 .build();
-        System.out.println(memberRepository.findMembers(pageRequestDto));
+        MemberPageResultDto dto = memberRepository.findMembers(pageRequestDto);
+
+        Assertions.assertThat(dto.getSize()).isGreaterThan(4);
+
+        Assertions.assertThat(dto.getDtoList().getFirst().getPhoneAddress()).isEqualTo("010-1234-1234");
     }
 
-    /*
     @Test
-    @DisplayName("데이터 수정 테스트")
+    @DisplayName("회원 데이터 수정 테스트")
     public void testUpdateMember() {
 
+        String intro = "나는 강사입니다.";
+        String teacherId = "98a10847-ad7e-11ef-8e5c-0242ac140002";
+        
         MemberDto dto = MemberDto.builder()
-                .id(1L)
-                .phoneAddress("010-5678-5678")
+                .userId(teacherId)
+                .introduction(intro)
                 .build();
 
-        System.out.println(memberRepository.update(dto));
-    }
-    */
+        memberRepository.update(dto);
 
-    /*
+        MemberDto resultDto = memberRepository.findById(teacherId);
+        Assertions.assertThat(resultDto.getUserId()).isEqualTo(teacherId);
+        Assertions.assertThat(resultDto.getIntroduction()).isEqualTo(intro);
+    }
+
     @Test
-    @DisplayName("데이터 삭제 테스트")
+    @DisplayName("회원 삭제 테스트")
     public void testDeleteMember() {
 
-        memberRepository.deleteById(1L);
+        String teacherId = "98a10847-ad7e-11ef-8e5c-0242ac140002";
 
-        Assertions.assertThat(memberRepository.findById(1L)).isNull();
+        Assertions.assertThat(memberRepository.deleteById(teacherId)).isTrue();
+
+        Assertions.assertThat(memberRepository.findById(teacherId).isDeleted()).isTrue();
     }
-    */
+
 
     @Test
     @DisplayName("관리자 조회 테스트")

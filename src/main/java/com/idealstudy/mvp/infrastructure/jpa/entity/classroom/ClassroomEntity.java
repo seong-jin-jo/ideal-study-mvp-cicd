@@ -15,10 +15,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @Entity
 @Table(name = "classroom")
+@SuperBuilder
 public class ClassroomEntity extends BaseEntity {
 
     @Id

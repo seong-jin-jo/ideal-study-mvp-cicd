@@ -13,17 +13,17 @@ public class OfficialProfileService {
     @Autowired
     private final OfficialProfileRepository officialProfileRepository;
 
-    public void create() {
-
+    public void create(String teacherId) {
+        officialProfileRepository.create(teacherId);
     }
 
-    public OfficialProfileDto selectOne(String userId) {
+    public OfficialProfileDto selectOne(String teacherId) {
 
-        return null;
+        return officialProfileRepository.findByTeacherId(teacherId);
     }
 
-    public OfficialProfileDto update(String userId) {
+    public OfficialProfileDto update(OfficialProfileDto dto) {
 
-        return selectOne(userId);
+        return officialProfileRepository.update(dto);
     }
 }
