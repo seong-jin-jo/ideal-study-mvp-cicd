@@ -1,0 +1,99 @@
+package com.idealstudy.mvp.application;
+
+import com.idealstudy.mvp.TestRepositoryUtil;
+import com.idealstudy.mvp.application.dto.PageRequestDto;
+import com.idealstudy.mvp.application.dto.classroom.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
+import com.idealstudy.mvp.application.service.classroom.FAQService;
+import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.FAQJpaRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+@SpringBootTest
+@Transactional
+public class FAQServiceTest {
+
+    private final FAQService faqService;
+
+    // 테스트 이외에 의존성 없음
+    private final TestRepositoryUtil testRepositoryUtil;
+    private Long autoIncrement;
+
+    private static final Long FAQ_ID = 1L;
+
+    private static final String TEACHER_ID = "98a10847-ad7e-11ef-8e5c-0242ac140002";
+
+    private static final String CLASSROOM_ID = "98a12345-ad7e-11ef-8e5c-0242ac140002";
+
+    private static final String TABLE_NAME = "faq";
+
+    @Autowired
+    public FAQServiceTest(FAQService faqService, TestRepositoryUtil testRepositoryUtil) {
+        this.faqService = faqService;
+        this.testRepositoryUtil = testRepositoryUtil;
+    }
+
+    @BeforeEach
+    public void getAutoIncrement() {
+        autoIncrement = testRepositoryUtil.getAutoIncrement(TABLE_NAME);
+    }
+
+    @Test
+    public void createAndFindById() {
+
+        String title = "과제 하는 방법";
+        String content = "<p>과제를 작성하고 파일 형태로 첨부하여 제출할 것.</p>";
+
+        faqService.create(TEACHER_ID, CLASSROOM_ID, title, content);
+
+        FAQDto dto = faqService.findById(autoIncrement);
+        Assertions.assertThat(dto.getId()).isEqualTo(autoIncrement);
+        Assertions.assertThat(dto.getCreatedBy()).isEqualTo(TEACHER_ID);
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(CLASSROOM_ID);
+        Assertions.assertThat(dto.getTitle()).isEqualTo(title);
+        Assertions.assertThat(dto.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void findList() {
+
+        int page = 1;
+
+        FAQPageResultDto resultDto = faqService.findList(page);
+        List<FAQDto> list = resultDto.getDtoList();
+        FAQDto dto = list.getFirst();
+
+        Assertions.assertThat(resultDto.getPage()).isEqualTo(page);
+        Assertions.assertThat(dto.getCreatedBy()).isEqualTo(TEACHER_ID);
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(CLASSROOM_ID);
+    }
+
+    @Test
+    public void update() {
+
+        String newTitle = "동영상 시청 팁";
+        String newContent = "<p>동영상 시청은 어렵지 않습니다.</p>";
+
+        FAQDto updateDto = faqService.update(FAQ_ID, newTitle, newContent);
+
+        Assertions.assertThat(updateDto.getCreatedBy()).isEqualTo(TEACHER_ID);
+        Assertions.assertThat(updateDto.getTitle()).isEqualTo(newTitle);
+        Assertions.assertThat(updateDto.getContent()).isEqualTo(newContent);
+    }
+
+    @Test
+    public void delete() {
+
+        faqService.delete(FAQ_ID);
+
+        Assertions.assertThatThrownBy(() -> {faqService.findById(FAQ_ID);})
+                .isInstanceOf(NoSuchElementException.class);
+    }
+}
