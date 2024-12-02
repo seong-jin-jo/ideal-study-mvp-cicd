@@ -22,7 +22,7 @@ public class ParentsEntity extends MemberEntity {
     @ManyToMany
     @JoinTable( name = "PARENTS_STUDENT",
             joinColumns = @JoinColumn(name = "PARENTS_ID", referencedColumnName = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "USER_ID")
+            inverseJoinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "student_id")
     )
     private List<StudentEntity> students;
 

@@ -2,12 +2,10 @@ package com.idealstudy.mvp.infrastructure.jpa.entity.member;
 
 import com.idealstudy.mvp.enums.member.Grade;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+
 import java.util.List;
 
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -18,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @Setter
+@PrimaryKeyJoinColumn(name = "student_id")
 public class StudentEntity extends MemberEntity {
 
     private String school;

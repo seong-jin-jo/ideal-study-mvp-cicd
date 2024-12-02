@@ -80,3 +80,47 @@ CREATE TABLE IF NOT EXISTS student (
         PRIMARY KEY (USER_ID),
         FOREIGN KEY (USER_ID) REFERENCES member(USER_ID)
 );
+
+CREATE TABLE IF NOT EXISTS student (
+
+        student_id CHAR(36) NOT NULL,
+        GRADE ENUM('M1', 'M2', 'M3', 'H1', 'H2', 'H3', 'N'),
+        PRIMARY KEY (student_id),
+        FOREIGN KEY (student_id) REFERENCES member(USER_ID)
+);
+
+-- 클래스 테이블 생성
+CREATE TABLE IF NOT EXISTS classroom (
+        classroom_id CHAR(36) NOT NULL,
+        teacher_id CHAR(36) NOT NULL,
+        title VARCHAR(50) NOT NULL,
+        description VARCHAR(1000),
+        capacity INT NOT NULL,
+        thumbnail VARCHAR(255),
+        reg_date DATETIME(6) NOT NULL,
+        PRIMARY KEY (classroom_id),
+        FOREIGN KEY (teacher_id) REFERENCES teacher(teacher_id)
+);
+
+-- 클래스 더미 데이터 삽입
+INSERT INTO classroom
+VALUES
+        ('98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', '이상한수학',
+        '수학을 잘 하고 싶은 사람들 모두 모여라', 20, 'http://어딘가', NOW());
+
+CREATE TABLE IF NOT EXISTS faq (
+        faq_id BIGINT,
+        title VARCHAR(100) NOT NULL,
+        content VARCHAR(1000) NOT NULL,
+        classroom_id CHAR(36) NOT NULL,
+        created_by CHAR(36) NOT NULL,
+        mod_date DATETIME(6),
+        reg_date DATETIME(6) NOT NULL,
+        PRIMARY KEY (faq_id),
+        FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id)
+);
+
+INSERT INTO faq
+VALUES
+        (1000000, '동영상 시청은 어떻게 하나요?', 'A 화면 어딘가에 박혀있는 B라는 버튼을 누르면 어디로 navigation 되는데 ~~~',
+         '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NOW());

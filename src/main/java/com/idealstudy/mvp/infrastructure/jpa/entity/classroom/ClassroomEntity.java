@@ -64,4 +64,8 @@ public class ClassroomEntity extends BaseEntity {
 
     private String scheduler; // 스케쥴러 관련
 
+
+    public ClassroomEntity() {
+
+    }
 }
