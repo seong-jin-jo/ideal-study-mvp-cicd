@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext }from 'react';
 import { createEnrollment, readEnrollment } from '../../../services/classroom/EnrollmentService.mjs';
 import { AuthContext } from '../../../context/AuthContext';
-import Button from '../../../components/Button';
+import Button from '../../Button';
 
 
 const EnrollmentForm = ({ classId, isClose }) => {

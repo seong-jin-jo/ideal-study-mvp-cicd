@@ -20,8 +20,9 @@ const Enrollment = ({classId}) => {
     }
 
     return (
-        <div>
-            <h2>수업 신청</h2>
+        <div style={{ display:"flex" }}>
+            <h2>수업 신청</h2> &nbsp;
+            
             <button onClick ={openModal}> 신청하기 </button>
             <Modal
                 isOpen = {isOpen}

@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import { createSchedule, readSchedulesByClass } from '../../../services/classroom/ScheduleService.mjs';
 import './ScheduleBoard.css';
 
-import ScheduleCalendar from '../../../components/classroom/schedule/ScheduleCalendar';
-import ScheduleDetails from '../../../components/classroom/schedule/ScheduleDetails';
+import ScheduleCalendar from './ScheduleCalendar';
+import ScheduleDetails from './ScheduleDetails';
 
 const ScheduleBoard = ({ classId }) => {
   const [date, setDate] = useState(new Date()); // 현재 시간
@@ -41,7 +41,7 @@ const ScheduleBoard = ({ classId }) => {
     };
     if (newSchedule.title && newSchedule.content) {
       setSchedules(prevSchedules => [...prevSchedules, newSchedule]);
-      await createSchedule(classId, newSchedule)
+      await createSchedule(classId, newSchedule);
     }
   }
 
