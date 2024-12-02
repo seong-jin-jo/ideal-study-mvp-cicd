@@ -85,13 +85,14 @@ public class FAQRepositoryTest {
                 .size(10)
                 .build();
 
-        FAQPageResultDto resultDto = faqRepository.findList(requestDto);
+        FAQPageResultDto resultDto = faqRepository.findList(requestDto, CLASSROOM_ID);
         List<FAQDto> list = resultDto.getDtoList();
         FAQDto dto = list.getFirst();
 
         Assertions.assertThat(resultDto.getPage()).isEqualTo(1);
         Assertions.assertThat(dto.getId()).isEqualTo(ID);
         Assertions.assertThat(dto.getCreatedBy()).isEqualTo(TEACHER_ID);
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(CLASSROOM_ID);
     }
 
     @Test

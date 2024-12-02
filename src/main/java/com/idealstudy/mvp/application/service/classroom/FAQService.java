@@ -39,14 +39,14 @@ public class FAQService {
         return faqRepository.findById(faqId);
     }
 
-    public FAQPageResultDto findList(int page) {
+    public FAQPageResultDto findList(int page, String classroomId) {
 
         PageRequestDto dto = PageRequestDto.builder()
                 .page(page)
                 .size(PAGE_SIZE)
                 .build();
 
-        return faqRepository.findList(dto);
+        return faqRepository.findList(dto, classroomId);
     }
 
     public FAQDto updateTitle(Long faqId, String title) {

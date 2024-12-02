@@ -66,7 +66,7 @@ public class FAQServiceTest {
 
         int page = 1;
 
-        FAQPageResultDto resultDto = faqService.findList(page);
+        FAQPageResultDto resultDto = faqService.findList(page, CLASSROOM_ID);
         List<FAQDto> list = resultDto.getDtoList();
         FAQDto dto = list.getFirst();
 

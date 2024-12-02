@@ -10,7 +10,7 @@ public interface FAQRepository {
 
     FAQDto findById(Long faqId);
 
-    FAQPageResultDto findList(PageRequestDto dto);
+    FAQPageResultDto findList(PageRequestDto dto, String classroomId);
 
     FAQDto update(FAQDto dto);
 

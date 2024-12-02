@@ -1,4 +1,4 @@
-package com.idealstudy.mvp;
+package com.idealstudy.mvp.util;
 
 import com.idealstudy.mvp.application.dto.member.AdminDto;
 import com.idealstudy.mvp.application.dto.member.ParentsDto;

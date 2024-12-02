@@ -68,10 +68,11 @@ public class MemberService {
     @Deprecated
     public void createDummies() {
 
-        addMember("student@gmail.com", Role.ROLE_STUDENT, "1234");
-        addMember("teacher@gmail.com", Role.ROLE_TEACHER, "1234");
-        addMember("parents@gmail.com", Role.ROLE_PARENTS, "1234");
-        addMember("admin@gmail.com", Role.ROLE_ADMIN, "1234");
+        //addMember("student@gmail.com", Role.ROLE_STUDENT, "1234");
+        //addMember("teacher@gmail.com", Role.ROLE_TEACHER, "1234");
+        //addMember("parents@gmail.com", Role.ROLE_PARENTS, "1234");
+        //addMember("admin@gmail.com", Role.ROLE_ADMIN, "1234");
+        addMember("badteacher@gmail.com", Role.ROLE_TEACHER, "1234");
     }
 
     private void addMember(String email, Role role, String password) {

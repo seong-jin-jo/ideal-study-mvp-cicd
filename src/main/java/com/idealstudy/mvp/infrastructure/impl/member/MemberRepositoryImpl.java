@@ -134,8 +134,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return null;
     }
 
-    // @Override
-    @Deprecated
+    @Override
     public MemberDto update(MemberDto dto) {
 
         MemberEntity entity = memberJpaRepository.findById(dto.getUserId()).orElseThrow();

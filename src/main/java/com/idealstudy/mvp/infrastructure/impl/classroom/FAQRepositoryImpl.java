@@ -56,11 +56,11 @@ public class FAQRepositoryImpl implements FAQRepository {
     }
 
     @Override
-    public FAQPageResultDto findList(PageRequestDto dto) {
+    public FAQPageResultDto findList(PageRequestDto dto, String classroomId) {
 
         Pageable pageable = dto.getPageable(Sort.by("regDate").ascending());
 
-        Page<FAQEntity> results = faqJpaRepository.findAll(pageable);
+        Page<FAQEntity> results = faqJpaRepository.findByClassroom_classroomId(classroomId, pageable);
 
         Function<FAQEntity, FAQDto> fn = (faqMapper::entityToDto);
 
