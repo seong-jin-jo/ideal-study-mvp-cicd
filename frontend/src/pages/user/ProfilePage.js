@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useParams } from 'react-router-dom';
-import { readUser } from '../../services/UserService.mjs';
+import { readUser } from '../../services/user/UserService.mjs';
 import { readBio } from '../../services/MyPageService.mjs';
 
 import UserInfoSpace from '../../components/user/UserInfoSpace';

@@ -25,66 +25,66 @@
 /* FAQ 섹션 */
 .faq-section {
     padding: 15px;
-    background-color: #e8f8f5; /* 연한 녹색 배경 */
-    border-left: 5px solid #2ecc71; /* 강조를 위한 테두리 */
+    background-color: #ffffff; /* 연한 녹색 배경 */
+    border-left: 5px solid; /* 강조를 위한 테두리 */
 }
 
 .faq-section h2 {
     margin: 0;
     font-size: 20px;
-    color: #27ae60;
+    color: #000000;
 }
 
 /* 질문 게시판 */
 .inquiry-section {
     padding: 15px;
-    background-color: #fef9e7; /* 연한 노란색 배경 */
-    border-left: 5px solid #f39c12;
+    background-color: #ffffff; /* 연한 노란색 배경 */
+    border-left: 5px solid;
 }
 
 .inquiry-section h2 {
     margin: 0;
     font-size: 20px;
-    color: #e67e22;
+    color: #000000;
 }
 
 /* 게시물 섹션 */
 .post-section {
     padding: 15px;
-    background-color: #f4ecf7; /* 연한 보라색 배경 */
-    border-left: 5px solid #9b59b6;
+    background-color: #ffffff; /* 연한 보라색 배경 */
+    border-left: 5px solid;
 }
 
 .post-section h2 {
     margin: 0;
     font-size: 20px;
-    color: #8e44ad;
+    color: #000000;
 }
 
 /* 스케줄 섹션 */
 .schedule-section {
     padding: 15px;
-    background-color: #ebf5fb; /* 연한 파란색 배경 */
-    border-left: 5px solid #3498db;
+    background-color: #ffffff; /* 연한 파란색 배경 */
+    border-left: 5px solid;
 }
 
 .schedule-section h2 {
     margin: 0;
     font-size: 20px;
-    color: #2980b9;
+    color: #000000;
 }
 
 /* 수강 등록 섹션 */
 .enrollment-section {
     padding: 15px;
-    background-color: #fdebd0; /* 연한 주황색 배경 */
-    border-left: 5px solid #e67e22;
+    background-color: #ffffff; /* 연한 주황색 배경 */
+    border-left: 5px solid;
 }
 
 .enrollment-section h2 {
     margin: 0;
     font-size: 20px;
-    color: #d35400;
+    color: #000000;
 }
 
 /* 반응형 디자인 */

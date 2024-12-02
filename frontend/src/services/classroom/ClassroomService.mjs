@@ -1,4 +1,4 @@
-import apiClient from './apiClient.mjs';
+import apiClient from '../apiClient.mjs';
 
 /**
  * 클래스 생성
