@@ -22,7 +22,15 @@ export const getInquiriesByClassId = async (classId) => {
       return response.data;
     } catch (err) {
       console.error("문의 목록 조회 실패:", err);
-      throw err;
+      
+      const data = [
+        { id: 1, title: "수업 일정 문의", author: "홍길동", isPublic: true, comments: 3 },
+        { id: 2, title: "강사님 경력 문의", author: "김철수", isPublic: false, comments: 1 },
+        { id: 3, title: "온라인 강의 가능한가요?", author: "이영희", isPublic: true, comments: 0 },
+        { id: 4, title: "수업 시간 조정 요청", author: "박민수", isPublic: false, comments: 2 },
+      ];
+
+      return data;
     }
   };
   
