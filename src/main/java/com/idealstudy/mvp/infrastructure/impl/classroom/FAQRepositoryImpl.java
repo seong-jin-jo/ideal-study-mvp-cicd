@@ -5,10 +5,13 @@ import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.FAQDto;
 import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
 import com.idealstudy.mvp.infrastructure.FAQRepository;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.FAQEntity;
+import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.FAQJpaRepository;
 import com.idealstudy.mvp.mapstruct.FAQMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +22,14 @@ import java.util.function.Function;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class FAQRepositoryImpl implements FAQRepository {
 
     @Autowired
     private final FAQJpaRepository faqJpaRepository;
+
+    @Autowired
+    private final ClassroomJpaRepository classroomJpaRepository;
 
     @Autowired
     private final FAQMapper faqMapper;
@@ -30,8 +37,14 @@ public class FAQRepositoryImpl implements FAQRepository {
     @Override
     public void create(FAQDto dto) {
 
-        FAQEntity entity = faqMapper.dtoTOEntity(dto);
-        faqJpaRepository.save(entity);
+        FAQEntity faqEntity = faqMapper.dtoTOEntity(dto);
+
+        ClassroomEntity classroomEntity = classroomJpaRepository.findById(dto.getClassroomId()).orElseThrow();
+        faqEntity.setClassroom(classroomEntity);
+
+        log.info("생성된 entity: " + faqEntity);
+
+        faqJpaRepository.save(faqEntity);
     }
 
     @Override

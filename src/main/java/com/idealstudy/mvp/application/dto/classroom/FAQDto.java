@@ -13,7 +13,7 @@ public class FAQDto {
 
     private Long id;
 
-    // classroomId 필요한 경우 추가해서 매핑 전략 추가 구상해야 함.
+    private String classroomId;
 
     private String title;
 
