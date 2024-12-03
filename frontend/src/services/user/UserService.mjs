@@ -1,4 +1,4 @@
-import apiClient from './apiClient.mjs';
+import apiClient from '../apiClient.mjs';
 
 /**
  * 더미데이터 생성

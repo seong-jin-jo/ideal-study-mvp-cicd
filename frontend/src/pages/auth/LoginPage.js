@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
-import { loginUser } from '../../services/AuthService.mjs';
+import { loginUser } from '../../services/auth/AuthService.mjs';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // 로그인 함수 가져오기

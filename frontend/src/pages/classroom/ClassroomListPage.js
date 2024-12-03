@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ClassroomCard from '../../components/classroom/ClassroomCard';
-import { readClasses } from '../../services/ClassroomService.mjs';
+import { readClasses } from '../../services/classroom/ClassroomService.mjs';
 
 import './ClassroomListPage.css';
 
