@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @ToString(callSuper = true)
+@PrimaryKeyJoinColumn(name = "teacher_id")
 public class TeacherEntity extends MemberEntity {
 
     // @Column(length = 50)
