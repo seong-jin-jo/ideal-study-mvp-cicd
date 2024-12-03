@@ -62,9 +62,9 @@ public class FAQRepositoryImpl implements FAQRepository {
 
         Page<FAQEntity> results = faqJpaRepository.findByClassroom_classroomId(classroomId, pageable);
 
-        Function<FAQEntity, FAQDto> fn = (faqMapper::entityToDto);
+        Function<FAQEntity, FAQDto> fn = faqMapper::entityToDto;
 
-        return faqMapper.toFAQPageResultDto(new PageResultDto<FAQDto, FAQEntity>(results, fn));
+        return faqMapper.toPageResultDto(new PageResultDto<FAQDto, FAQEntity>(results, fn));
     }
 
     @Override

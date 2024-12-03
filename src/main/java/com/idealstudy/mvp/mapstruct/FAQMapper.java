@@ -23,5 +23,5 @@ public interface FAQMapper {
     @Mapping(source = "classroomId", target = "classroom.classroomId")
     FAQEntity dtoTOEntity(FAQDto dto);
 
-    FAQPageResultDto toFAQPageResultDto(PageResultDto<FAQDto, FAQEntity> dto);
+    FAQPageResultDto toPageResultDto(PageResultDto<FAQDto, FAQEntity> dto);
 }
