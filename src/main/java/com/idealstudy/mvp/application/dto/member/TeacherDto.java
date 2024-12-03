@@ -1,8 +1,5 @@
 package com.idealstudy.mvp.application.dto.member;
 
-
-import com.idealstudy.mvp.enums.member.Gender;
-import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.enums.member.SchoolRegister;
 import lombok.Getter;
 import lombok.Setter;

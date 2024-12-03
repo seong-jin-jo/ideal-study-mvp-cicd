@@ -6,6 +6,8 @@ import com.idealstudy.mvp.application.dto.member.*;
 import com.idealstudy.mvp.enums.member.MemberError;
 import com.idealstudy.mvp.infrastructure.MemberRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.member.MemberEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.member.ParentsEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.member.StudentEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.member.TeacherEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.member.*;
 import com.idealstudy.mvp.mapstruct.MemberMapper;
@@ -51,11 +53,19 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public void create(ParentsDto dto) {
 
+        dto.setFirst(true);
+
+        ParentsEntity entity = memberMapper.dtoToEntity(dto);
+        parentsJpaRepository.save(entity);
     }
 
     @Override
     public void create(StudentDto dto) {
 
+        dto.setFirst(true);
+
+        StudentEntity entity = memberMapper.dtoToEntity(dto);
+        studentJpaRepository.save(entity);
     }
 
     /**
@@ -87,12 +97,24 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public ParentsDto findParentsById(String id) {
-        return null;
+
+        Optional<ParentsEntity> result = parentsJpaRepository.findById(id);
+
+        if(result.isEmpty())
+            throw new NullPointerException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
+
+        return memberMapper.entityToDto(result.get());
     }
 
     @Override
     public StudentDto findStudentById(String id) {
-        return null;
+
+        Optional<StudentEntity> result = studentJpaRepository.findById(id);
+
+        if(result.isEmpty())
+            throw new NullPointerException(MemberError.NOT_REGISTERED_MEMBER.getMsg());
+
+        return memberMapper.entityToDto(result.get());
     }
 
 
@@ -121,17 +143,30 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public TeacherDto update(TeacherDto dto) {
-        return null;
+
+        TeacherEntity entity = teacherJpaRepository.findById(dto.getUserId()).orElseThrow();
+
+        memberMapper.updateEntityFromDto(dto, entity);
+
+        return memberMapper.entityToDto(teacherJpaRepository.save(entity));
     }
 
     @Override
     public ParentsDto update(ParentsDto dto) {
-        return null;
+        ParentsEntity entity = parentsJpaRepository.findById(dto.getUserId()).orElseThrow();
+
+        memberMapper.updateEntityFromDto(dto, entity);
+
+        return memberMapper.entityToDto(parentsJpaRepository.save(entity));
     }
 
     @Override
     public StudentDto update(StudentDto dto) {
-        return null;
+        StudentEntity entity = studentJpaRepository.findById(dto.getUserId()).orElseThrow();
+
+        memberMapper.updateEntityFromDto(dto, entity);
+
+        return memberMapper.entityToDto(studentJpaRepository.save(entity));
     }
 
     @Override

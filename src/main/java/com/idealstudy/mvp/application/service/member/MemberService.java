@@ -23,8 +23,9 @@ public class MemberService {
     @Autowired
     private final RedisRepository redisRepository;
 
+    // Repository에 포함시키면 순환 참조 문제 발생하여 불가능. 인코딩은 어플리케이션 계층에서 처리하기로 결정
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public String addMember(String email, String token, Role role) throws IllegalArgumentException {
         String savedToken = redisRepository.getToken(email);
@@ -72,15 +73,23 @@ public class MemberService {
         //addMember("teacher@gmail.com", Role.ROLE_TEACHER, "1234");
         //addMember("parents@gmail.com", Role.ROLE_PARENTS, "1234");
         //addMember("admin@gmail.com", Role.ROLE_ADMIN, "1234");
-        addMember("badteacher@gmail.com", Role.ROLE_TEACHER, "1234");
+        // addMember("badteacher@gmail.com", Role.ROLE_TEACHER, "1234");
+        addMember("otherparents@gmail.com", Role.ROLE_PARENTS, "1234");
+        addMember("otherstudent@gmail.com", Role.ROLE_STUDENT, "1234");
+    }
+
+    public boolean testPassword(String raw, String encoded) {
+        return passwordEncoder.matches(raw, encoded);
     }
 
     private void addMember(String email, Role role, String password) {
 
+        String encodedPassword = passwordEncoder.encode(password);
+
         if(role == Role.ROLE_TEACHER)
             memberRepository.create((TeacherDto) TeacherDto.builder()
                     .userId(UUID.randomUUID().toString())
-                    .password(passwordEncoder.encode(password))
+                    .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
                     .role(role)
@@ -89,7 +98,7 @@ public class MemberService {
         if(role == Role.ROLE_STUDENT)
             memberRepository.create((StudentDto) StudentDto.builder()
                     .userId(UUID.randomUUID().toString())
-                    .password(passwordEncoder.encode(password))
+                    .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
                     .role(role)
@@ -98,7 +107,7 @@ public class MemberService {
         if(role == Role.ROLE_PARENTS)
             memberRepository.create((ParentsDto) ParentsDto.builder()
                     .userId(UUID.randomUUID().toString())
-                    .password(passwordEncoder.encode(password))
+                    .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
                     .role(role)
@@ -108,7 +117,7 @@ public class MemberService {
         if(role == Role.ROLE_ADMIN)
             memberRepository.create((AdminDto) AdminDto.builder()
                     .userId(UUID.randomUUID().toString())
-                    .password(passwordEncoder.encode(password))
+                    .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
                     .role(role)

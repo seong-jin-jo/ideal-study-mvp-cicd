@@ -41,9 +41,12 @@ CREATE TABLE IF NOT EXISTS member (
 INSERT INTO member (user_id, password, name, phone_address, email, sex, referral_id, level, role, from_social, init, deleted, reg_date, dtype)
 VALUES
     (UUID(), '$2a$10$J03L0oKiIDC5mhdYxzOTresMpd9gMfqbJakKr.iHAsgUbq/To2VZO', '관리자', '010-1234-1234', 'admin@gmail.com', 'MALE', null, 1, 'ROLE_ADMIN', 0, 1, 0, NOW(), 'A'),
-    (UUID(), '$2a$10$/essrJvIRI8sf52JKG/YHO.5bv6JOqmk8UFD.kFK8a12WtQZ.t2sK', '학생', '010-1234-1234', 'student@gmail.com', 'MALE', null, 1, 'ROLE_STUDENT', 0, 1, 0, NOW(), 'S'),
-    ('98a10847-ad7e-11ef-8e5c-0242ac140002', '$2a$10$J03L0oKiIDC5mhdYxzOTresMpd9gMfqbJakKr.iHAsgUbq/To2VZO', '강사', '010-1234-1234', 'teacher@gmail.com', 'MALE', null, 1, 'ROLE_TEACHER', 0, 1, 0, NOW(), 'T'),
-    (UUID(), '$2a$10$tPBgYrrCy8kKo7G.w5uVJeCcGPaCDOC80oV5qK2PE68THsjk443wy', '학부모', '010-1234-1234', 'parents@gmail.com', 'FEMALE', null, 1, 'ROLE_PARENTS', 0, 1, 0, NOW(), 'P');
+    ('c99fd58f-b0ae-11ef-89d8-0242ac140003', '$2a$10$/essrJvIRI8sf52JKG/YHO.5bv6JOqmk8UFD.kFK8a12WtQZ.t2sK', '김학생', '010-1234-1234', 'student@gmail.com', 'MALE', null, 1, 'ROLE_STUDENT', 0, 1, 0, NOW(), 'S'),
+    ('98a10847-ad7e-11ef-8e5c-0242ac140002', '$2a$10$J03L0oKiIDC5mhdYxzOTresMpd9gMfqbJakKr.iHAsgUbq/To2VZO', '김강사', '010-1234-1234', 'teacher@gmail.com', 'MALE', null, 1, 'ROLE_TEACHER', 0, 1, 0, NOW(), 'T'),
+    ('c99fd83e-b0ae-11ef-89d8-0242ac140003', '$2a$10$tPBgYrrCy8kKo7G.w5uVJeCcGPaCDOC80oV5qK2PE68THsjk443wy', '김학생 학부모', '010-1234-1234', 'parents@gmail.com', 'FEMALE', null, 1, 'ROLE_PARENTS', 0, 1, 0, NOW(), 'P'),
+    ('add9fa2e-92c9-48ee-adb7-46c307ca8778', '$2a$10$nRCXAFC8IOh78cwfh9v57uJt1NzF8vLgWzn9.OOXgPx3hIk4e/2sq', '조강사', '010-1234-1234', 'otherteacher@gmail.com', 'MALE', null, 1, 'ROLE_TEACHER', 0, 1, 0, NOW(), 'T'),
+    ('e8445639-917a-4396-8aaa-4a68dd11e4c7', '$2a$10$kdG9XoA8h0J7UirQ1xuUfuzVfa/BgGzZtEjmPc063.vrevHZfM6oK', '조학생', '010-1234-1234', 'otherstudent@gmail.com', 'MALE', null, 1, 'ROLE_STUDENT', 0, 1, 0, NOW(), 'S'),
+    ('c2862de7-e8ef-4aa8-bf7d-711cd712279b', '$2a$10$S3rRiFdZMWjtaOsKeD6HxOsdq9pJqvlc6vI1wofESR1s13RUkj0PG', '조학생 학부모', '010-1234-1234', 'otherparents@gmail.com', 'FEMALE', null, 1, 'ROLE_PARENTS', 0, 1, 0, NOW(), 'P');
 
 -- 깅사 테이블 생성
 CREATE TABLE IF NOT EXISTS teacher (
@@ -58,7 +61,8 @@ CREATE TABLE IF NOT EXISTS teacher (
 -- 강사 더미 데이터 삽입
 INSERT INTO teacher
 VALUES
-        ('98a10847-ad7e-11ef-8e5c-0242ac140002', 'GRADUATION', '한국대학교', '수학');
+        ('98a10847-ad7e-11ef-8e5c-0242ac140002', 'GRADUATION', '한국대학교', '수학'),
+        ('add9fa2e-92c9-48ee-adb7-46c307ca8778', 'GRADUATION', '행복대학교', '영어');
 
 -- 공식 프로필 테이블 생성
 CREATE TABLE IF NOT EXISTS official_profile (
@@ -71,7 +75,8 @@ CREATE TABLE IF NOT EXISTS official_profile (
 -- 공식 프로필 더미 데이터 삽입
 INSERT INTO official_profile
 VALUES
-        ('98a10847-ad7e-11ef-8e5c-0242ac140002', '<p>공식 프로필 페이지를 설정해주세요.</p>');
+        ('98a10847-ad7e-11ef-8e5c-0242ac140002', '<p>공식 프로필 페이지를 설정해주세요.</p>'),
+        ('add9fa2e-92c9-48ee-adb7-46c307ca8778', '<p>공식 프로필 페이지를 설정해주세요.</p>');
 
 CREATE TABLE IF NOT EXISTS student (
 
@@ -81,13 +86,10 @@ CREATE TABLE IF NOT EXISTS student (
         FOREIGN KEY (USER_ID) REFERENCES member(USER_ID)
 );
 
-CREATE TABLE IF NOT EXISTS student (
-
-        student_id CHAR(36) NOT NULL,
-        GRADE ENUM('M1', 'M2', 'M3', 'H1', 'H2', 'H3', 'N'),
-        PRIMARY KEY (student_id),
-        FOREIGN KEY (student_id) REFERENCES member(USER_ID)
-);
+INSERT INTO student
+VALUES
+('c99fd58f-b0ae-11ef-89d8-0242ac140003', 'H1'),
+('e8445639-917a-4396-8aaa-4a68dd11e4c7', 'H3');
 
 -- 클래스 테이블 생성
 CREATE TABLE IF NOT EXISTS classroom (
