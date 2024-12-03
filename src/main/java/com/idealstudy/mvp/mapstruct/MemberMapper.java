@@ -33,5 +33,14 @@ public interface MemberMapper {
     @Mapping(target = "userId", ignore = true)
     void updateEntityFromDto(MemberDto dto, @MappingTarget MemberEntity entity);
 
+    @Mapping(target = "userId", ignore = true)
+    void updateEntityFromDto(TeacherDto dto, @MappingTarget TeacherEntity entity);
+
+    @Mapping(target = "userId", ignore = true)
+    void updateEntityFromDto(ParentsDto dto, @MappingTarget ParentsEntity entity);
+
+    @Mapping(target = "userId", ignore = true)
+    void updateEntityFromDto(StudentDto dto, @MappingTarget StudentEntity entity);
+
     MemberPageResultDto toApplicationPageResult(PageResultDto<MemberDto, MemberEntity> pageResultDto);
 }
