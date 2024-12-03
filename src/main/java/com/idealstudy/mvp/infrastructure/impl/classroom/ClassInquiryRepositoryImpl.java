@@ -2,11 +2,11 @@ package com.idealstudy.mvp.infrastructure.impl.classroom;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryDto;
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryPageResultDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageResultDto;
 import com.idealstudy.mvp.infrastructure.ClassInquiryRepository;
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassInquiryEntity;
-import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassInquiryJpaRepository;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass.ClassInquiryEntity;
+import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.preclass.ClassInquiryJpaRepository;
 import com.idealstudy.mvp.mapstruct.ClassInquiryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

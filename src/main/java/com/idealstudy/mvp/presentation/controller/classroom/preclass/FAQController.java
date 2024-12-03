@@ -1,8 +1,8 @@
-package com.idealstudy.mvp.presentation.controller.classroom;
+package com.idealstudy.mvp.presentation.controller.classroom.preclass;
 
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
-import com.idealstudy.mvp.application.service.classroom.FAQService;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
+import com.idealstudy.mvp.application.service.classroom.preclass.FAQService;
 import com.idealstudy.mvp.presentation.dto.classroom.FAQRequestDto;
 import com.idealstudy.mvp.security.annotation.ForTeacher;
 import com.idealstudy.mvp.security.dto.JwtPayloadDto;

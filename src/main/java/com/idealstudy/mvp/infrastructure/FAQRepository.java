@@ -1,8 +1,8 @@
 package com.idealstudy.mvp.infrastructure;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
 
 public interface FAQRepository {
 

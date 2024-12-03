@@ -1,7 +1,7 @@
 package com.idealstudy.mvp.infrastructure;
 
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryDto;
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryPageResultDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageResultDto;
 
 public interface ClassInquiryRepository {
 

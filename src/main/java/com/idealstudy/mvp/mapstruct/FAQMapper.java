@@ -1,9 +1,9 @@
 package com.idealstudy.mvp.mapstruct;
 
 import com.idealstudy.mvp.application.dto.PageResultDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.FAQEntity;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass.FAQEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;

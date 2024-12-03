@@ -1,9 +1,9 @@
 package com.idealstudy.mvp.mapstruct;
 
 import com.idealstudy.mvp.application.dto.PageResultDto;
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryDto;
-import com.idealstudy.mvp.application.dto.classroom.ClassInquiryPageResultDto;
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassInquiryEntity;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageResultDto;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass.ClassInquiryEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

@@ -1,23 +1,24 @@
-package com.idealstudy.mvp.infrastructure.jpa.entity.classroom;
+package com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
-import com.idealstudy.mvp.infrastructure.jpa.entity.member.MemberEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "class_inquiry")
+@Table(name = "FAQ")
+@SuperBuilder
 @Getter
 @Setter
-@SuperBuilder
-@ToString
-@NoArgsConstructor
-public class ClassInquiryEntity extends BaseEntity {
+@ToString(callSuper = true)
+public class FAQEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inquiry_id")
+    @Column(name = "faq_id")
     private Long id;
 
     private String title;
@@ -27,4 +28,8 @@ public class ClassInquiryEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "classroom_id")
     private ClassroomEntity classroom;
+
+    public FAQEntity() {
+
+    }
 }

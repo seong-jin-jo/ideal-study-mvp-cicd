@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.application.dto.classroom;
+package com.idealstudy.mvp.application.dto.classroom.preclass;
 
 import lombok.Builder;
 import lombok.Getter;
