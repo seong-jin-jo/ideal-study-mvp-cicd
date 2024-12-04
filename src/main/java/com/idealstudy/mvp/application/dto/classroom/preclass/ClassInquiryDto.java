@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.application.dto.classroom.preclass;
 
+import com.idealstudy.mvp.enums.classroom.Visibility;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,8 @@ public class ClassInquiryDto {
     private String title;
 
     private String content;
+
+    private Visibility visibility;
 
     private String classroomId;
 

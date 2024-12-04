@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass;
 
+import com.idealstudy.mvp.enums.classroom.Visibility;
 import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.*;
@@ -23,6 +24,9 @@ public class ClassInquiryEntity extends BaseEntity {
     private String title;
 
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id")

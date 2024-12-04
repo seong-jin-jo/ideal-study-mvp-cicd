@@ -4,6 +4,7 @@ import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageResultDto;
+import com.idealstudy.mvp.enums.classroom.Visibility;
 import com.idealstudy.mvp.infrastructure.ClassInquiryRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass.ClassInquiryEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.preclass.ClassInquiryJpaRepository;
@@ -31,13 +32,15 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
     private final ClassInquiryMapper classInquiryMapper;
 
     @Override
-    public ClassInquiryDto create(String title, String content, String classroomId, String writer) {
+    public ClassInquiryDto create(String title, String content, String classroomId, String writer,
+                                  Visibility visibility) {
 
         ClassInquiryDto dto = ClassInquiryDto.builder()
                 .title(title)
                 .content(content)
                 .classroomId(classroomId)
                 .createdBy(writer)
+                .visibility(visibility)
                 .build();
 
         ClassInquiryEntity entity = classInquiryMapper.dtoToEntity(dto);
@@ -64,6 +67,7 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
         return classInquiryMapper.toPageResultDto(resultDto);
     }
 
+    // private row는 본인만 조회할 수 있게 application layer에서 방어해야 함.
     @Override
     public ClassInquiryDto findById(Long inquiryId) {
 
@@ -73,14 +77,17 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
         return classInquiryMapper.entityToDto(entity);
     }
 
+    // 본인이 아니면 수정할 수 없게 application layer에서 방어해야 함.
     @Override
-    public ClassInquiryDto update(Long id, String title, String content, String classroomId, String writer) {
+    public ClassInquiryDto update(Long id, String title, String content, String classroomId, String writer,
+                                  Visibility visibility) {
 
         ClassInquiryDto dto = ClassInquiryDto.builder()
                 .title(title)
                 .content(content)
                 .classroomId(classroomId)
                 .createdBy(writer)
+                .visibility(visibility)
                 .build();
 
         ClassInquiryEntity entity = classInquiryJpaRepository.findById(id).orElseThrow();
@@ -90,6 +97,7 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
         return classInquiryMapper.entityToDto(classInquiryJpaRepository.save(entity));
     }
 
+    // 본인이 아니면 삭제할 수 없게 application layer에서 방어해야 함.
     @Override
     public boolean delete(Long inquiryId) {
 
