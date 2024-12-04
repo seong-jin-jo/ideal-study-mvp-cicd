@@ -2,8 +2,8 @@ package com.idealstudy.mvp.infrastructure;
 
 import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

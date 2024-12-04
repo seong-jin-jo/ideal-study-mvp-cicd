@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.application.dto.classroom;
+package com.idealstudy.mvp.application.dto.classroom.preclass;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +7,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FAQPageResultDto {
+public class ClassInquiryPageResultDto {
 
-    private List<FAQDto> dtoList;
+    private List<ClassInquiryDto> dtoList;
 
     private int totalPage;
 

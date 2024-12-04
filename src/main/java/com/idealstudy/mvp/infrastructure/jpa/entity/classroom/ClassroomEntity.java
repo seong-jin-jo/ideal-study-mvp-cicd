@@ -56,13 +56,9 @@ public class ClassroomEntity extends BaseEntity {
 
     // 아래 필드는 임시 필드로만 추가 TODO : 연관관계 맺어 주어야함
 
-    private String faq; // F&Q 게시판 관련
-
     private String posts; // 수업 포스트 관련
 
     private String likes; // 좋아요 관련
-
-    private String inquiries; // 수업 문의 관련
 
     private String enrollments; // 수업 신청 관련
 
@@ -71,5 +67,16 @@ public class ClassroomEntity extends BaseEntity {
 
     public ClassroomEntity() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "ClassroomEntity{" +
+                "classroomId='" + classroomId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", capacity=" + capacity +
+                ", thumbnail='" + thumbnail + '\'' +
+                '}';
     }
 }

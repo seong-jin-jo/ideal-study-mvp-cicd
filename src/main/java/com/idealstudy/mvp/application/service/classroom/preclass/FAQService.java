@@ -1,17 +1,19 @@
-package com.idealstudy.mvp.application.service.classroom;
+package com.idealstudy.mvp.application.service.classroom.preclass;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
 import com.idealstudy.mvp.infrastructure.FAQRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class FAQService {
 
     private final static Integer PAGE_SIZE = 10;

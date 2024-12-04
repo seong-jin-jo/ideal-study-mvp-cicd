@@ -1,6 +1,7 @@
-package com.idealstudy.mvp.infrastructure.jpa.entity.classroom;
+package com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass;
 
 import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,11 +1,9 @@
 package com.idealstudy.mvp.application;
 
 import com.idealstudy.mvp.TestRepositoryUtil;
-import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQDto;
-import com.idealstudy.mvp.application.dto.classroom.FAQPageResultDto;
-import com.idealstudy.mvp.application.service.classroom.FAQService;
-import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.FAQJpaRepository;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQDto;
+import com.idealstudy.mvp.application.dto.classroom.preclass.FAQPageResultDto;
+import com.idealstudy.mvp.application.service.classroom.preclass.FAQService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
