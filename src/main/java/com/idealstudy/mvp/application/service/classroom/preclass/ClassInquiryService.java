@@ -23,14 +23,13 @@ public class ClassInquiryService {
     @Autowired
     private final ClassInquiryRepository classInquiryRepository;
 
-    public void create(String title, String content, String classroomId, String writer, Visibility visibility)
-            throws IOException {
+    public void create(String title, String content, String classroomId, String writer, Visibility visibility) {
 
         try {
             classInquiryRepository.create(title, content, classroomId, writer, visibility);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(DBErrorMsg.CREATE_ERROR.toString());
-            throw new IOException(DBErrorMsg.CREATE_ERROR.toString());
+            throw new RuntimeException(DBErrorMsg.CREATE_ERROR.toString());
         }
     }
 
@@ -39,7 +38,7 @@ public class ClassInquiryService {
         ClassInquiryDto dto = classInquiryRepository.findById(classInquiryId);
         if(dto.getVisibility().equals(Visibility.PRIVATE)) {
 
-            if( !checkMine(classInquiryId, userId)) {
+            if( userId == null || !checkMine(classInquiryId, userId)) {
                 log.error(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
                 throw new SecurityException(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
             }
@@ -47,32 +46,32 @@ public class ClassInquiryService {
         return dto;
     }
 
-    public ClassInquiryPageResultDto findListByClassId(String classId, int page) throws IOException {
+    public ClassInquiryPageResultDto findListByClassId(String classId, int page) {
 
         ClassInquiryPageResultDto dto = null;
         try {
             dto = classInquiryRepository.findListByClassId(classId, page);
             return dto;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(DBErrorMsg.SELECT_ERROR.toString());
-            throw new IOException(DBErrorMsg.SELECT_ERROR.toString());
+            throw new RuntimeException(DBErrorMsg.SELECT_ERROR.toString());
         }
     }
 
-    public ClassInquiryPageResultDto findListByMemberId(String userId, int page) throws IOException {
+    public ClassInquiryPageResultDto findListByMemberId(String userId, int page){
         ClassInquiryPageResultDto dto = null;
         try {
             dto = classInquiryRepository.findListByMemberId(userId, page);
             return dto;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(DBErrorMsg.SELECT_ERROR.toString());
-            throw new IOException(DBErrorMsg.SELECT_ERROR.toString());
+            throw new RuntimeException(DBErrorMsg.SELECT_ERROR.toString());
         }
     }
 
 
     public ClassInquiryDto update(Long classInquiryId, String title, String content, String classroomId, String writer,
-                                  Visibility visibility) throws IOException {
+                                  Visibility visibility) {
 
         ClassInquiryDto dto = null;
         try {
@@ -84,13 +83,13 @@ public class ClassInquiryService {
         } catch (SecurityException e) {
             log.error(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
             throw new SecurityException(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(DBErrorMsg.UPDATE_ERROR.toString());
-            throw new IOException(DBErrorMsg.UPDATE_ERROR.toString());
+            throw new RuntimeException(DBErrorMsg.UPDATE_ERROR.toString());
         }
     }
 
-    public void delete(Long inquiryId, String deleter) throws IOException {
+    public void delete(Long inquiryId, String deleter) {
 
         try{
             if( !checkMine(inquiryId, deleter))
@@ -100,9 +99,9 @@ public class ClassInquiryService {
         } catch (SecurityException e) {
             log.error(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
             throw new SecurityException(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(DBErrorMsg.DELETE_ERROR.toString());
-            throw new IOException(DBErrorMsg.DELETE_ERROR.toString());
+            throw new RuntimeException(DBErrorMsg.DELETE_ERROR.toString());
         }
     }
 
