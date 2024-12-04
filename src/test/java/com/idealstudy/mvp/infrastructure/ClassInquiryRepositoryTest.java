@@ -7,7 +7,6 @@ import com.idealstudy.mvp.enums.classroom.Visibility;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,7 +67,6 @@ public class ClassInquiryRepositoryTest {
         Assertions.assertThat(dto.getCreatedBy()).isEqualTo(STUDENT_ID);
     }
 
-
     @Test
     public void update() {
 
@@ -105,19 +103,38 @@ public class ClassInquiryRepositoryTest {
     }
 
     @Test
-    public void findList() {
+    public void findByClassId() {
 
-        int page =1;
+        int page = 1;
+        String classId = CLASSROOM_ID;
+        String writer = STUDENT_ID;
 
-        ClassInquiryPageResultDto dto = classInquiryRepository.findList(CLASSROOM_ID, page);
+        ClassInquiryPageResultDto dto = classInquiryRepository.findListByClassId(classId, page);
 
         List<ClassInquiryDto> list = dto.getDtoList();
         ClassInquiryDto firstDto = list.getFirst();
 
         log.info("dto 정보: " + firstDto);
         Assertions.assertThat(list.size()).isEqualTo(1);
-        Assertions.assertThat(firstDto.getClassroomId()).isEqualTo(CLASSROOM_ID);
-        Assertions.assertThat(firstDto.getCreatedBy()).isEqualTo(STUDENT_ID);
+        Assertions.assertThat(firstDto.getClassroomId()).isEqualTo(classId);
+        Assertions.assertThat(firstDto.getCreatedBy()).isEqualTo(writer);
     }
 
+    @Test
+    public void findByMemberId() {
+
+        int page = 1;
+        String classId = CLASSROOM_ID;
+        String writer = STUDENT_ID;
+
+        ClassInquiryPageResultDto dto = classInquiryRepository.findListByMemberId(writer, page);
+
+        List<ClassInquiryDto> list = dto.getDtoList();
+        ClassInquiryDto firstDto = list.getFirst();
+
+        log.info("dto 정보: " + firstDto);
+        Assertions.assertThat(list.size()).isEqualTo(1);
+        Assertions.assertThat(firstDto.getClassroomId()).isEqualTo(classId);
+        Assertions.assertThat(firstDto.getCreatedBy()).isEqualTo(writer);
+    }
 }

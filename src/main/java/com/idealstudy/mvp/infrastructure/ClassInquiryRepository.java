@@ -8,7 +8,9 @@ public interface ClassInquiryRepository {
 
     ClassInquiryDto create(String title, String content, String classroomId, String writer, Visibility visibility);
 
-    ClassInquiryPageResultDto findList(String classId, int page);
+    ClassInquiryPageResultDto findListByClassId(String classId, int page);
+
+    ClassInquiryPageResultDto findListByMemberId(String userId, int page);
 
     ClassInquiryDto findById(Long inquiryId);
 

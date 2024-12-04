@@ -49,7 +49,7 @@ public class ClassInquiryService {
 
         ClassInquiryPageResultDto dto = null;
         try {
-            dto = classInquiryRepository.findList(classId, page);
+            dto = classInquiryRepository.findListByClassId(classId, page);
             return dto;
         } catch (Exception e) {
             log.error(DBErrorMsg.SELECT_ERROR.toString());

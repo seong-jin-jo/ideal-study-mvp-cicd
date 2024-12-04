@@ -49,7 +49,7 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
     }
 
     @Override
-    public ClassInquiryPageResultDto findList(String classId, int page) {
+    public ClassInquiryPageResultDto findListByClassId(String classId, int page) {
 
         PageRequestDto requestDto = PageRequestDto.builder()
                 .page(page)
@@ -58,6 +58,24 @@ public class ClassInquiryRepositoryImpl implements ClassInquiryRepository {
 
         Page<ClassInquiryEntity> resultPage = classInquiryJpaRepository.findByClassroom_classroomId(classId,
                  requestDto.getPageable(Sort.by("regDate")));
+
+        Function<ClassInquiryEntity, ClassInquiryDto> fn = classInquiryMapper::entityToDto;
+
+        PageResultDto<ClassInquiryDto, ClassInquiryEntity>resultDto =
+                new PageResultDto<ClassInquiryDto, ClassInquiryEntity>(resultPage, fn);
+
+        return classInquiryMapper.toPageResultDto(resultDto);
+    }
+
+    @Override
+    public ClassInquiryPageResultDto findListByMemberId(String userId, int page) {
+        PageRequestDto requestDto = PageRequestDto.builder()
+                .page(page)
+                .size(SIZE)
+                .build();
+
+        Page<ClassInquiryEntity> resultPage = classInquiryJpaRepository.findByCreatedBy(userId,
+                requestDto.getPageable(Sort.by("regDate")));
 
         Function<ClassInquiryEntity, ClassInquiryDto> fn = classInquiryMapper::entityToDto;
 

@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ClassInquiryJpaRepository extends JpaRepository<ClassInquiryEntity, Long> {
 
     Page<ClassInquiryEntity> findByClassroom_classroomId(String classroomId, Pageable pageable);
+
+    Page<ClassInquiryEntity> findByCreatedBy(String createdBy, Pageable pageable);
 }

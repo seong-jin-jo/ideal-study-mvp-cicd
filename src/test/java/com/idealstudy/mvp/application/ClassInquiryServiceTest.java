@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 
 @SpringBootTest
 @Transactional
-public class ClassInquiryTest {
+public class ClassInquiryServiceTest {
 
     private final ClassInquiryService classInquiryService;
 
@@ -43,7 +43,7 @@ public class ClassInquiryTest {
     private static final String TABLE_NAME = "class_inquiry";
 
     @Autowired
-    public ClassInquiryTest(ClassInquiryService classInquiryService, TestRepositoryUtil testRepositoryUtil) {
+    public ClassInquiryServiceTest(ClassInquiryService classInquiryService, TestRepositoryUtil testRepositoryUtil) {
         this.classInquiryService = classInquiryService;
         this.testRepositoryUtil = testRepositoryUtil;
     }
