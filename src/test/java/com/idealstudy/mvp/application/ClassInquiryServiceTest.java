@@ -89,16 +89,33 @@ public class ClassInquiryServiceTest {
     }
 
     @Test
-    public void findList() throws IOException {
+    public void findListByClassId() throws IOException {
 
         String classId = CLASSROOM_ID;
         int page = 1;
 
-        ClassInquiryPageResultDto resultDto = classInquiryService.findList(classId, page);
+        ClassInquiryPageResultDto resultDto = classInquiryService.findListByClassId(classId, page);
         ClassInquiryDto dto = resultDto.getDtoList().getFirst();
 
         Assertions.assertThat(resultDto.getPage()).isEqualTo(page);
         Assertions.assertThat(dto.getId()).isEqualTo(EXIST_ID);
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(classId);
+    }
+
+    @Test
+    public void findListByMemberId() throws IOException {
+
+        String classId = CLASSROOM_ID;
+        String writer = STUDENT_ID;
+        int page = 1;
+
+        ClassInquiryPageResultDto resultDto = classInquiryService.findListByMemberId(writer, page);
+        ClassInquiryDto dto = resultDto.getDtoList().getFirst();
+
+        Assertions.assertThat(resultDto.getPage()).isEqualTo(page);
+        Assertions.assertThat(dto.getId()).isEqualTo(EXIST_ID);
+        Assertions.assertThat(dto.getCreatedBy()).isEqualTo(writer);
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(classId);
     }
 
     @Test

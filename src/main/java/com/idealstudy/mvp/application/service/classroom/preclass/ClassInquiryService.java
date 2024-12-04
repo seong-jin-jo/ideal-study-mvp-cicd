@@ -45,11 +45,22 @@ public class ClassInquiryService {
         return dto;
     }
 
-    public ClassInquiryPageResultDto findList(String classId, int page) throws IOException {
+    public ClassInquiryPageResultDto findListByClassId(String classId, int page) throws IOException {
 
         ClassInquiryPageResultDto dto = null;
         try {
             dto = classInquiryRepository.findListByClassId(classId, page);
+            return dto;
+        } catch (Exception e) {
+            log.error(DBErrorMsg.SELECT_ERROR.toString());
+            throw new IOException(DBErrorMsg.SELECT_ERROR.toString());
+        }
+    }
+
+    public ClassInquiryPageResultDto findListByMemberId(String userId, int page) throws IOException {
+        ClassInquiryPageResultDto dto = null;
+        try {
+            dto = classInquiryRepository.findListByMemberId(userId, page);
             return dto;
         } catch (Exception e) {
             log.error(DBErrorMsg.SELECT_ERROR.toString());
