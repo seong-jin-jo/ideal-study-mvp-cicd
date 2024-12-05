@@ -147,6 +147,10 @@ public class JwtUtil {
         return !(token == null);
     }
 
+    public String getAuthorizationHeader(HttpServletRequest request) {
+        return request.getHeader(AUTHORIZATION_HEADER);
+    }
+
     // Http Header에서 JwtToken의 payload를 가져옴.
     public String getUserInfoFromToken(HttpServletRequest req) {
         return substringToken(req.getHeader(AUTHORIZATION_HEADER));
