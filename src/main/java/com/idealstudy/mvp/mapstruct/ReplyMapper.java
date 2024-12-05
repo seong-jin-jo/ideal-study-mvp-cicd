@@ -13,9 +13,9 @@ import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ReplyEntity;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface CommentMapper {
+public interface ReplyMapper {
 
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
+    ReplyMapper INSTANCE = Mappers.getMapper(ReplyMapper.class);
     
     @Mapping(source = "parentComment.commentId", target = "parentCommentId")
     @Mapping(source = "classInquiry.id", target = "classInquiryId")

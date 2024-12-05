@@ -10,7 +10,7 @@ import com.idealstudy.mvp.infrastructure.jpa.repository.ReplyJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.PostJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.preclass.ClassInquiryJpaRepository;
 import com.idealstudy.mvp.infrastructure.repository.ReplyRepository;
-import com.idealstudy.mvp.mapstruct.CommentMapper;
+import com.idealstudy.mvp.mapstruct.ReplyMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
         ReplyEntity savedEntity = replyJpaRepository.save(entity);
 
-        return CommentMapper.INSTANCE.entityToDto(savedEntity);
+        return ReplyMapper.INSTANCE.entityToDto(savedEntity);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
         ReplyEntity entity = replyJpaRepository.findById(id).orElseThrow();
 
-        return CommentMapper.INSTANCE.entityToDto(entity);
+        return ReplyMapper.INSTANCE.entityToDto(entity);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
         ReplyEntity savedEntity = replyJpaRepository.save(entity);
 
-        return CommentMapper.INSTANCE.entityToDto(savedEntity);
+        return ReplyMapper.INSTANCE.entityToDto(savedEntity);
     }
 
     @Override
