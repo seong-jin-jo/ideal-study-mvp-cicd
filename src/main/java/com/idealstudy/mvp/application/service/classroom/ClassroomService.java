@@ -1,6 +1,6 @@
 package com.idealstudy.mvp.application.service.classroom;
 
-import com.idealstudy.mvp.infrastructure.ClassroomRepository;
+import com.idealstudy.mvp.infrastructure.repository.ClassroomRepository;
 import com.idealstudy.mvp.presentation.dto.classroom.ClassroomRequestDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 
