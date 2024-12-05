@@ -126,3 +126,54 @@ INSERT INTO faq
 VALUES
         (1000000, '동영상 시청은 어떻게 하나요?', 'A 화면 어딘가에 박혀있는 B라는 버튼을 누르면 어디로 navigation 되는데 ~~~',
          '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NOW());
+
+CREATE TABLE IF NOT EXISTS class_inquiry(
+        inquiry_id  BIGINT NOT NULL AUTO_INCREMENT,
+        classroom_id CHAR(36) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        content VARCHAR(1000) NOT NULL,
+        visibility ENUM('PUBLIC', 'PRIVATE') NOT NULL,
+        reg_date DATETIME(6) NOT NULL,
+        mod_date DATETIME(6),
+        created_by CHAR(36)  NOT NULL,
+        PRIMARY KEY (inquiry_id),
+        FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id),
+        FOREIGN KEY (created_by) REFERENCES member(user_id)
+);
+
+INSERT INTO class_inquiry
+VALUES
+(1, '98a12345-ad7e-11ef-8e5c-0242ac140002', '수업 커리큘럼 내 과제는 어떻게 진행되는 건가요?',
+'안녕하세요. 이번 클래스에 참가하고 싶은 학생입니다. 수업 내에 과제 관련된 내용이 포함되어 있던데, 이것에 대한 자세한 운>영 계획을 들어볼 수 있을까요?',
+'PRIVATE', NOW(), NULL, 'c99fd58f-b0ae-11ef-89d8-0242ac140003');
+
+-- 수업글
+CREATE TABLE IF NOT EXISTS post (
+        post_id BIGINT NOT NULL AUTO_INCREMENT,
+        PRIMARY KEY (post_id)
+);
+
+-- 댓글
+CREATE TABLE IF NOT EXISTS comment (
+        comment_id BIGINT NOT NULL AUTO_INCREMENT,
+        content VARCHAR(1000) NOT NULL,
+        visibility ENUM('PUBLIC', 'PRIVATE'),
+        created_by CHAR(36) NOT NULL,
+        reg_date DATETIME(6) NOT NULL,
+        mod_date DATETIME(6),
+        parent_comment_id BIGINT,
+        post_id BIGINT,
+        class_inquiry_id BIGINT,
+        PRIMARY KEY (comment_id),
+        FOREIGN KEY (created_by) REFERENCES member(user_id),
+        FOREIGN KEY (parent_comment_id) REFERENCES comment(comment_id),
+        FOREIGN KEY (post_id) REFERENCES post(post_id),
+        FOREIGN KEY (class_inquiry_id) REFERENCES class_inquiry(inquiry_id)
+);
+
+INSERT INTO comment
+VALUES
+(1, '저희 강의는 최첨단 강의어서 모두가 만족할 수 있습니다.', 'PUBLIC', '98a10847-ad7e-11ef-8e5c-0242ac140002', NOW(), NULL, NULL, NULL, 1),
+(2, '그렇군요, 알겠습니다.', 'PUBLIC', 'c99fd58f-b0ae-11ef-89d8-0242ac140003', NOW(), NULL, 1, NULL, 1);
+(3, '비밀 댓글입니다. 비밀.', 'PRIVATE', 'c99fd58f-b0ae-11ef-89d8-0242ac140003', NOW(), NULL, NULL, NULL, 1);
+
