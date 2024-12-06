@@ -82,7 +82,7 @@ public class ReplyRepositoryImpl implements ReplyRepository {
                 .build();
 
         Page<ReplyEntity> resultPage = replyJpaRepository.findByClassInquiry_id(classInquiryId,
-                requestDto.getPageable(Sort.by("regDate").descending()));
+                requestDto.getPageable(Sort.by("regDate").ascending()));
 
         Function<ReplyEntity, ReplyDto> fn = ReplyMapper.INSTANCE::entityToDto;
         PageResultDto<ReplyDto, ReplyEntity> resultDto = new PageResultDto<ReplyDto, ReplyEntity>(resultPage, fn);
