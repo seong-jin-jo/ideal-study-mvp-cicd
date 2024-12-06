@@ -36,7 +36,7 @@ public class JwtTokenGrepper extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String rawToken = jwtUtil.getAuthorizationHeader(request);
-        log.info("Is authorization header NULL? " + rawToken);
+        // log.info("Is authorization header NULL? " + rawToken);
         if(rawToken == null) {
             filterChain.doFilter(request, response);
             return;

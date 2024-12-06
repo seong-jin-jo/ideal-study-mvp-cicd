@@ -33,6 +33,13 @@ public class ReplyService {
         );
     }
 
+    /**
+     * 댓글을 상세조회할 일이 없음.
+     * @param commentId
+     * @param userId
+     * @return
+     */
+    @Deprecated
     public ReplyDto findById(Long commentId, String userId) {
 
         return TryCatchServiceTemplate.execute(
