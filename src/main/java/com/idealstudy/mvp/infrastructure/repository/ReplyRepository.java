@@ -5,9 +5,6 @@ import com.idealstudy.mvp.application.dto.ReplyDto;
 import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
 import com.idealstudy.mvp.enums.classroom.Visibility;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 public interface ReplyRepository {
 
     ReplyDto create(String content, Visibility visibility, Long parentCommentId, Long classInquiryId, 
