@@ -1,6 +1,5 @@
 package com.idealstudy.mvp.application.dto;
 
-
 import java.time.LocalDateTime;
 
 import com.idealstudy.mvp.enums.classroom.Visibility;
