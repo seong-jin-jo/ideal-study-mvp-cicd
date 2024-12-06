@@ -31,4 +31,6 @@ public class ReplyDto {
     private Long classInquiryId;
 
     private Long postId;
+
+    // Like와 일대다 양방향 연관관계
 }

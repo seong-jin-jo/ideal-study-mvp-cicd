@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.infrastructure;
 
+import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.NoSuchElementException;
@@ -147,4 +148,39 @@ public class ReplyRepositoryTest {
         Assertions.assertThatThrownBy(() -> replyRepository.findById(id))
         .isInstanceOf(NoSuchElementException.class);
     }
+
+    @Test
+    public void findListInClassInquiry() {
+
+        Long classInquiryId = CLASS_INQUIRY_ID;
+        int page = 1;
+
+        ReplyPageResultDto dto = replyRepository.findListInClassInquiry(classInquiryId, page);
+
+        Assertions.assertThat(dto.getDtoList().size()).isNotZero();
+        Assertions.assertThat(dto.getTotalPage()).isNotZero();
+        Assertions.assertThat(dto.getPage()).isEqualTo(1);
+        Assertions.assertThat(dto.getSize()).isEqualTo(10);
+        Assertions.assertThat(dto.getStartPage()).isEqualTo(1);
+        Assertions.assertThat(dto.getEndPage()).isEqualTo(1);
+        Assertions.assertThat(dto.isHasPrev()).isFalse();
+        Assertions.assertThat(dto.isHasNext()).isFalse();
+
+        ReplyDto reply = dto.getDtoList().get(0);
+        Assertions.assertThat(reply.getCommentId()).isEqualTo(EXIST_PARENT_ID);
+        Assertions.assertThat(reply.getVisibility()).isEqualTo(Visibility.PUBLIC);
+        Assertions.assertThat(reply.getParentCommentId()).isEqualTo(null);
+        Assertions.assertThat(reply.getClassInquiryId()).isEqualTo(CLASS_INQUIRY_ID);
+        Assertions.assertThat(reply.getPostId()).isEqualTo(null);
+        Assertions.assertThat(reply.getCreatedBy()).isEqualTo(TEACHER_ID);
+
+        ReplyDto reply2 = dto.getDtoList().get(1);
+        Assertions.assertThat(reply2.getCommentId()).isEqualTo(EXIST_SUB_ID);
+        Assertions.assertThat(reply2.getVisibility()).isEqualTo(Visibility.PUBLIC);
+        Assertions.assertThat(reply2.getParentCommentId()).isEqualTo(EXIST_PARENT_ID);
+        Assertions.assertThat(reply2.getClassInquiryId()).isEqualTo(CLASS_INQUIRY_ID);
+        Assertions.assertThat(reply2.getPostId()).isEqualTo(null);
+        Assertions.assertThat(reply2.getCreatedBy()).isEqualTo(STUDENT_ID);
+    }
+
 }

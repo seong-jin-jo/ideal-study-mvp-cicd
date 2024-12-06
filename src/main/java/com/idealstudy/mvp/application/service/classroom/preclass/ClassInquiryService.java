@@ -34,8 +34,10 @@ public class ClassInquiryService {
 
         ClassInquiryDto dto = classInquiryRepository.findById(classInquiryId);
         if(dto.getVisibility().equals(Visibility.PRIVATE)) {
-
-            if( userId == null || !checkMine(classInquiryId, userId)) {
+            if( userId != null)
+                checkMine(classInquiryId, userId);
+            // 회원 정보 없으면 무조건 거부
+            else {
                 log.error(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
                 throw new SecurityException(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
             }
@@ -69,13 +71,13 @@ public class ClassInquiryService {
                 ()-> checkMine(inquiryId, deleter), DBErrorMsg.DELETE_ERROR);
     }
 
-    private boolean checkMine(Long classInquiryId, String userId) {
+    private void checkMine(Long classInquiryId, String userId) {
 
         ClassInquiryDto dto = classInquiryRepository.findById(classInquiryId);
 
-        if(dto.getCreatedBy().equals(userId))
-            return true;
-
-        return false;
+        if(dto.getCreatedBy().equals(userId)) {
+            log.error(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
+            throw new SecurityException(SecurityErrorMsg.PRIVATE_EXCEPTION.toString());
+        }
     }
 }
