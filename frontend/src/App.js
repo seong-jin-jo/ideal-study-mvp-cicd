@@ -18,9 +18,9 @@ import "./App.css"; // 스타일 파일 import
 import Sidebar from "./components/Sidebar";
 import ClassroomListPage from "./pages/classroom/ClassroomListPage";
 import ClassroomPage from "./pages/classroom/ClassroomPage";
-import InquiryDetail from "./components/classroom/Inquiry/InquiryDetail";
-import InquiyBoard from "./components/classroom/Inquiry/InquiryBoard";
+import InquiyBoard from "./pages/classroom/inquiry/InquiryBoardPage";
 import InquiryForm from "./components/classroom/Inquiry/InquiryForm";
+import InquiryDetailPage from "./pages/classroom/inquiry/InquiryDetailPage";
 
 const App = () => {
   return (
@@ -54,11 +54,24 @@ const App = () => {
               <Route path="/classes" element={<ClassroomListPage />} />
               <Route path="/classes/:classId" element={<ClassroomPage />} />
               {/* classroom - inquiry */}
-              <Route path="/inquiries/new" element={<InquiryForm />} />
-              <Route path="/inquiries" element={<InquiyBoard />} />
-              <Route path="/inquiries/:inquiryId" element={<InquiryDetail />} />
+              {/* 문의 목록 */}
               <Route
-                path="/inquiries/edit/:inquiryId"
+                path="/classes/:classId/inquiries"
+                element={<InquiyBoard />}
+              />
+              {/* 문의 작성 */}
+              <Route
+                path="/classes/:classId/inquiries/new"
+                element={<InquiryForm />}
+              />
+              {/* 문의 상세 */}
+              <Route
+                path="/classes/:classId/inquiries/:inquiryId"
+                element={<InquiryDetailPage />}
+              />
+              {/* 문의 수정 */}
+              <Route
+                path="/classes/:classId/inquiries/:inquiryId/edit"
                 element={<InquiryForm />}
               />
               {/* 일치하는 라우트가 없을 때 NotFound 컴포넌트 렌더링 */}

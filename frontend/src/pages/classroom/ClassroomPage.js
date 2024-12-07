@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { readClassById } from '../../services/classroom/ClassroomService.mjs';
-import LikeButton from '../../components/LikeButton';
-import ClassInfo from './ClassInfo';
-import ClassEnrollment from '../../components/classroom/enrollment/Enrollment';
-import ClassFAQ from '../../components/classroom/FAQ/FAQBoard';
-import ClassInquiry from '../../components/classroom/Inquiry/InquiryBoard';
-import ClassPosts from '../../components/classroom/post/PostBoard';
-import ClassSchedule from '../../components/classroom/schedule/ScheduleBoard';
+import { readClassById } from "../../services/classroom/ClassroomService.mjs";
+import LikeButton from "../../components/LikeButton";
+import ClassInfo from "./ClassInfo";
+import ClassEnrollment from "../../components/classroom/enrollment/Enrollment";
+import ClassFAQ from "../../components/classroom/FAQ/FAQBoard";
+import ClassInquiry from "./inquiry/InquiryBoardPage";
+import ClassPosts from "../../components/classroom/post/PostBoard";
+import ClassSchedule from "../../components/classroom/schedule/ScheduleBoard";
 
-import './ClassroomPage.css'
+import "./ClassroomPage.css";
 
 const ClassroomPage = () => {
   const { classId } = useParams();
@@ -28,20 +28,25 @@ const ClassroomPage = () => {
   if (!classroomInfo) return <p>로딩 중...</p>;
 
   return (
-<div className="classroom-container">
+    <div className="classroom-container">
       {/* 클래스 정보 섹션 */}
       <div className="section class-info-section">
         <ClassInfo classroom={classroomInfo} />
       </div>
 
+      {/* 좋아요 버튼 */}
+      <div className="section like-button">
+        <LikeButton />
+      </div>
+
       {/* 수업 신청 섹션 */}
       <div className="section enrollment-section">
-        <ClassEnrollment classId={classId}/>
+        <ClassEnrollment classId={classId} />
       </div>
 
       {/* 질문 게시판 섹션 */}
       <div className="section inquiry-section">
-        <ClassInquiry classId={classId}/>
+        <ClassInquiry classId={classId} />
       </div>
 
       {/* FAQ 섹션 */}
@@ -51,17 +56,12 @@ const ClassroomPage = () => {
 
       {/* 스케줄 섹션 */}
       <div className="section schedule-section">
-        <ClassSchedule classId={classId}/>
+        <ClassSchedule classId={classId} />
       </div>
 
       {/* 게시물 섹션 */}
       <div className="section post-section">
-        <ClassPosts classId={classId}/>
-      </div>
-
-      {/* 좋아요 버튼 */}
-      <div className="section like-button">
-        <LikeButton />
+        <ClassPosts classId={classId} />
       </div>
     </div>
   );
