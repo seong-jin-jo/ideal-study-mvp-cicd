@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.function.Supplier;
 
 @Slf4j
-public class TryCatchControllerTemplate {
+public class TryCatchTemplate {
 
     public static <T> ResponseEntity<T> execute(Supplier<T> supplier) {
 
