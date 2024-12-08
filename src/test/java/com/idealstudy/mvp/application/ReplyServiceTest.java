@@ -27,6 +27,7 @@ public class ReplyServiceTest {
     @Autowired
     private TestRepositoryUtil testRepositoryUtil;
     private Long autoIncrement;
+    private Long likesAutoImcrement;
 
     private static final String TEACHER_ID = "98a10847-ad7e-11ef-8e5c-0242ac140002";
 
@@ -51,6 +52,7 @@ public class ReplyServiceTest {
     @BeforeEach
     public void setUp() {
         autoIncrement = testRepositoryUtil.getAutoIncrement(TABLE_NAME);
+        likesAutoImcrement = testRepositoryUtil.getAutoIncrement("liked");
     }
 
     @Test
@@ -163,5 +165,22 @@ public class ReplyServiceTest {
 
         Assertions.assertThatThrownBy(() -> replyService.findById(id, userId))
             .isInstanceOf(RuntimeException.class);
+    }
+
+
+    @Test
+    public void likesTest() {
+
+        // Long likedId = 11L;
+        Long likedId = null;
+        Long replyId = EXIST_PARENT_ID;
+        // String userId = STUDENT_ID;
+        String userId = TEACHER_ID;
+
+        replyService.updateLiked(likedId, replyId, userId);
+
+        int count = replyService.countLiked(replyId);
+        // Assertions.assertThat(count).isEqualTo(0);
+        Assertions.assertThat(count).isEqualTo(2);
     }
 }

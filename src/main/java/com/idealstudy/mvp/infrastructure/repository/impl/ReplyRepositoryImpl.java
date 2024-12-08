@@ -1,8 +1,8 @@
 package com.idealstudy.mvp.infrastructure.repository.impl;
 
-import com.idealstudy.mvp.application.dto.PageRequestDto;
-import com.idealstudy.mvp.application.dto.PageResultDto;
-import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
+import com.idealstudy.mvp.application.dto.*;
+import com.idealstudy.mvp.infrastructure.jpa.entity.LikedEntity;
+import com.idealstudy.mvp.infrastructure.jpa.repository.LikedJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.ReplyJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,10 +18,10 @@ import com.idealstudy.mvp.mapstruct.ReplyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.idealstudy.mvp.application.dto.ReplyDto;
 import com.idealstudy.mvp.enums.classroom.Visibility;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -36,6 +36,9 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
     @Autowired
     private final PostJpaRepository postJpaRepository;
+
+    @Autowired
+    private final LikedJpaRepository likedJpaRepository;
 
     private final static int SIZE = 10;
     
@@ -70,7 +73,9 @@ public class ReplyRepositoryImpl implements ReplyRepository {
 
         ReplyEntity entity = replyJpaRepository.findById(id).orElseThrow();
 
-        return ReplyMapper.INSTANCE.entityToDto(entity);
+        ReplyDto dto = ReplyMapper.INSTANCE.entityToDto(entity);
+
+        return dto;
     }
 
     @Override
@@ -84,7 +89,16 @@ public class ReplyRepositoryImpl implements ReplyRepository {
         Page<ReplyEntity> resultPage = replyJpaRepository.findByClassInquiry_id(classInquiryId,
                 requestDto.getPageable(Sort.by("regDate").ascending()));
 
-        Function<ReplyEntity, ReplyDto> fn = ReplyMapper.INSTANCE::entityToDto;
+        Function<ReplyEntity, ReplyDto> fn = entity -> {
+            ReplyDto dto = ReplyMapper.INSTANCE.entityToDto(entity);
+            dto.setLikeCount(entity.getLikes().size());
+
+            // 불변 객체 변경
+            dto.setLikeUsers(entity.getLikes().stream()
+                .map(LikedEntity::getCreatedBy)
+                .collect(Collectors.toList()));
+            return dto;
+        };
         PageResultDto<ReplyDto, ReplyEntity> resultDto = new PageResultDto<ReplyDto, ReplyEntity>(resultPage, fn);
 
         return ReplyMapper.INSTANCE.toPageResult(resultDto);

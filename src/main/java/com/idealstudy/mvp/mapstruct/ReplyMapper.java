@@ -2,6 +2,7 @@ package com.idealstudy.mvp.mapstruct;
 
 import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;

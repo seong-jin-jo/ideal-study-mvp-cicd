@@ -1,6 +1,8 @@
 package com.idealstudy.mvp.application.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.idealstudy.mvp.enums.classroom.Visibility;
 
@@ -31,5 +33,7 @@ public class ReplyDto {
 
     private Long postId;
 
-    // Like와 일대다 양방향 연관관계
+    private int likeCount;
+
+    private List<String> likeUsers = new ArrayList<>();
 }

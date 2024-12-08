@@ -126,6 +126,14 @@ public class ReplyRepositoryTest {
     }
 
     @Test
+    public void findById_LikesTest() {
+
+        ReplyDto reply = replyRepository.findById(EXIST_PARENT_ID);
+
+        Assertions.assertThat(reply.getLikes().size()).isEqualTo(1);
+    }
+
+    @Test
     public void update() {
 
         String content = "수정된 댓글";

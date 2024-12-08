@@ -2,10 +2,10 @@ package com.idealstudy.mvp.application.service;
 
 import com.idealstudy.mvp.application.dto.ReplyDto;
 import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
-import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
 import com.idealstudy.mvp.enums.DBErrorMsg;
 import com.idealstudy.mvp.enums.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.classroom.Visibility;
+import com.idealstudy.mvp.infrastructure.repository.LikedRepository;
 import com.idealstudy.mvp.infrastructure.repository.ReplyRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 
@@ -13,18 +13,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ReplyService {
 
-    @Autowired
     private final ReplyRepository replyRepository;
 
-    public ReplyDto create(String content, Visibility visibility, Long parentCommentId, Long classInquiryId, 
-        Long postId, String createdBy) {
+    private final LikedRepository likedRepository;
+
+    @Autowired
+    public ReplyService(ReplyRepository replyRepository,
+                        @Qualifier("likedReplyRepositoryImpl") LikedRepository likedRepository) {
+        this.replyRepository = replyRepository;
+        this.likedRepository = likedRepository;
+    }
+
+    public ReplyDto create(String content, Visibility visibility, Long parentCommentId, Long classInquiryId,
+                           Long postId, String createdBy) {
 
         return TryCatchServiceTemplate.execute(
             () -> replyRepository.create(content, visibility, parentCommentId, classInquiryId, postId, createdBy),
@@ -73,6 +81,23 @@ public class ReplyService {
             replyRepository.delete(id);
             return null;
         }, ()-> checkMine(id, userId), DBErrorMsg.DELETE_ERROR);
+    }
+
+    public void updateLiked(Long likedId, Long replyId, String userId) {
+
+        TryCatchServiceTemplate.execute(() -> {
+            if(likedId == null)
+                likedRepository.create(replyId, userId);
+            else
+                likedRepository.delete(likedId, replyId);
+            return null;
+        }, null, DBErrorMsg.UPDATE_ERROR);
+    }
+
+    public int countLiked(Long replyId) {
+
+        String collection = "replies";
+        return likedRepository.countById(replyId);
     }
 
     private void checkMine(Long commentId, String userId) {

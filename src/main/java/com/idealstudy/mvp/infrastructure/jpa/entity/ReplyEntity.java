@@ -1,5 +1,7 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity;
 
+import java.util.List;
+
 import com.idealstudy.mvp.enums.classroom.Visibility;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.PostEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.preclass.ClassInquiryEntity;
@@ -12,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReplyEntity extends BaseEntity {
@@ -39,4 +40,19 @@ public class ReplyEntity extends BaseEntity {
     private ClassInquiryEntity classInquiry;
 
     // Like와 일대다 양방향 연관관계
+    @ManyToMany(mappedBy = "replies")
+    private List<LikedEntity> likes;
+
+    @Override
+    public String toString() {
+        return "ReplyEntity{" +
+                "commentId=" + commentId +
+                ", content='" + content + '\'' +
+                ", visibility=" + visibility +
+                ", parentComment=" + parentComment +
+                ", post=" + post +
+                ", classInquiry=" + classInquiry +
+                ", likes=" + likes +
+                '}';
+    }
 }
