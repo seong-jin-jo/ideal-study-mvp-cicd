@@ -128,7 +128,7 @@ VALUES
          '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NOW());
 
 -- 수업문의 테이블 생성
-CREATE TABLE IF NOT EXISTS inquiry (
+CREATE TABLE IF NOT EXISTS class_inquiry (
     inquiry_id BIGINT AUTO_INCREMENT PRIMARY KEY,                                         title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     visibility ENUM('VISIBLE', 'HIDDEN') NOT NULL,  -- Visibility 값에 맞게 수정
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS inquiry (
 );
 
 -- 더미 데이터 삽입 (20개 예시)
-INSERT INTO inquiry (title, content, visibility, classroom_id, created_by, reg_date)
+INSERT INTO class_inquiry (title, content, visibility, classroom_id, created_by, reg_date)
 VALUES
     ('수학 강의 관련 질문', '이 강의의 내용은 언제 업데이트 되나요?', 'VISIBLE', '98a12345-ad7e-11ef-8e5c-0242ac140002', '관리자', NOW()),
     ('수업 일정 변경', '이번 주 수업 시간이 변경되었나요?', 'VISIBLE', '98a12345-ad7e-11ef-8e5c-0242ac140002', '관리자', NOW()),
