@@ -128,15 +128,18 @@ VALUES
          '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NOW());
 
 -- 수업문의 테이블 생성
-CREATE TABLE IF NOT EXISTS class_inquiry (
-    inquiry_id BIGINT AUTO_INCREMENT PRIMARY KEY,                                         title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    visibility ENUM('VISIBLE', 'HIDDEN') NOT NULL,  -- Visibility 값에 맞게 수정
-    classroom_id CHAR(36),
-    created_by VARCHAR(255),
-    mod_date DATETIME(6),
-    reg_date DATETIME(6) NOT NULL,
-    FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id)
+CREATE TABLE IF NOT EXISTS class_inquiry(
+        inquiry_id  BIGINT NOT NULL AUTO_INCREMENT,
+        classroom_id CHAR(36) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        content VARCHAR(1000) NOT NULL,
+        visibility ENUM('PUBLIC', 'PRIVATE') NOT NULL,
+        reg_date DATETIME(6) NOT NULL,
+        mod_date DATETIME(6),
+        created_by CHAR(36)  NOT NULL,
+        PRIMARY KEY (inquiry_id),
+        FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id),
+        FOREIGN KEY (created_by) REFERENCES member(user_id)
 );
 
 -- 더미 데이터 삽입 (20개 예시)
