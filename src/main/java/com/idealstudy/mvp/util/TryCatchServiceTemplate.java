@@ -1,7 +1,7 @@
 package com.idealstudy.mvp.util;
 
-import com.idealstudy.mvp.enums.DBErrorMsg;
-import com.idealstudy.mvp.enums.SecurityErrorMsg;
+import com.idealstudy.mvp.enums.error.DBErrorMsg;
+import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Supplier;
