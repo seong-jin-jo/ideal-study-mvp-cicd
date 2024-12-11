@@ -85,7 +85,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework/spring-aspects
 	implementation 'org.springframework:spring-aspects:6.2.0'
 
-
+	implementation 'com.clickntap:vimeo:2.0'
 }
 
 tasks.named('test') {
