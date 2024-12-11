@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.enums;
+package com.idealstudy.mvp.enums.error;
 
 import lombok.Getter;
 

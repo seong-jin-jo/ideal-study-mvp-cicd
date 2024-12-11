@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.infrastructure.repository.impl.classroom;
+package com.idealstudy.mvp.infrastructure.repository.impl.classroom.preclass;
 
 import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;

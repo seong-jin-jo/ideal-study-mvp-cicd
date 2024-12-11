@@ -4,7 +4,7 @@ import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageResultDto;
 import com.idealstudy.mvp.application.service.classroom.preclass.ClassInquiryService;
-import com.idealstudy.mvp.enums.SecurityErrorMsg;
+import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.classroom.Visibility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,22 +2,23 @@ package com.idealstudy.mvp.application.service;
 
 import com.idealstudy.mvp.application.dto.ReplyDto;
 import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
-import com.idealstudy.mvp.enums.DBErrorMsg;
-import com.idealstudy.mvp.enums.SecurityErrorMsg;
+import com.idealstudy.mvp.enums.error.DBErrorMsg;
+import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.classroom.Visibility;
 import com.idealstudy.mvp.infrastructure.repository.LikedRepository;
 import com.idealstudy.mvp.infrastructure.repository.ReplyRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
+@Transactional
 public class ReplyService {
 
     private final ReplyRepository replyRepository;
