@@ -1,8 +1,6 @@
 package com.idealstudy.mvp.application.dto.classroom.preclass;
 
 import com.idealstudy.mvp.enums.classroom.Status;
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import com.idealstudy.mvp.infrastructure.jpa.entity.member.StudentEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

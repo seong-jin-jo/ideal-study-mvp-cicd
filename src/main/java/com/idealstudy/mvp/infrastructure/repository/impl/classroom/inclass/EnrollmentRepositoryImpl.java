@@ -111,8 +111,6 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
     @Override
     public void refuse(Long id) {
 
-        // 알림을 전달할 필요가 있다.
-
         EnrollmentEntity entity = enrollmentJpaRepository.findById(id).orElseThrow();
         enrollmentJpaRepository.delete(entity);
     }
