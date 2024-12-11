@@ -10,7 +10,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "reply")
 @Getter
 @Setter
 @SuperBuilder
