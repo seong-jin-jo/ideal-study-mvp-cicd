@@ -1,25 +1,40 @@
 package com.idealstudy.mvp.infrastructure.repository;
 
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
+import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
+import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.RecordLectureEntity;
 
 import java.io.File;
 
 public interface RecordLectureRepository {
 
-    RecordLectureDto create(String classroomId, String title, String description, File file, int order);
+    @Deprecated
+    default RecordLectureDto create(String classroomId, String title, String description, File file, int order) {
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
 
-    void getDetail(Long id);
+    RecordLectureDto create(String classroomId, String title, String description, String videoEndPoint, Integer order);
 
-    void selectList(String classroomId);
+    RecordLectureDto getDetail(Long id);
+
+    RecordLecturePageResultDto selectList(String classroomId);
 
     /**
      * 파라미터에 null값을 넣으면, 해당 파라미터는 변경 대상에서 제외됨.
      */
-    void updateVideo(Long id, String title, String description, String videoUrl);
+    @Deprecated
+    default void updateVideo(Long id, String title, String description, String videoUrl) {
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
 
     void updateOrder(Long id, int order);
 
-    void updatePlaytime(Long id, int playtime);
+    RecordLectureDto update(Long id, String title, String description, String videoEndPoint, Integer order);
 
-    void delete(Long id, String videoEndPoint);
+    @Deprecated
+    default void deleteVideo(Long id, String videoEndPoint){
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
+
+    void delete(Long id);
 }

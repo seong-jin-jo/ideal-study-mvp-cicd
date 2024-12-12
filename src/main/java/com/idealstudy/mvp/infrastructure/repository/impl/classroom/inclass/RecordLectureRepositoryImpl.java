@@ -1,57 +1,43 @@
 package com.idealstudy.mvp.infrastructure.repository.impl.classroom.inclass;
 
-import com.clickntap.vimeo.Vimeo;
-import com.clickntap.vimeo.VimeoException;
-import com.clickntap.vimeo.VimeoResponse;
+import com.idealstudy.mvp.application.dto.PageRequestDto;
+import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
+import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.RecordLectureEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.inclass.RecordLectureJpaRepository;
 import com.idealstudy.mvp.infrastructure.repository.RecordLectureRepository;
 import com.idealstudy.mvp.mapstruct.RecordLectureMapper;
-import com.idealstudy.mvp.util.TryCatchVimeoTemplate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Function;
 
 @Repository
 @Slf4j
+@RequiredArgsConstructor
 public class RecordLectureRepositoryImpl implements RecordLectureRepository {
 
-    private final RecordLectureJpaRepository recordLectureJpaRepository;
-
+    @Autowired
     private final ClassroomJpaRepository classroomJpaRepository;
 
-    private final Vimeo vimeo;
-
-    private final String domain;
-
     @Autowired
-    public RecordLectureRepositoryImpl(RecordLectureJpaRepository recordLectureJpaRepository,
-                                       ClassroomJpaRepository classroomJpaRepository,
-                                       @Value("${vimeo.personal-access-token}") String accessToken,
-                                       @Value("${server.backend-domain}") String domain) {
-        this.recordLectureJpaRepository = recordLectureJpaRepository;
-        this.classroomJpaRepository = classroomJpaRepository;
-        this.domain = domain;
+    private final RecordLectureJpaRepository recordLectureJpaRepository;
 
-        vimeo = new Vimeo(accessToken);
-    }
+    private static final int SIZE = 1000;
 
     @Override
-    public RecordLectureDto create(String classroomId, String title, String description, File file, int order) {
+    public RecordLectureDto create(String classroomId, String title, String description, String videoEndPoint,
+                                   Integer order) {
 
-        String videoEndPoint = TryCatchVimeoTemplate.execute(() -> addVideo(file, title, description));
+        order = null;
 
         ClassroomEntity classroom = classroomJpaRepository.findById(classroomId).orElseThrow();
 
@@ -69,119 +55,64 @@ public class RecordLectureRepositoryImpl implements RecordLectureRepository {
     }
 
     @Override
-    public void getDetail(Long id) {
+    public RecordLectureDto getDetail(Long id) {
 
+        RecordLectureEntity entity = recordLectureJpaRepository.findById(id).orElseThrow();
+
+        return RecordLectureMapper.INSTANCE.toDto(entity);
     }
 
     @Override
-    public void selectList(String classroomId) {
+    public RecordLecturePageResultDto selectList(String classroomId) {
 
+        PageRequestDto requestDto = PageRequestDto.builder()
+                .page(1)  // 인강에서는 페이징 기능이 필요없음. 하지만 정렬 기능 때문에 PageRequest 사용 필요
+                .size(SIZE)
+                .build();
+
+        // 순서에 대한 논의 중이므로, 현재는 먼저 등록한 것부터 출력되도록 함.
+        Page<RecordLectureEntity> pageResult = recordLectureJpaRepository.findByClassroom_ClassroomId(classroomId,
+                requestDto.getPageable(Sort.by("regDate").ascending()));
+
+        Function<RecordLectureEntity, RecordLectureDto> fn = RecordLectureMapper.INSTANCE::toDto;
+
+        PageResultDto<RecordLectureDto, RecordLectureEntity> pageResultDto =
+                new PageResultDto<RecordLectureDto, RecordLectureEntity>(pageResult, fn);
+
+        return RecordLectureMapper.INSTANCE.toPageResultDto(pageResultDto);
     }
 
-    @Override
-    public void updateVideo(Long id, String title, String description, String videoUrl) {
-
-        TryCatchVimeoTemplate.execute(() -> {
-            editVideo(videoUrl, title, description);
-            return null;
-        });
-    }
 
     @Override
     public void updateOrder(Long id, int order) {
 
+        // 순서 구현 방안에 대해서 아직 논의 중
     }
 
     @Override
-    public void updatePlaytime(Long id, int playtime) {
+    public RecordLectureDto update(Long id, String title, String description, String videoEndPoint, Integer order) {
 
-    }
+        order = null;
 
-    @Override
-    public void delete(Long id, String videoEndPoint) {
-
-        TryCatchVimeoTemplate.execute(() -> {
-            vimeo.removeVideo(videoEndPoint);
-            return null;
-        });
-    }
-
-    private String addVideo(File file, String name, String desc) {
-
-        VimeoResponse response = createVideo(file, name, desc);
-        String videoEntPoint = uploadVideo(response, file);
-        return videoEntPoint;
-    }
-
-    private String getTranscodeStatus(String videoEndPoint) {
-        return TryCatchVimeoTemplate.execute(() ->
-                vimeo.getVideoInfo(videoEndPoint).getJson().getString("transcode.status"));
-    }
-
-    private void editVideo(String videoEndPoint, String name, String desc) throws IOException {
-
-        final String effName = name;
-        final String effDesc = desc;
-
-        JSONObject json = vimeo.getVideoInfo(videoEndPoint).getJson();
-        if(name == null)
-            name = vimeo.getVideoInfo(videoEndPoint).getJson().getString("name");
-        if(desc == null)
-            desc = vimeo.getVideoInfo(videoEndPoint).getJson().getString("description");
-
-        String license = "";  // see Vimeo API Docs
-        String privacyView = "nobody";  // TODO: 유료 모델 사용 시 disable로 변경할 것
-        String privacyEmbed = "whitelist";
-        boolean reviewLink = false;
-
-
-        TryCatchVimeoTemplate.execute(() -> vimeo.updateVideoMetadata(videoEndPoint,
-                effName, effDesc, license, privacyView, privacyEmbed, reviewLink));
-    }
-
-    private VimeoResponse createVideo(File file, String name, String desc) {
-
-        long fileSize = file.length();
-        String privacyView = "nobody";  // TODO: 유료 모델 사용 시 disable로 변경할 것
-        String privacyEmbed = "whitelist";
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("upload.approach", "tus");
-        params.put("upload.size", fileSize + "");
-        params.put("name", name);
-        params.put("description", desc);
-        params.put("license", "");  // see Vimeo API Docs
-        params.put("privacy.view", privacyView);
-        params.put("privacy.embed", privacyEmbed);
-        params.put("review_page.active", "false");
-
-        return TryCatchVimeoTemplate.execute(() ->
-                vimeo.post("/me/videos", params, (Map) null));
-    }
-
-    private String uploadVideo(VimeoResponse response, File file) {
-
-        String videoEndpoint = null;
-        if (response.getStatusCode() == 200) {
-            log.info("video upload 시작");
-            JSONObject upload = response.getJson().getJSONObject("upload");
-            if ("tus".equalsIgnoreCase(upload.getString("approach"))) {
-                TryCatchVimeoTemplate.execute(() ->
-                    vimeo.uploadVideo(upload.getString("upload_link"), file)
-                );
-                videoEndpoint = response.getJson().getString("uri");
-                log.info("Upload finished. Update videoEndPoint: " + videoEndpoint);
-
-                String domain = URLEncoder.encode(this.domain, StandardCharsets.UTF_8);
-
-                final String effVideoEndpoint = videoEndpoint;
-                TryCatchVimeoTemplate.execute(() ->
-                        vimeo.put(effVideoEndpoint + "/privacy/domains/" + domain));
-            }
-        } else {
-            log.error("전송 설정 실패... " + response);
+        RecordLectureEntity entity = recordLectureJpaRepository.findById(id).orElseThrow();
+        if (title != null) {
+            entity.setTitle(title);
+        }
+        if (description != null) {
+            entity.setDescription(description);
+        }
+        if (videoEndPoint != null) {
+            entity.setUrl(videoEndPoint);
         }
 
-        return videoEndpoint;
+        return RecordLectureMapper.INSTANCE.toDto(recordLectureJpaRepository.save(entity));
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        RecordLectureEntity entity = recordLectureJpaRepository.findById(id).orElseThrow();
+
+        recordLectureJpaRepository.delete(entity);
     }
 }

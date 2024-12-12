@@ -2,6 +2,7 @@ package com.idealstudy.mvp.infrastructure;
 
 import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
+import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
 import com.idealstudy.mvp.infrastructure.repository.RecordLectureRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,12 +85,12 @@ public class RecordLectureRepositoryTest {
         String videoEndPoint = "/videos/1037866255";
 
         Assertions.assertThatCode(() ->
-                        recordLectureRepository.delete(id, videoEndPoint))
+                        recordLectureRepository.deleteVideo(id, videoEndPoint))
                 .doesNotThrowAnyException();
     }
 
     @Test
-    public void testCreate() {
+    public void testCreateOld() {
 
         String classroomId = CLASSROOM_ID;
         String title = "test";
@@ -102,6 +103,105 @@ public class RecordLectureRepositoryTest {
         Assertions.assertThat(dto.getTitle()).isEqualTo(title);
         Assertions.assertThat(dto.getDescription()).isEqualTo(description);
         Assertions.assertThat(dto.getOrderNum()).isEqualTo(order);
+    }
+
+    @Test
+    public void testCreate() {
+
+        String classroomId = CLASSROOM_ID;
+        String title = "test";
+        String description = "test";
+        int order = 1;
+        String videoEndPoint = "/videos/1038052017";
+
+        RecordLectureDto dto = recordLectureRepository.create(classroomId, title, description, videoEndPoint, order);
+
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(classroomId);
+        Assertions.assertThat(dto.getTitle()).isEqualTo(title);
+        Assertions.assertThat(dto.getDescription()).isEqualTo(description);
+        Assertions.assertThat(dto.getOrderNum()).isEqualTo(order);
+    }
+
+    @Test
+    public void testGetDetail() {
+
+        int order = 1;
+        Long id = autoIncrement;
+        String classroomId = CLASSROOM_ID;
+        String title = "test";
+        String description = "test";
+        String videoEndPoint = "/videos/1038052017";
+
+        createDummy(order);
+
+        RecordLectureDto dto = recordLectureRepository.getDetail(id);
+
+        Assertions.assertThat(dto.getClassroomId()).isEqualTo(classroomId);
+        Assertions.assertThat(dto.getTitle()).isEqualTo(title);
+        Assertions.assertThat(dto.getDescription()).isEqualTo(description);
+        Assertions.assertThat(dto.getOrderNum()).isEqualTo(order);
+        Assertions.assertThat(dto.getUrl()).isEqualTo(videoEndPoint);
+    }
+
+    @Test
+    public void testGetList() {
+
+        createDummy();
+        createDummy();
+        autoIncrement++;
+
+        String classroomId = CLASSROOM_ID;
+
+        RecordLecturePageResultDto pageResultDto = recordLectureRepository.selectList(classroomId);
+        Assertions.assertThat(pageResultDto.getDtoList().size()).isEqualTo(2+1);
+        Assertions.assertThat(pageResultDto.getDtoList().getFirst().getClassroomId()).isEqualTo(classroomId);
+    }
+
+    @Test
+    public void testUpdate() {
+
+        createDummy();
+
+        Long id = autoIncrement;
+        String title = "update";
+        String desc = "update";
+
+        RecordLectureDto dto = recordLectureRepository.update(id, title, desc, null, null);
+        Assertions.assertThat(dto.getTitle()).isEqualTo(title);
+        Assertions.assertThat(dto.getDescription()).isEqualTo(desc);
+    }
+
+    @Test
+    public void testDelete() {
+
+        createDummy();
+
+        Long id = autoIncrement;
+
+        recordLectureRepository.delete(id);
+
+        Assertions.assertThatThrownBy(() -> recordLectureRepository.getDetail(id));
+    }
+
+    @Deprecated
+    private RecordLectureDto createDummy(int order) {
+
+        String classroomId = CLASSROOM_ID;
+        String title = "test";
+        String description = "test";
+        String videoEndPoint = "/videos/1038052017";
+
+        return recordLectureRepository.create(classroomId, title, description, videoEndPoint, order);
+    }
+
+    private RecordLectureDto createDummy() {
+
+        String classroomId = CLASSROOM_ID;
+        String title = "test";
+        String description = "test";
+        String videoEndPoint = "/videos/1038052017";
+
+        return recordLectureRepository.create(classroomId, title, description, videoEndPoint, null);
     }
 }
 

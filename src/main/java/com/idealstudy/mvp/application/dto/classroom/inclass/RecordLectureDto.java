@@ -15,7 +15,7 @@ public class RecordLectureDto {
 
     private String classroomId;
 
-    private int orderNum;
+    private Integer orderNum;
 
     private String title;
 

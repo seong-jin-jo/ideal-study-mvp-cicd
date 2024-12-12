@@ -26,7 +26,7 @@ public class RecordLectureEntity extends BaseEntity {
     @JoinColumn(name = "classroom_id")
     private ClassroomEntity classroom;
 
-    private int orderNum;
+    private Integer orderNum;
 
     private String title;
 
