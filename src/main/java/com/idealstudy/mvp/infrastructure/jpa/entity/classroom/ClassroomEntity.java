@@ -58,15 +58,6 @@ public class ClassroomEntity extends BaseEntity {
     @ManyToMany(mappedBy = "classrooms")
     private List<LikedEntity> likes;
 
-    // 아래 필드는 임시 필드로만 추가 TODO : 연관관계 맺어 주어야함
-
-    private String posts; // 수업 포스트 관련
-
-    private String enrollments; // 수업 신청 관련
-
-    private String scheduler; // 스케쥴러 관련
-
-
     public ClassroomEntity() {
 
     }

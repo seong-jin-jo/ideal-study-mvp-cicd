@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.application.dto.classroom.inclass;
+package com.idealstudy.mvp.application.dto.classroom;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class RecordLecturePageResultDto {
+public class ClassroomPageResultDto {
 
-    private List<RecordLectureDto> dtoList;
+    private List<ClassroomResponseDto> dtoList;
 
     private int totalPage;
 
