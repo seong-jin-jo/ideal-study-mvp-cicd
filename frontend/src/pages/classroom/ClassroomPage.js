@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom";
 import { readClassById } from "../../services/classroom/ClassroomService.mjs";
 import LikeButton from "../../components/LikeButton";
 import ClassInfo from "./ClassInfo";
-import ClassEnrollment from "../../components/classroom/enrollment/Enrollment";
-import ClassFAQ from "../../components/classroom/FAQ/FAQBoard";
-import ClassInquiry from "./inquiry/InquiryBoardPage";
-import ClassPosts from "../../components/classroom/post/PostBoard";
-import ClassSchedule from "../../components/classroom/schedule/ScheduleBoard";
+import ClassEnrollment from "../../components/classroom/preClass/enrollment/Enrollment";
+import ClassFAQ from "../../components/classroom/preClass/FAQ/FAQBoard";
+import ClassInquiry from "./preClass/inquiry/InquiryBoardPage";
+import ClassSchedule from "../../components/classroom/inClass/schedule/ScheduleBoard";
 
 import "./ClassroomPage.css";
+import PostBoard from "../../components/classroom/inClass/post/PostBoard";
 
 const ClassroomPage = () => {
   const { classId } = useParams();
@@ -61,7 +61,7 @@ const ClassroomPage = () => {
 
       {/* 게시물 섹션 */}
       <div className="section post-section">
-        <ClassPosts classId={classId} />
+        <PostBoard classId={classId} />
       </div>
     </div>
   );

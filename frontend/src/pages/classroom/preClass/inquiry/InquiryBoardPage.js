@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getInquiriesByClassId } from "../../../services/classroom/InquiryService.mjs";
-import Pagination from "../../../components/Pagination";
-import InquiryList from "../../../components/classroom/Inquiry/InquiryList";
-import InquiryHeader from "../../../components/classroom/Inquiry/InquiryHeader";
+import { getInquiriesByClassId } from "../../../../services/classroom/InquiryService.mjs";
+import Pagination from "../../../../components/Pagination";
+import InquiryList from "../../../../components/classroom/preClass/inquiry/InquiryList";
+import InquiryHeader from "../../../../components/classroom/preClass/inquiry/InquiryHeader";
 
 const InquiryBoard = () => {
   const navigate = useNavigate();

@@ -1,43 +1,45 @@
-import React, { useState, useEffect, useContext }from 'react';
-import { createEnrollment, readEnrollment } from '../../../services/classroom/EnrollmentService.mjs';
-import { AuthContext } from '../../../context/AuthContext';
-import Button from '../../Button';
-
+import React, { useState, useEffect, useContext } from "react";
+import {
+  createEnrollment,
+  readEnrollment,
+} from "../../../../services/classroom/EnrollmentService.mjs";
+import { AuthContext } from "../../../../context/AuthContext";
+import Button from "../../../Button";
 
 const EnrollmentForm = ({ classId, isClose }) => {
   const { userInfo } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
-    currentGrade: '',
-    targetGrade: '',
-    concerns: '',
-    goals: '',
-    requests: '',
+    currentGrade: "",
+    targetGrade: "",
+    concerns: "",
+    goals: "",
+    requests: "",
   });
 
   // 수업신청이력이 있다면 정보가져오기
-  useEffect(()=>{
-    const fetchEnrollment = async () =>{
-      const data = await readEnrollment({classId, userInfo});
+  useEffect(() => {
+    const fetchEnrollment = async () => {
+      const data = await readEnrollment({ classId, userInfo });
       setFormData(data);
-    }
+    };
     fetchEnrollment();
-  },[classId])
+  }, [classId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData( (prev) => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }) );
-  }
+      [name]: value,
+    }));
+  };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await createEnrollment(formData);
     alert("수업신청이 완료되었습니다");
     isClose();
-  }
+  };
 
   return (
     <div className="enrollment-form">
@@ -87,7 +89,7 @@ const EnrollmentForm = ({ classId, isClose }) => {
         </div>
         <br></br>
         <Button type="submit"> 신청 </Button>
-        <Button onClick={isClose} > 나중에 </Button>
+        <Button onClick={isClose}> 나중에 </Button>
       </form>
     </div>
   );
