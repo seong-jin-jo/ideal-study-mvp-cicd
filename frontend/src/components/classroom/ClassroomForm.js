@@ -4,28 +4,24 @@ import {
   updateClass,
 } from "../../services/classroom/ClassroomService.mjs";
 import styles from "./ClassroomForm.module.css";
+import Button from "../Button";
 
-const ClassroomForm = ({ initialData = null, onSuccess }) => {
+const ClassroomForm = ({ initialData = null, onSubmit }) => {
   const [form, setForm] = useState(
     initialData || { title: "", description: "" }
   );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.id) {
-      await updateClass(form.id, form);
-    } else {
-      await createClass(form);
-    }
-    onSuccess();
+    onSubmit(form);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.imageContainer}>
         <img src={form.thumbnail} alt="썸네일 이미지" />
       </div>
-      <div className={styles.formContainer}>
+      <div className={styles.inputContainer}>
         <h2>클래스 제목</h2>
         <input
           type="text"
@@ -40,7 +36,7 @@ const ClassroomForm = ({ initialData = null, onSuccess }) => {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
       </div>
-      <button type="submit">{form.id ? "수정하기" : "생성하기"}</button>
+      <Button type="submit">{form.id ? "수정하기" : "생성하기"}</Button>
     </form>
   );
 };
