@@ -28,6 +28,8 @@ public interface EnrollmentRepository {
      */
     EnrollmentDto getInfo(Long id);
 
+    boolean belongToClassroom(String classroomId, String studentId);
+
     /**
      * 특정 클래스의 수업 신청 리스트 조회
      */

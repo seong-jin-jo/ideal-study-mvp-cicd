@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
@@ -88,6 +89,15 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         EnrollmentEntity entity = enrollmentJpaRepository.findById(id).orElseThrow();
 
         return EnrollmentMapper.INSTANCE.toDto(entity);
+    }
+
+    @Override
+    public boolean belongToClassroom(String classroomId, String studentId) {
+
+        Optional<EnrollmentEntity> entity = enrollmentJpaRepository.findByClassroom_ClassroomIdAndStudent_UserId(
+                classroomId, studentId);
+
+        return entity.isPresent();
     }
 
     @Override

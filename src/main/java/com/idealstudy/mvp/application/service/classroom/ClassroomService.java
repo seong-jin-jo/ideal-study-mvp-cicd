@@ -1,5 +1,8 @@
 package com.idealstudy.mvp.application.service.classroom;
 
+import com.idealstudy.mvp.application.dto.classroom.ClassroomPageResultDto;
+import com.idealstudy.mvp.enums.error.DBErrorMsg;
+import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.infrastructure.repository.ClassroomRepository;
 import com.idealstudy.mvp.infrastructure.repository.LikedRepository;
 import com.idealstudy.mvp.presentation.dto.classroom.ClassroomRequestDto;
@@ -8,6 +11,8 @@ import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,35 +37,38 @@ public class ClassroomService {
     }
 
     public ClassroomResponseDto createClassroom(ClassroomRequestDto request) {
-        ClassroomEntity savedClassroom = classroomRepository.save(request.toEntity());
-        return ClassroomResponseDto.fromEntity(savedClassroom);
+
+        return TryCatchServiceTemplate.execute(() -> classroomRepository.save(request.getTitle(),
+                request.getDescription(), request.getCapacity(), request.getThumbnail()), null,
+                DBErrorMsg.CREATE_ERROR);
     }
 
-    public List<ClassroomResponseDto> getAllClassrooms() {
-        return classroomRepository.findAll().stream()
-                .map(ClassroomResponseDto::fromEntity)
-                .collect(Collectors.toList());
+    public ClassroomPageResultDto getAllClassrooms() {
+
+        return TryCatchServiceTemplate.execute(() -> classroomRepository.findAll(),
+                null, DBErrorMsg.SELECT_ERROR);
     }
 
     public ClassroomResponseDto getClassroomById(String id) {
-        return classroomRepository.findById(id)
-                .map(ClassroomResponseDto::fromEntity)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+
+        return TryCatchServiceTemplate.execute(() -> classroomRepository.findById(id),
+                null, DBErrorMsg.SELECT_ERROR);
     }
 
-    public ClassroomResponseDto updateClassroom(String id, ClassroomRequestDto request) {
-        ClassroomEntity classroom = classroomRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
-        request.updateEntity(classroom);
-        ClassroomEntity updatedClassroom = classroomRepository.save(classroom);
-        return ClassroomResponseDto.fromEntity(updatedClassroom);
+    public ClassroomResponseDto updateClassroom(String id, ClassroomRequestDto request, String teacherId) {
+
+        return TryCatchServiceTemplate.execute(() -> classroomRepository.update(id,request.getTitle(),
+                        request.getDescription(), request.getCapacity(), request.getThumbnail()),
+                () -> isMine(teacherId, id), DBErrorMsg.UPDATE_ERROR);
     }
 
-    public void deleteClassroom(String id) {
-        if (!classroomRepository.existsById(id)) {
-            throw new IllegalArgumentException("Classroom not found");
-        }
-        classroomRepository.deleteById(id);
+    public void deleteClassroom(String classroomId, String teacherId) {
+
+        TryCatchServiceTemplate.execute(() -> {
+            classroomRepository.deleteById(classroomId);
+            return null;
+        },
+        () -> isMine(teacherId, classroomId), DBErrorMsg.DELETE_ERROR);
     }
 
     public void updateLiked() {
@@ -72,5 +80,12 @@ public class ClassroomService {
 
         String collection = "classrooms";
         return likedRepository.countById(classroomId);
+    }
+
+    private void isMine(String teacherId, String classroomId) {
+
+        ClassroomResponseDto dto = classroomRepository.findById(classroomId);
+        if( !dto.getCreatedBy().equals(teacherId))
+            throw new SecurityException(SecurityErrorMsg.NOT_YOURS.toString());
     }
 }

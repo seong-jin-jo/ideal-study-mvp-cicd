@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS record_lecture (
 
 	id BIGINT NOT NULL AUTO_INCREMENT,
 	classroom_id CHAR(36) NOT NULL,
-	order_num INT NOT NULL,
+	order_num INT,
 	title VARCHAR(100) NOT NULL,
 	description VARCHAR(1000) NOT NULL,
 	playtime INT,
@@ -274,4 +274,4 @@ CREATE TABLE IF NOT EXISTS record_lecture (
 INSERT INTO record_lecture
 (id, classroom_id, created_by, del_date, deleted_by, description, mod_date, modified_by, order_num, playtime, reg_date, title, url)
 VALUES
-(1, '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NULL, 'test', NULL, NULL, 1, NULL, NOW(), 'test', '/videos/1038052017');
+(1, '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NULL, 'test', NULL, NULL, NULL, 10000, NOW(), 'test', '/videos/1038052017');

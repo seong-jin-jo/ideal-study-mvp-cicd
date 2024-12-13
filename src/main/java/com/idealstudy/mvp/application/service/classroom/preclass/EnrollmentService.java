@@ -38,6 +38,11 @@ public class EnrollmentService {
         return enrollmentRepository.check(id);
     }
 
+    public boolean belongToClassroom(String classroomId, String studentId) {
+
+        return enrollmentRepository.belongToClassroom(classroomId, studentId);
+    }
+
     public EnrollmentDto getInfo(Long id) {
         return enrollmentRepository.getInfo(id);
     }
