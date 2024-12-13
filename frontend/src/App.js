@@ -22,9 +22,9 @@ import InquiyBoard from "./pages/classroom/preClass/inquiry/InquiryBoardPage";
 import InquiryForm from "./components/classroom/preClass/inquiry/InquiryForm";
 import InquiryDetailPage from "./pages/classroom/preClass/inquiry/InquiryDetailPage";
 import ClassroomForm from "./components/classroom/ClassroomForm";
-import RecordedLecturePage from "./pages/classroom/inClass/RecordedLecture/RecordedLecturePage";
-import RecordedLectureListPage from "./pages/classroom/inClass/RecordedLecture/RecordedLectureListPage";
-import RecordedLectureDetailPage from "./pages/classroom/inClass/RecordedLecture/RecordedLectureDetailPage";
+import RecordedLecturePage from "./pages/classroom/inClass/recordedLecture/RecordedLecturePage";
+import RecordedLectureListPage from "./pages/classroom/inClass/recordedLecture/RecordedLectureListPage";
+import RecordedLectureDetailPage from "./pages/classroom/inClass/recordedLecture/RecordedLectureDetailPage";
 
 const App = () => {
   return (
@@ -42,7 +42,7 @@ const App = () => {
               />
               {/* 인강 목록 */}
               <Route
-                path="/recordedLecture/list"
+                path="/recordedLecture/list/:classId"
                 element={<RecordedLectureListPage />}
               />
               {/* 인강 상세 */}
