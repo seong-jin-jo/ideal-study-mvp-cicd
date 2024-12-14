@@ -275,3 +275,21 @@ INSERT INTO record_lecture
 (id, classroom_id, created_by, del_date, deleted_by, description, mod_date, modified_by, order_num, playtime, reg_date, title, url)
 VALUES
 (1, '98a12345-ad7e-11ef-8e5c-0242ac140002', '98a10847-ad7e-11ef-8e5c-0242ac140002', NULL, NULL, 'test', NULL, NULL, NULL, 10000, NOW(), 'test', '/videos/1038052017');
+
+CREATE TABLE IF NOT EXISTS live_lecture (
+
+        id BIGINT NOT NULL AUTO_INCREMENT,
+        classroom_id CHAR(36) NOT NULL,
+        title VARCHAR(100) NOT NULL,
+        start_time DATETIME(6) NOT NULL,
+        end_time DATETIME(6) NOT NULL,                                                                              study_space VARCHAR(200) NOT NULL,
+        flatform ENUM('ZOOM', 'GOOGLE_MEET', 'DISCORD', 'KAKAO_TALK', 'CALL', 'YOUTUBE_LIVE', 'OFFLINE') NOT NULL,
+        reg_date DATETIME(6) NOT NULL,                                                                              mod_date DATETIME(6),
+        del_date DATETIME(6),
+        created_by CHAR(36),
+        modified_by CHAR(36),
+        deleted_by CHAR(36),
+        PRIMARY KEY (id),
+        FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id)
+        -- FOREIGN KEY (created_by) REFERENCES teacher(teacher_id)
+);
