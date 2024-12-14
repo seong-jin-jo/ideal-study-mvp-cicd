@@ -5,6 +5,7 @@ import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.LiveLectureEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -17,8 +18,10 @@ public interface LiveLectureMapper {
 
     LiveLectureMapper INSTANCE = Mappers.getMapper(LiveLectureMapper.class);
 
+    @Mapping(source = "classroom.classroomId", target = "classroomId")
     LiveLectureDto toDto(LiveLectureEntity entity);
 
+    @Mapping(target = "classroom.classroomId", source = "classroomId")
     LiveLectureEntity toEntity(LiveLectureDto dto);
 
     LiveLecturePageResultDto toPageResultDto(PageResultDto<LiveLectureDto, LiveLectureEntity> pageResultDto);
