@@ -1,4 +1,4 @@
-package com.idealstudy.mvp.infrastructure.repository;
+package com.idealstudy.mvp.infrastructure.repository.inclass;
 
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;

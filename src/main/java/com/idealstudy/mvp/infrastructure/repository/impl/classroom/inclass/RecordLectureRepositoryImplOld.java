@@ -8,7 +8,7 @@ import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.RecordLectureEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.inclass.RecordLectureJpaRepository;
-import com.idealstudy.mvp.infrastructure.repository.RecordLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.RecordLectureRepository;
 import com.idealstudy.mvp.mapstruct.RecordLectureMapper;
 import com.idealstudy.mvp.util.TryCatchVimeoTemplate;
 import lombok.extern.slf4j.Slf4j;

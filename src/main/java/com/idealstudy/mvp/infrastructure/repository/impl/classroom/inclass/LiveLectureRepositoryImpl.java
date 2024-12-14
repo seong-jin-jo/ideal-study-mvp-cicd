@@ -9,7 +9,7 @@ import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.LiveLectureEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.inclass.LiveLectureJpaRepository;
-import com.idealstudy.mvp.infrastructure.repository.LiveLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
 import com.idealstudy.mvp.mapstruct.LiveLectureMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

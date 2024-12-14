@@ -4,7 +4,7 @@ import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
 import com.idealstudy.mvp.enums.classroom.Flatform;
-import com.idealstudy.mvp.infrastructure.repository.LiveLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

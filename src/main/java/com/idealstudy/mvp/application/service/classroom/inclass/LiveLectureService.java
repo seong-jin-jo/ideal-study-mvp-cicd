@@ -4,7 +4,7 @@ import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
 import com.idealstudy.mvp.enums.classroom.Flatform;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
-import com.idealstudy.mvp.infrastructure.repository.LiveLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

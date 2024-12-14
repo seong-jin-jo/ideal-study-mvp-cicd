@@ -1,8 +1,7 @@
-package com.idealstudy.mvp.infrastructure.repository;
+package com.idealstudy.mvp.infrastructure.repository.inclass;
 
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.RecordLectureEntity;
 
 import java.io.File;
 
