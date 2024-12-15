@@ -1,6 +1,6 @@
 package com.idealstudy.mvp.application.dto.classroom.preclass;
 
-import com.idealstudy.mvp.enums.classroom.Status;
+import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,7 +18,7 @@ public class EnrollmentDto {
 
     private String createdBy;
 
-    private Status status;
+    private EnrollmentStatus status;
 
     private String curScore;  // 현재 점수
 

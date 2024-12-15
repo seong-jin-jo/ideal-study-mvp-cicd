@@ -4,7 +4,7 @@ import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
-import com.idealstudy.mvp.enums.classroom.Flatform;
+import com.idealstudy.mvp.enums.classroom.Platform;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.LiveLectureEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
@@ -36,7 +36,7 @@ public class LiveLectureRepositoryImpl implements LiveLectureRepository {
 
     @Override
     public LiveLectureDto create(String classroomId, String title, LocalDateTime startTime, LocalDateTime endTime,
-                                 String studySpace, Flatform flatform) {
+                                 String studySpace, Platform flatform) {
 
         ClassroomEntity classroom = classroomJpaRepository.findById(classroomId).orElseThrow();
 
@@ -46,7 +46,7 @@ public class LiveLectureRepositoryImpl implements LiveLectureRepository {
                     .startTime(startTime)
                     .endTime(endTime)
                     .studySpace(studySpace)
-                    .flatform(flatform)
+                    .platform(flatform)
                     .build();
 
         return LiveLectureMapper.INSTANCE.toDto(liveLectureJpaRepository.save(entity));
@@ -79,7 +79,7 @@ public class LiveLectureRepositoryImpl implements LiveLectureRepository {
 
     @Override
     public LiveLectureDto update(Long id, String title, LocalDateTime startTime, LocalDateTime endTime, String studySpace,
-                       Flatform flatform) {
+                       Platform flatform) {
 
         LiveLectureEntity entity = liveLectureJpaRepository.findById(id).orElseThrow();
 
@@ -96,7 +96,7 @@ public class LiveLectureRepositoryImpl implements LiveLectureRepository {
             entity.setStudySpace(studySpace);
         }
         if (flatform != null) {
-            entity.setFlatform(flatform);
+            entity.setPlatform(flatform);
         }
 
         return LiveLectureMapper.INSTANCE.toDto(liveLectureJpaRepository.save(entity));

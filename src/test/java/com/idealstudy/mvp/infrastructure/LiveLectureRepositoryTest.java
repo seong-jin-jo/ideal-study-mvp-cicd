@@ -3,7 +3,7 @@ package com.idealstudy.mvp.infrastructure;
 import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
-import com.idealstudy.mvp.enums.classroom.Flatform;
+import com.idealstudy.mvp.enums.classroom.Platform;
 import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +52,7 @@ public class LiveLectureRepositoryTest {
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plusHours(1);
         String studySpace = "test";
-        Flatform flatform = Flatform.ZOOM;
+        Platform flatform = Platform.ZOOM;
 
         LiveLectureDto dto = liveLectureRepository.create(classroomId, title, startTime, endTime, studySpace,
                 flatform);
@@ -70,7 +70,7 @@ public class LiveLectureRepositoryTest {
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plusHours(1);
         String studySpace = "test";
-        Flatform flatform = Flatform.ZOOM;
+        Platform flatform = Platform.ZOOM;
 
         createDummy();
 
@@ -90,7 +90,7 @@ public class LiveLectureRepositoryTest {
         String title = "update";
         LocalDateTime endTime = LocalDateTime.now().plusHours(2);
         String studySpace = "update";
-        Flatform flatform = Flatform.OFFLINE;
+        Platform flatform = Platform.OFFLINE;
 
         createDummy();
 
@@ -142,7 +142,7 @@ public class LiveLectureRepositoryTest {
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plusHours(1);
         String studySpace = "test";
-        Flatform flatform = Flatform.ZOOM;
+        Platform flatform = Platform.ZOOM;
 
         LiveLectureDto dto = liveLectureRepository.create(CLASSROOM_ID, title, startTime, endTime, studySpace,
                 flatform);
@@ -154,7 +154,7 @@ public class LiveLectureRepositoryTest {
         String title = "test";
         LocalDateTime endTime = startTime.plusHours(1);
         String studySpace = "test";
-        Flatform flatform = Flatform.ZOOM;
+        Platform flatform = Platform.ZOOM;
 
         LiveLectureDto dto = liveLectureRepository.create(CLASSROOM_ID, title, startTime, endTime, studySpace,
                 flatform);

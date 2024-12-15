@@ -2,7 +2,7 @@ package com.idealstudy.mvp.application.service.classroom.inclass;
 
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
-import com.idealstudy.mvp.enums.classroom.Flatform;
+import com.idealstudy.mvp.enums.classroom.Platform;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
@@ -25,7 +25,7 @@ public class LiveLectureService {
 
 
     public LiveLectureDto create(String classroomId, String title, LocalDateTime startTime, LocalDateTime endTime,
-                                 String studySpace, Flatform flatform) {
+                                 String studySpace, Platform flatform) {
 
         return TryCatchServiceTemplate.execute(()-> liveLectureRepository.create(classroomId, title,
                         startTime, endTime, studySpace, flatform), null,
@@ -45,7 +45,7 @@ public class LiveLectureService {
     }
 
     public LiveLectureDto update(Long id, String title, LocalDateTime startTime, LocalDateTime endTime,
-                                 String studySpace, Flatform flatform) {
+                                 String studySpace, Platform flatform) {
 
         return TryCatchServiceTemplate.execute(() -> liveLectureRepository.update(id, title, startTime, endTime,
                         studySpace, flatform), null, DBErrorMsg.UPDATE_ERROR);

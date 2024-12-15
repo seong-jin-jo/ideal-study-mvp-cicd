@@ -283,7 +283,7 @@ CREATE TABLE IF NOT EXISTS live_lecture (
         title VARCHAR(100) NOT NULL,
         start_time DATETIME(6) NOT NULL,
         end_time DATETIME(6) NOT NULL,                                                                              study_space VARCHAR(200) NOT NULL,
-        flatform ENUM('ZOOM', 'GOOGLE_MEET', 'DISCORD', 'KAKAO_TALK', 'CALL', 'YOUTUBE_LIVE', 'OFFLINE') NOT NULL,
+        platform ENUM('ZOOM', 'GOOGLE_MEET', 'DISCORD', 'KAKAO_TALK', 'CALL', 'YOUTUBE_LIVE', 'OFFLINE') NOT NULL,
         reg_date DATETIME(6) NOT NULL,                                                                              mod_date DATETIME(6),
         del_date DATETIME(6),
         created_by CHAR(36),
@@ -292,4 +292,25 @@ CREATE TABLE IF NOT EXISTS live_lecture (
         PRIMARY KEY (id),
         FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id)
         -- FOREIGN KEY (created_by) REFERENCES teacher(teacher_id)
+);
+
+CREATE TABLE IF NOT EXISTS materials (
+	id BIGINT NOT NULL AUTO_INCREMENT,
+	classroom_id CHAR(36) NOT NULL,
+	student_id CHAR(36),
+	order_num INT,
+	status ENUM('PUBLIC', 'INDIVIDUAL') NOT NULL,
+	title VARCHAR(100) NOT NULL,
+	description VARCHAR(2000),
+	material_uri VARCHAR(1000),
+    reg_date DATETIME(6) NOT NULL,
+    mod_date DATETIME(6),
+    del_date DATETIME(6),
+    created_by CHAR(36),
+    modified_by CHAR(36),
+    deleted_by CHAR(36),
+	PRIMARY KEY (id),
+	FOREIGN KEY (classroom_id) REFERENCES classroom(classroom_id),
+	FOREIGN KEY (student_id) REFERENCES student(student_id),
+	FOREIGN KEY (created_by) REFERENCES member(user_id)
 );

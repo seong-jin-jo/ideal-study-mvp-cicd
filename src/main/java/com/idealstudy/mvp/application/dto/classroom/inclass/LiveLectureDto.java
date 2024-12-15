@@ -1,7 +1,7 @@
 package com.idealstudy.mvp.application.dto.classroom.inclass;
 
 
-import com.idealstudy.mvp.enums.classroom.Flatform;
+import com.idealstudy.mvp.enums.classroom.Platform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,5 +25,5 @@ public class LiveLectureDto {
 
     private String studySpace;
 
-    private Flatform flatform;
+    private Platform flatform;
 }

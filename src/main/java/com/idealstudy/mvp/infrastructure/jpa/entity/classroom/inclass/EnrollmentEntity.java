@@ -1,6 +1,6 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass;
 
-import com.idealstudy.mvp.enums.classroom.Status;
+import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
 import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.member.StudentEntity;
@@ -31,7 +31,7 @@ public class EnrollmentEntity extends BaseEntity {
     private StudentEntity student;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private EnrollmentStatus status;
 
     private String curScore;  // 현재 점수
 

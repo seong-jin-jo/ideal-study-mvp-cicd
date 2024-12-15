@@ -1,6 +1,6 @@
 package com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass;
 
-import com.idealstudy.mvp.enums.classroom.Flatform;
+import com.idealstudy.mvp.enums.classroom.Platform;
 import com.idealstudy.mvp.infrastructure.jpa.entity.BaseEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import jakarta.persistence.*;
@@ -36,5 +36,5 @@ public class LiveLectureEntity extends BaseEntity {
     private String studySpace;
 
     @Enumerated(value = EnumType.STRING)
-    private Flatform flatform;
+    private Platform platform;
 }
