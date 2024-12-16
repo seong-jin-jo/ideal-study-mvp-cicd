@@ -9,4 +9,3 @@ const StudyGroupPage = () => {
 };
 
 export default StudyGroupPage;
-<h2></h2>;
