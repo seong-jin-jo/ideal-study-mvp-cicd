@@ -97,6 +97,8 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
         Optional<EnrollmentEntity> entity = enrollmentJpaRepository.findByClassroom_ClassroomIdAndStudent_UserId(
                 classroomId, studentId);
 
+        log.info("해당 학생이 존재하는가? " + entity.isPresent());
+
         return entity.isPresent();
     }
 

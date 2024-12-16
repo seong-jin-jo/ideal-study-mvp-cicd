@@ -54,7 +54,7 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
 
     @Override
     public MaterialsDto upload(String classroomId, String studentId, Integer orderNum, MaterialsStatus status,
-                               String description, File file) {
+                               String title, String description, String materialUri) {
 
         ClassroomEntity classroom = classroomJpaRepository.findById(classroomId).orElseThrow();
 
@@ -65,14 +65,14 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
         if(studentId != null && status == MaterialsStatus.PUBLIC)
             throw new RuntimeException("학생 개인에게 전달하는 과제는 반드시 INDIVIDUAL이어야 합니다.");
 
-        String materialUri = uploadFile(file);
+        // String materialUri = uploadFile(file);
 
         MaterialsEntity entity = MaterialsEntity.builder()
                 .classroom(classroom)
                 .student(student)
                 .orderNum(orderNum)
                 .status(status)
-                .title(file.getName())
+                .title(title)
                 .description(description)
                 .materialUri(materialUri)
                 .build();
@@ -115,7 +115,8 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
                 .size(SIZE)
                 .build();
 
-        Page<MaterialsEntity> resultPage = materialsJpaRepository.findByClassroom_classroomIdAndStudent_userId(
+        Page<MaterialsEntity> resultPage = materialsJpaRepository
+                .findByClassroom_classroomIdAndStudent_userIdOrStudent_userIdIsNull(
                 classroomId, studentId,
                 requestDto.getPageable(Sort.by("regDate").descending()));
 
@@ -148,7 +149,7 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
 
     @Override
     public MaterialsDto update(Long id, String studentId, Integer orderNum, MaterialsStatus status,
-                               String description, File file) {
+                               String description, String materialUri, String title) {
 
         MaterialsEntity entity = materialsJpaRepository.findById(id).orElseThrow();
 
@@ -175,12 +176,15 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
             entity.setDescription(description);
         }
 
-        if (file != null) {
-            deleteFile(entity.getMaterialUri());
+        if (materialUri != null) {
+            // deleteFile(entity.getMaterialUri());
+            // String materialUri = uploadFile(file);
 
-            String materialUri = uploadFile(file);
             entity.setMaterialUri(materialUri);
-            entity.setTitle(file.getName());
+        }
+
+        if(title != null) {
+            entity.setTitle(title);
         }
 
         return MaterialsMapper.INSTANCE.toDto(materialsJpaRepository.save(entity));
@@ -190,10 +194,11 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
     public void delete(Long id) {
 
         MaterialsEntity entity = materialsJpaRepository.findById(id).orElseThrow();
-        deleteFile(entity.getMaterialUri());
+        // deleteFile(entity.getMaterialUri());
         materialsJpaRepository.delete(entity);
     }
 
+    @Deprecated
     private String uploadFile(File file) {
 
         String uuid = UUID.randomUUID().toString();
@@ -219,6 +224,7 @@ public class MaterialsRepositoryImpl implements MaterialsRepository {
         return filePath;
     }
 
+    @Deprecated
     private void deleteFile(String materialUri) {
 
         File file = new File(materialUri);

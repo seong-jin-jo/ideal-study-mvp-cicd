@@ -63,12 +63,14 @@ public class MaterialsRepositoryTest {
 
         String classroomId = CLASSROOM_ID;
         String studentId = STUDENT_ID;
+        String title = "test";
         String description = "test";
         MaterialsStatus status = MaterialsStatus.INDIVIDUAL;
-        File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        // File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        String filePath = "src/main/resources/static/upload-materials/test.pdf";
 
-        MaterialsDto dto = materialsRepository.upload(classroomId, studentId, null, status,
-                description, file);
+        MaterialsDto dto = materialsRepository.upload(classroomId, studentId, null, status,title,
+                description, filePath);
 
         org.junit.jupiter.api.Assertions.assertNotNull(dto);
         org.junit.jupiter.api.Assertions.assertEquals(description, dto.getDescription());
@@ -95,6 +97,7 @@ public class MaterialsRepositoryTest {
                 .doesNotThrowAnyException();
     }
 
+
     @Test
     public void testUpdate() {
 
@@ -103,9 +106,10 @@ public class MaterialsRepositoryTest {
         Long id = autoIncrement;
 
         String description = "update";
-        File file = new File("src/main/resources/static/upload-materials/test02.txt");
+        String materialUri = "src/main/resources/static/upload-materials/test02.txt";
 
-        MaterialsDto dto = materialsRepository.update(id, null, null, null, description, file);
+        MaterialsDto dto = materialsRepository.update(id, null, null, null, description,
+                materialUri);
         Assertions.assertThat(dto).isNotNull();
         Assertions.assertThat(dto.getDescription()).isEqualTo(description);
 
@@ -194,22 +198,26 @@ public class MaterialsRepositoryTest {
     private void createDummyIndividual(String studentId) {
 
         String classroomId = CLASSROOM_ID;
+        String title = "test";
         String description = "test";
         MaterialsStatus status = MaterialsStatus.INDIVIDUAL;
-        File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        // File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        String filePath = "src/main/resources/static/upload-materials/test.pdf";
 
-        materialsRepository.upload(classroomId, studentId, null, status,
-                description, file);
+        materialsRepository.upload(classroomId, studentId, null, status,title,
+                description, filePath);
     }
 
     private void createDummyPublic() {
 
         String classroomId = CLASSROOM_ID;
+        String title = "test";
         String description = "test";
         MaterialsStatus status = MaterialsStatus.PUBLIC;
-        File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        // File file = new File("src/main/resources/static/upload-materials/test.pdf");
+        String filePath = "src/main/resources/static/upload-materials/test.pdf";
 
-        materialsRepository.upload(classroomId, null, null, status,
-                description, file);
+        materialsRepository.upload(classroomId, null, null, status,title,
+                description, filePath);
     }
 }

@@ -10,7 +10,7 @@ public interface MaterialsJpaRepository extends JpaRepository<MaterialsEntity, L
 
     Page<MaterialsEntity> findByClassroom_classroomId(String classroomId, Pageable pageable);
 
-    Page<MaterialsEntity> findByClassroom_classroomIdAndStudent_userId(String classroomId, String studentId,
+    Page<MaterialsEntity> findByClassroom_classroomIdAndStudent_userIdOrStudent_userIdIsNull(String classroomId, String studentId,
                                                                        Pageable pageable);
     
     Page<MaterialsEntity> findByClassroom_classroomIdAndStatus(String classroomId, MaterialsStatus status,

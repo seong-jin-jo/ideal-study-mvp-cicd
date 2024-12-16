@@ -9,7 +9,7 @@ import java.io.File;
 public interface MaterialsRepository {
 
     MaterialsDto upload(String classroomId, String studentId, Integer orderNum, MaterialsStatus status,
-                        String description, File file);
+                        String title, String description, String materialUri);
 
     MaterialsDto getDetail(Long id);
 
@@ -29,7 +29,7 @@ public interface MaterialsRepository {
     MaterialsPageResultDto getListForTeacher(String classroomId, int page);
 
     MaterialsDto update(Long id, String studentId, Integer orderNum, MaterialsStatus status,
-                        String description, File file);
+                        String description, String materialUri, String title);
 
     void delete(Long id);
 }

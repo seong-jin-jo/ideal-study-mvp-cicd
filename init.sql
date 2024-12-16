@@ -251,6 +251,10 @@ CREATE TABLE IF NOT EXISTS enrollment (
 	FOREIGN KEY (created_by) REFERENCES member(user_id)
 );
 
+INSERT INTO enrollment
+VALUES
+(1, '98a12345-ad7e-11ef-8e5c-0242ac140002', 'c99fd58f-b0ae-11ef-89d8-0242ac140003', 'c99fd58f-b0ae-11ef-89d8-0242ac140003', 'PERMITTED' ,'50점', '100 이요', '없습니다', '화이팅', NOW(), NULL, NULL, NULL, NULL);
+
 CREATE TABLE IF NOT EXISTS record_lecture (
 
 	id BIGINT NOT NULL AUTO_INCREMENT,

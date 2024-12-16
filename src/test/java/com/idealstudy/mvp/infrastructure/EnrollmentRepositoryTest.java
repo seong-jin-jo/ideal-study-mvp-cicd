@@ -145,6 +145,18 @@ public class EnrollmentRepositoryTest {
         Assertions.assertThatThrownBy(() -> enrollmentRepository.getInfo(id));
     }
 
+    @Test
+    public void testBelong() {
+
+        createDummy();
+
+        String classroomId = CLASSROOM_ID;
+        String studentId = STUDENT_ID;
+
+        Assertions.assertThat(enrollmentRepository.belongToClassroom(classroomId, studentId))
+                .isTrue();
+    }
+
     private EnrollmentDto createDummy() {
 
         String classroomId = CLASSROOM_ID;

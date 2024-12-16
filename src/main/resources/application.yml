@@ -20,6 +20,12 @@ spring:
       hibernate:
         format_sql: true
 
+  # 파일 업로드 크기 제어
+  servlet:
+    multipart:
+      max-file-size: 250MB
+      max-request-size: 250MB
+
 upload:
   path: src/main/resources/static/upload-materials/
 
