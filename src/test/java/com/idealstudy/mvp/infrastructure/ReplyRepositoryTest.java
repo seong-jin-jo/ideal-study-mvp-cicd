@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.ReplyDto;
 import com.idealstudy.mvp.enums.classroom.Visibility;
-import com.idealstudy.mvp.infrastructure.repository.ReplyRepository;
+import com.idealstudy.mvp.application.repository.ReplyRepository;
 
 @SpringBootTest
 @Transactional

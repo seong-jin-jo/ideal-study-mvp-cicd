@@ -1,19 +1,14 @@
 package com.idealstudy.mvp.application.service.classroom;
 
 import com.idealstudy.mvp.application.dto.classroom.ClassroomPageResultDto;
+import com.idealstudy.mvp.application.component.ClassroomComponent;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
-import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
-import com.idealstudy.mvp.infrastructure.repository.ClassroomRepository;
-import com.idealstudy.mvp.infrastructure.repository.LikedRepository;
+import com.idealstudy.mvp.application.repository.ClassroomRepository;
+import com.idealstudy.mvp.application.repository.LikedRepository;
 import com.idealstudy.mvp.presentation.dto.classroom.ClassroomRequestDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 
-import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,11 +24,15 @@ public class ClassroomService {
 
     private final LikedRepository likedRepository;
 
+    private final ClassroomComponent classroomComponent;
+
     @Autowired
     public ClassroomService(ClassroomRepository classroomRepository,
-                            @Qualifier("likedClassroomRepositoryImpl") LikedRepository likedRepository) {
+                            @Qualifier("likedClassroomRepositoryImpl") LikedRepository likedRepository,
+                            ClassroomComponent classroomComponent) {
         this.classroomRepository = classroomRepository;
         this.likedRepository = likedRepository;
+        this.classroomComponent = classroomComponent;
     }
 
     public ClassroomResponseDto createClassroom(ClassroomRequestDto request) {
@@ -59,7 +58,7 @@ public class ClassroomService {
 
         return TryCatchServiceTemplate.execute(() -> classroomRepository.update(id,request.getTitle(),
                         request.getDescription(), request.getCapacity(), request.getThumbnail()),
-                () -> isMine(teacherId, id), DBErrorMsg.UPDATE_ERROR);
+                () -> classroomComponent.checkMyClassroom(teacherId, id), DBErrorMsg.UPDATE_ERROR);
     }
 
     public void deleteClassroom(String classroomId, String teacherId) {
@@ -68,7 +67,7 @@ public class ClassroomService {
             classroomRepository.deleteById(classroomId);
             return null;
         },
-        () -> isMine(teacherId, classroomId), DBErrorMsg.DELETE_ERROR);
+        () -> classroomComponent.checkMyClassroom(teacherId, classroomId), DBErrorMsg.DELETE_ERROR);
     }
 
     public void updateLiked() {
@@ -80,12 +79,5 @@ public class ClassroomService {
 
         String collection = "classrooms";
         return likedRepository.countById(classroomId);
-    }
-
-    private void isMine(String teacherId, String classroomId) {
-
-        ClassroomResponseDto dto = classroomRepository.findById(classroomId);
-        if( !dto.getCreatedBy().equals(teacherId))
-            throw new SecurityException(SecurityErrorMsg.NOT_YOURS.toString());
     }
 }

@@ -1,16 +1,16 @@
 package com.idealstudy.mvp.application.service.classroom.inclass;
 
-import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.MaterialsDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.MaterialsPageResultDto;
+import com.idealstudy.mvp.application.component.ClassroomComponent;
 import com.idealstudy.mvp.domain.Materials;
 import com.idealstudy.mvp.enums.classroom.MaterialsStatus;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.member.Role;
-import com.idealstudy.mvp.infrastructure.repository.ClassroomRepository;
-import com.idealstudy.mvp.infrastructure.repository.inclass.EnrollmentRepository;
-import com.idealstudy.mvp.infrastructure.repository.inclass.MaterialsRepository;
+import com.idealstudy.mvp.application.repository.ClassroomRepository;
+import com.idealstudy.mvp.application.repository.inclass.EnrollmentRepository;
+import com.idealstudy.mvp.application.repository.inclass.MaterialsRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -29,23 +28,22 @@ public class MaterialsService {
 
     private final MaterialsRepository materialsRepository;
 
-    // 자신의 클래스인지 체크하는 용도로 사용
-    private final ClassroomRepository classroomRepository;
-
     // 해당 클래스에 소속되어 있는지 체크하는 용도로 사용
     private final EnrollmentRepository enrollmentRepository;
 
     private final Materials materials;
 
+    private final ClassroomComponent classroom;
+
     @Autowired
     public MaterialsService(MaterialsRepository materialsRepository, ClassroomRepository classroomRepository, EnrollmentRepository enrollmentRepository,
                             @Value("${upload.path}") String uploadPath) {
         this.materialsRepository = materialsRepository;
-        this.classroomRepository = classroomRepository;
         this.enrollmentRepository = enrollmentRepository;
 
         materials = new Materials(materialsRepository, enrollmentRepository
                 , classroomRepository, uploadPath);
+        classroom = new ClassroomComponent(classroomRepository);
     }
 
     public MaterialsDto uploadPublic(String teacherId, String classroomId, String description, MultipartFile file,
@@ -56,7 +54,7 @@ public class MaterialsService {
 
         return TryCatchServiceTemplate.execute(() -> tryCatchUpload(classroomId, studentId, orderNum,
                 status, description, file, title),
-                () -> checkMyClassroom(classroomId, teacherId), DBErrorMsg.CREATE_ERROR);
+                () -> classroom.checkMyClassroom(classroomId, teacherId), DBErrorMsg.CREATE_ERROR);
     }
 
     public MaterialsDto uploadIndividual(String teacherId, String classroomId, String studentId, String description,
@@ -66,7 +64,7 @@ public class MaterialsService {
 
         return TryCatchServiceTemplate.execute(() -> tryCatchUpload(classroomId, studentId, orderNum, status,
                         description, file, title),
-                () -> checkMyClassroom(classroomId, teacherId), DBErrorMsg.CREATE_ERROR);
+                () -> classroom.checkMyClassroom(classroomId, teacherId), DBErrorMsg.CREATE_ERROR);
     }
 
     public MaterialsDto getDetailForTeacher(Long id, String teacherId){
@@ -75,7 +73,7 @@ public class MaterialsService {
             MaterialsDto dto = materialsRepository.getDetail(id);
             String classroomId = dto.getClassroomId();
 
-            checkMyClassroom(classroomId, teacherId);
+            classroom.checkMyClassroom(classroomId, teacherId);
 
             return dto;
         },
@@ -94,7 +92,7 @@ public class MaterialsService {
                     String classroomId = dto.getClassroomId();
 
                     if(dto.getStatus() == MaterialsStatus.PUBLIC) {
-                        if( !enrollmentRepository.belongToClassroom(classroomId, studentId))
+                        if( !enrollmentRepository.checkAffiliated(classroomId, studentId))
                             throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
                     } else if (dto.getStatus() == MaterialsStatus.INDIVIDUAL) {
                         if( !dto.getStudentId().equals(studentId))
@@ -124,7 +122,7 @@ public class MaterialsService {
     public MaterialsPageResultDto getListForTeacher(String classroomId, int page, String teacherId){
 
         return TryCatchServiceTemplate.execute(() -> materialsRepository.getListForTeacher(classroomId, page),
-                () -> checkMyClassroom(classroomId, teacherId), DBErrorMsg.SELECT_ERROR);
+                () -> classroom.checkMyClassroom(classroomId, teacherId), DBErrorMsg.SELECT_ERROR);
     }
 
     public MaterialsDto update(Long id, String studentId, String description, MultipartFile multipartFile,
@@ -133,7 +131,7 @@ public class MaterialsService {
 
         return TryCatchServiceTemplate.execute(() -> tryCatchUpdate(id, studentId, description, multipartFile,
                         orderNum, status, title),
-                () -> checkMyClassroom(classroomId, teacherId), DBErrorMsg.UPDATE_ERROR);
+                () -> classroom.checkMyClassroom(classroomId, teacherId), DBErrorMsg.UPDATE_ERROR);
     }
 
     public void delete(Long id, String classroomId, String teacherId){
@@ -144,7 +142,7 @@ public class MaterialsService {
             materialsRepository.delete(id);
             return null;
         },
-        () -> checkMyClassroom(classroomId, teacherId), DBErrorMsg.DELETE_ERROR);
+        () -> classroom.checkMyClassroom(classroomId, teacherId), DBErrorMsg.DELETE_ERROR);
 
     }
 
@@ -152,18 +150,6 @@ public class MaterialsService {
             throws RuntimeException {
 
         return materials.getFile(materialUri, id, userId, role);
-    }
-
-    /*
-      본인 클래스룸 외의 자료에 대한 CRUD를 막기 위함.
-      학생에 대한 조작은 컨트롤러에서 권한 상 이미 차단되므로 고려하지 않아도 됨.
-     */
-    private void checkMyClassroom(String classroomId, String teacherId) throws SecurityException{
-
-        ClassroomResponseDto dto = classroomRepository.findById(classroomId);
-
-        if( !dto.getCreatedBy().equals(teacherId))
-            throw new SecurityException(SecurityErrorMsg.NOT_YOURS.toString());
     }
 
     private MaterialsDto tryCatchUpload(String classroomId, String studentId, Integer orderNum, MaterialsStatus status,

@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.infrastructure.jpa.repository.classroom.inclass;
 
+import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.EnrollmentEntity;
 
 import java.util.Optional;
@@ -12,5 +13,6 @@ public interface EnrollmentJpaRepository extends JpaRepository<EnrollmentEntity,
 
     Page<EnrollmentEntity> findByClassroom_ClassroomId(String classroomId, Pageable pageable);
 
-    Optional<EnrollmentEntity> findByClassroom_ClassroomIdAndStudent_UserId(String classroomId, String userId);
+    Optional<EnrollmentEntity> findByClassroom_ClassroomIdAndStudent_UserIdAndStatus(String classroomId, String userId,
+                                                                                     EnrollmentStatus status);
 }
