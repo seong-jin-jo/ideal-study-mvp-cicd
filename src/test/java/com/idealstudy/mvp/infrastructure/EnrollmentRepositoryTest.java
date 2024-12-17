@@ -3,7 +3,7 @@ package com.idealstudy.mvp.infrastructure;
 import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentPageResultDto;
-import com.idealstudy.mvp.enums.classroom.Status;
+import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
 import com.idealstudy.mvp.infrastructure.repository.inclass.EnrollmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,7 +94,7 @@ public class EnrollmentRepositoryTest {
         Long id = autoIncrement;
 
         EnrollmentDto dto = enrollmentRepository.check(id);
-        Assertions.assertThat(dto.getStatus()).isEqualTo(Status.CHECKED);
+        Assertions.assertThat(dto.getStatus()).isEqualTo(EnrollmentStatus.CHECKED);
     }
 
     @Test
@@ -143,6 +143,18 @@ public class EnrollmentRepositoryTest {
         enrollmentRepository.refuse(id);
 
         Assertions.assertThatThrownBy(() -> enrollmentRepository.getInfo(id));
+    }
+
+    @Test
+    public void testBelong() {
+
+        createDummy();
+
+        String classroomId = CLASSROOM_ID;
+        String studentId = STUDENT_ID;
+
+        Assertions.assertThat(enrollmentRepository.belongToClassroom(classroomId, studentId))
+                .isTrue();
     }
 
     private EnrollmentDto createDummy() {

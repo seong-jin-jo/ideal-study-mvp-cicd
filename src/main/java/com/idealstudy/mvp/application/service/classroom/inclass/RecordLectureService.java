@@ -3,7 +3,7 @@ package com.idealstudy.mvp.application.service.classroom.inclass;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
-import com.idealstudy.mvp.infrastructure.repository.RecordLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.RecordLectureRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

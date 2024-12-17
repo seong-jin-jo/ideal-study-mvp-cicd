@@ -8,7 +8,7 @@ import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.RecordLectureEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.inclass.RecordLectureJpaRepository;
-import com.idealstudy.mvp.infrastructure.repository.RecordLectureRepository;
+import com.idealstudy.mvp.infrastructure.repository.inclass.RecordLectureRepository;
 import com.idealstudy.mvp.mapstruct.RecordLectureMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
 import java.util.function.Function;
 
 @Repository

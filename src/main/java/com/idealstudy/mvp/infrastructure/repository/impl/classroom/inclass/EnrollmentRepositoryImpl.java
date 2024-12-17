@@ -4,7 +4,7 @@ import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.PageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentPageResultDto;
-import com.idealstudy.mvp.enums.classroom.Status;
+import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.inclass.EnrollmentEntity;
@@ -78,7 +78,7 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
     public EnrollmentDto check(Long id) {
 
         EnrollmentEntity entity = enrollmentJpaRepository.findById(id).orElseThrow();
-        entity.setStatus(Status.CHECKED);
+        entity.setStatus(EnrollmentStatus.CHECKED);
 
         return EnrollmentMapper.INSTANCE.toDto(enrollmentJpaRepository.save(entity));
     }
@@ -96,6 +96,8 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
 
         Optional<EnrollmentEntity> entity = enrollmentJpaRepository.findByClassroom_ClassroomIdAndStudent_UserId(
                 classroomId, studentId);
+
+        log.info("해당 학생이 존재하는가? " + entity.isPresent());
 
         return entity.isPresent();
     }
