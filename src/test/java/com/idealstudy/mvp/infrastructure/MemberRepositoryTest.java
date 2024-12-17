@@ -6,7 +6,7 @@ import com.idealstudy.mvp.enums.member.Gender;
 import com.idealstudy.mvp.enums.member.Grade;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.enums.member.SchoolRegister;
-import com.idealstudy.mvp.infrastructure.repository.MemberRepository;
+import com.idealstudy.mvp.application.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

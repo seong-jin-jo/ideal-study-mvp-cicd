@@ -5,8 +5,8 @@ import com.idealstudy.mvp.application.dto.ReplyPageResultDto;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.classroom.Visibility;
-import com.idealstudy.mvp.infrastructure.repository.LikedRepository;
-import com.idealstudy.mvp.infrastructure.repository.ReplyRepository;
+import com.idealstudy.mvp.application.repository.LikedRepository;
+import com.idealstudy.mvp.application.repository.ReplyRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 
 import lombok.extern.slf4j.Slf4j;

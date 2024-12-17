@@ -25,5 +25,5 @@ public class LiveLectureDto {
 
     private String studySpace;
 
-    private Platform flatform;
+    private Platform platform;
 }

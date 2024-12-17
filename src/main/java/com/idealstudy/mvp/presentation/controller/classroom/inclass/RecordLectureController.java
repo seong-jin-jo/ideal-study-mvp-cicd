@@ -3,9 +3,7 @@ package com.idealstudy.mvp.presentation.controller.classroom.inclass;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.RecordLecturePageResultDto;
-import com.idealstudy.mvp.application.service.classroom.ClassroomService;
 import com.idealstudy.mvp.application.service.classroom.inclass.RecordLectureService;
-import com.idealstudy.mvp.application.service.classroom.preclass.EnrollmentService;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.security.annotation.ForTeacher;
 import com.idealstudy.mvp.security.annotation.ForUser;
@@ -27,30 +25,22 @@ public class RecordLectureController {
     @Autowired
     private final RecordLectureService recordLectureService;
 
-    @Autowired
-    private final EnrollmentService enrollmentService;
-
-    @Autowired
-    private final ClassroomService classroomService;
-
     @ForTeacher
     @PostMapping("/api/recorded-lectures")
     public ResponseEntity<RecordLectureDto> create(@RequestBody RecordLectureDto dto, HttpServletRequest request) {
 
-        JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
-
         return TryCatchControllerTemplate.execute(() ->  {
 
-            ClassroomResponseDto classroomDto = classroomService.getClassroomById(dto.getClassroomId());
-            if( !classroomDto.getCreatedBy().equals(payload.getSub()))
-                throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
+            JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
+            String teacherId = payload.getSub();
 
             return recordLectureService.create(
                     dto.getClassroomId(),
                     dto.getTitle(),
                     dto.getDescription(),
                     dto.getUrl(),
-                    dto.getOrderNum()
+                    dto.getOrderNum(),
+                    teacherId
             );
         });
     }
@@ -59,16 +49,7 @@ public class RecordLectureController {
     @GetMapping("/api/recorded-lectures/lecture/{lectureId}/{studentId}")
     public ResponseEntity<RecordLectureDto> getDetail(@PathVariable Long lectureId, @PathVariable String studentId) {
 
-        return TryCatchControllerTemplate.execute(() -> {
-            RecordLectureDto recordLectureDto = recordLectureService.getDetail(lectureId);
-
-            boolean result = enrollmentService.belongToClassroom(recordLectureDto.getClassroomId(), studentId);
-
-            if(result)
-                return recordLectureDto;
-            else
-                throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
-        });
+        return TryCatchControllerTemplate.execute(() -> recordLectureService.getDetail(lectureId, studentId));
     }
 
     @GetMapping("/api/recorded-lectures/{classroomId}")
@@ -82,13 +63,10 @@ public class RecordLectureController {
     public ResponseEntity<RecordLectureDto> update(@PathVariable Long lectureId, @RequestBody RecordLectureDto dto,
                                                    HttpServletRequest request) {
 
-        JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
-
         return TryCatchControllerTemplate.execute(() -> {
 
-            ClassroomResponseDto classroomDto = classroomService.getClassroomById(dto.getClassroomId());
-            if( !classroomDto.getCreatedBy().equals(payload.getSub()))
-                throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
+            JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
+            String teacherId = payload.getSub();
 
             log.info("수정을 진행합니다.");
             return recordLectureService.update(
@@ -96,7 +74,9 @@ public class RecordLectureController {
                     dto.getTitle(),
                     dto.getDescription(),
                     dto.getUrl(),
-                    dto.getOrderNum()
+                    dto.getOrderNum(),
+                    teacherId,
+                    dto.getClassroomId()
             );
         });
     }
@@ -106,15 +86,12 @@ public class RecordLectureController {
     public ResponseEntity<Object> delete(@PathVariable Long lectureId, @PathVariable String classroomId,
                                          HttpServletRequest request) {
 
-        JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
-
         return TryCatchControllerTemplate.execute(() -> {
 
-            ClassroomResponseDto classroomDto = classroomService.getClassroomById(classroomId);
-            if( !classroomDto.getCreatedBy().equals(payload.getSub()))
-                throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
+            JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
+            String teacherId = payload.getSub();
 
-            recordLectureService.delete(lectureId);
+            recordLectureService.delete(lectureId, teacherId, classroomId);
             return null;
         });
     }

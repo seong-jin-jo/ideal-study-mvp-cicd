@@ -5,7 +5,7 @@ import com.idealstudy.mvp.application.dto.classroom.preclass.ClassInquiryPageRes
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.classroom.Visibility;
-import com.idealstudy.mvp.infrastructure.repository.preclass.ClassInquiryRepository;
+import com.idealstudy.mvp.application.repository.preclass.ClassInquiryRepository;
 import com.idealstudy.mvp.util.TryCatchServiceTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

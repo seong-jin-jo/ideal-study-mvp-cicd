@@ -4,7 +4,7 @@ import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
 import com.idealstudy.mvp.enums.classroom.Platform;
-import com.idealstudy.mvp.infrastructure.repository.inclass.LiveLectureRepository;
+import com.idealstudy.mvp.application.repository.inclass.LiveLectureRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ public class LiveLectureRepositoryTest {
         Assertions.assertThat(dto.getStartTime()).isEqualTo(startTime);
         Assertions.assertThat(dto.getEndTime()).isEqualTo(endTime);
         Assertions.assertThat(dto.getStudySpace()).isEqualTo(studySpace);
-        Assertions.assertThat(dto.getFlatform()).isEqualTo(flatform);
+        Assertions.assertThat(dto.getPlatform()).isEqualTo(flatform);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class LiveLectureRepositoryTest {
         Assertions.assertThat(dto.getStartTime()).isEqualTo(startTime);
         Assertions.assertThat(dto.getEndTime()).isEqualTo(endTime);
         Assertions.assertThat(dto.getStudySpace()).isEqualTo(studySpace);
-        Assertions.assertThat(dto.getFlatform()).isEqualTo(flatform);
+        Assertions.assertThat(dto.getPlatform()).isEqualTo(flatform);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class LiveLectureRepositoryTest {
         Assertions.assertThat(dto.getTitle()).isEqualTo(title);
         Assertions.assertThat(dto.getEndTime()).isEqualTo(endTime);
         Assertions.assertThat(dto.getStudySpace()).isEqualTo(studySpace);
-        Assertions.assertThat(dto.getFlatform()).isEqualTo(flatform);
+        Assertions.assertThat(dto.getPlatform()).isEqualTo(flatform);
     }
 
     @Test

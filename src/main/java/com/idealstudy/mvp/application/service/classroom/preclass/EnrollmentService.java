@@ -2,7 +2,7 @@ package com.idealstudy.mvp.application.service.classroom.preclass;
 
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentPageResultDto;
-import com.idealstudy.mvp.infrastructure.repository.inclass.EnrollmentRepository;
+import com.idealstudy.mvp.application.repository.inclass.EnrollmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +36,6 @@ public class EnrollmentService {
         // 알림을 전달할 필요가 있다.
 
         return enrollmentRepository.check(id);
-    }
-
-    public boolean belongToClassroom(String classroomId, String studentId) {
-
-        return enrollmentRepository.belongToClassroom(classroomId, studentId);
     }
 
     public EnrollmentDto getInfo(Long id) {
