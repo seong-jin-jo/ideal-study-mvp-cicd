@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createLiveLecture } from "../../../../services/classroom/LiveLectureService.mjs";
+import styles from "./LiveLectureForm.module.css";
 
 const LiveLectureForm = ({ classId }) => {
   const [formData, setFormData] = useState({
@@ -28,20 +29,56 @@ const LiveLectureForm = ({ classId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="liveLectureForm">
-      <input type="text" name="title" placeholder="제목" />
-      <input type="text" name="description" placeholder="설명" />
-      <input type="text" name="startDate" placeholder="시작일" />
-      <input type="number" name="duration" placeholder="소요시간 (분)" />
-      <select>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <input
+        type="text"
+        name="title"
+        placeholder="제목"
+        className={styles.input}
+      />
+      <input
+        type="text"
+        name="description"
+        placeholder="설명"
+        className={styles.input}
+      />
+      <input
+        type="text"
+        name="startDate"
+        placeholder="시작일"
+        className={styles.input}
+      />
+      <input
+        type="number"
+        name="duration"
+        placeholder="소요시간 (분)"
+        className={styles.input}
+      />
+      <select className={styles.select}>
         <option value="ZOOM">ZOOM</option>
         <option value="GOOGLE MEET">GOOGLE MEET</option>
         <option value="오프라인">스터디카페</option>
       </select>
-      <input type="text" name="location" placeholder="장소" />
-      <input type="url" name="link" placeholder="수업 URL" />
-      <button type="submit">생성</button>
-      <button type="button">취소</button>
+      <input
+        type="text"
+        name="location"
+        placeholder="장소"
+        className={styles.input}
+      />
+      <input
+        type="url"
+        name="link"
+        placeholder="수업 URL"
+        className={styles.input}
+      />
+      <div className={styles.buttonContainer}>
+        <button type="submit" className={styles.submitButton}>
+          생성
+        </button>
+        <button type="button" className={styles.cancelButton}>
+          취소
+        </button>
+      </div>
     </form>
   );
 };

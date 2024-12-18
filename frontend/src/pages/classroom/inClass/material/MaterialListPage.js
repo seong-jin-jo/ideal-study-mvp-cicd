@@ -16,10 +16,10 @@ const MaterialListPage = () => {
           <p>설명</p>
         </div>
         <div className="materialListPageFooter">
-          <button>자료 다운로드</button>
-          <button>자료 삭제</button>
-          <button>자료 수정</button>
-          <button>자료 공유</button>
+          <Button>자료 다운로드</Button>
+          <Button>자료 삭제</Button>
+          <Button>자료 수정</Button>
+          <Button>자료 공유</Button>
         </div>
       </div>
     </div>

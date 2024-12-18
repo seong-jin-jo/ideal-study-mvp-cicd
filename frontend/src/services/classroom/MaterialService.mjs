@@ -19,12 +19,7 @@ export const createMaterial = async (teacherId, classId, materials) => {
     console.error("자료 생성 실패:", err);
     return {
       id: Math.random().toString(36).substr(2, 9),
-      files: materials.files.map((file) => ({
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        url: URL.createObjectURL(file),
-      })),
+      files: materials.files,
       description: materials.description,
       visibility: materials.visibility,
       uploadDate: new Date().toISOString(),

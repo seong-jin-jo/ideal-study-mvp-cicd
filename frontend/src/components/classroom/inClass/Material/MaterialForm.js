@@ -34,7 +34,7 @@ const MaterialForm = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("files", files); // TODO : 여러 개의 파일 업로드 처리
+    formData.append("files", files[0]); // TODO : 여러 개의 파일 업로드 처리
     formData.append("description", description);
     formData.append("visibility", visibility);
     // FormData의 내용을 확인하기 위한 디버깅 코드
