@@ -1,0 +1,23 @@
+.material-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.material-dropzone {
+  border: 2px dashed #cccccc;
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.material-dropzone.active {
+  border-color: #4a90e2;
+  background-color: rgba(74, 144, 226, 0.1);
+}
