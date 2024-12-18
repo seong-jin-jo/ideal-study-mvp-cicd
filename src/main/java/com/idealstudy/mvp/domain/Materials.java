@@ -4,9 +4,9 @@ import com.idealstudy.mvp.application.dto.classroom.inclass.MaterialsDto;
 import com.idealstudy.mvp.enums.classroom.MaterialsStatus;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.enums.member.Role;
-import com.idealstudy.mvp.infrastructure.repository.ClassroomRepository;
-import com.idealstudy.mvp.infrastructure.repository.inclass.EnrollmentRepository;
-import com.idealstudy.mvp.infrastructure.repository.inclass.MaterialsRepository;
+import com.idealstudy.mvp.application.repository.ClassroomRepository;
+import com.idealstudy.mvp.application.repository.inclass.EnrollmentRepository;
+import com.idealstudy.mvp.application.repository.inclass.MaterialsRepository;
 
 import java.io.*;
 import java.util.UUID;
@@ -81,7 +81,7 @@ public class Materials {
             throws SecurityException {
 
         if(status == MaterialsStatus.PUBLIC) {
-            if( !enrollmentRepository.belongToClassroom(classroomId, studentId))
+            if( !enrollmentRepository.checkAffiliated(classroomId, studentId))
                 throw new SecurityException(SecurityErrorMsg.NOT_AFFILIATED.toString());
         }
 

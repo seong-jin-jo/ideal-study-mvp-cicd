@@ -1,11 +1,8 @@
 package com.idealstudy.mvp.presentation.controller.classroom.inclass;
 
-import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLectureDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.LiveLecturePageResultDto;
-import com.idealstudy.mvp.application.service.classroom.ClassroomService;
 import com.idealstudy.mvp.application.service.classroom.inclass.LiveLectureService;
-import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
 import com.idealstudy.mvp.security.annotation.ForTeacher;
 import com.idealstudy.mvp.security.dto.JwtPayloadDto;
 import com.idealstudy.mvp.util.TryCatchControllerTemplate;
@@ -25,10 +22,6 @@ public class LiveLectureController {
     @Autowired
     private final LiveLectureService liveLectureService;
 
-    // controller에서 classroom 정보 가져온 뒤에, 토큰 내 teacher id와 classroom 소유자가 동일하지 않으면 kick
-    @Autowired
-    private final ClassroomService classroomService;
-
     @ForTeacher
     @PostMapping("/api/live-lectures")
     public ResponseEntity<LiveLectureDto> create(@RequestBody LiveLectureDto dto, HttpServletRequest request) {
@@ -38,10 +31,9 @@ public class LiveLectureController {
             JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
             String teacherId = payload.getSub();
             String classroomId = dto.getClassroomId();
-            checkMyClass(teacherId, classroomId);
 
             return liveLectureService.create(classroomId, dto.getTitle(), dto.getStartTime(), dto.getEndTime(),
-                    dto.getStudySpace(), dto.getFlatform());
+                    dto.getStudySpace(), dto.getPlatform(), teacherId);
         });
     }
 
@@ -67,7 +59,6 @@ public class LiveLectureController {
             JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
             String teacherId = payload.getSub();
             String classroomId = dto.getClassroomId();
-            checkMyClass(teacherId, classroomId);
 
             return liveLectureService.update(
                     dto.getId(),
@@ -75,7 +66,9 @@ public class LiveLectureController {
                     dto.getStartTime(),
                     dto.getEndTime(),
                     dto.getStudySpace(),
-                    dto.getFlatform()
+                    dto.getPlatform(),
+                    teacherId,
+                    classroomId
             );
         });
     }
@@ -89,17 +82,9 @@ public class LiveLectureController {
             JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
             String teacherId = payload.getSub();
             String classroomId = dto.getClassroomId();
-            checkMyClass(teacherId, classroomId);
 
-            liveLectureService.delete(dto.getId());
+            liveLectureService.delete(dto.getId(), teacherId, classroomId);
             return null;
         });
-    }
-
-    private void checkMyClass(String teacherId, String classroomId) {
-
-        ClassroomResponseDto dto = classroomService.getClassroomById(classroomId);
-        if( !teacherId.equals(dto.getCreatedBy()))
-            throw new SecurityException(SecurityErrorMsg.NOT_YOURS.toString());
     }
 }

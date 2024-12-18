@@ -4,7 +4,7 @@ import com.idealstudy.mvp.TestRepositoryUtil;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentDto;
 import com.idealstudy.mvp.application.dto.classroom.preclass.EnrollmentPageResultDto;
 import com.idealstudy.mvp.enums.classroom.EnrollmentStatus;
-import com.idealstudy.mvp.infrastructure.repository.inclass.EnrollmentRepository;
+import com.idealstudy.mvp.application.repository.inclass.EnrollmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -153,7 +153,7 @@ public class EnrollmentRepositoryTest {
         String classroomId = CLASSROOM_ID;
         String studentId = STUDENT_ID;
 
-        Assertions.assertThat(enrollmentRepository.belongToClassroom(classroomId, studentId))
+        Assertions.assertThat(enrollmentRepository.checkAffiliated(classroomId, studentId))
                 .isTrue();
     }
 
