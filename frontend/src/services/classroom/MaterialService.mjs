@@ -6,17 +6,9 @@ import apiClient from "../apiClient.mjs";
 export const createMaterial = async (teacherId, classId, materials) => {
   console.log("자료 생성 시도:", { teacherId, classId, materials });
   try {
-    const formData = new FormData();
-    materials.files.forEach((file) => {
-      formData.append("files", file);
-    });
-    formData.append("description", JSON.stringify(materials.description));
-    formData.append("visibility", materials.visibility);
-    formData.append("classId", classId);
-
     const response = await apiClient.post(
       `/api/materials/${teacherId}`,
-      formData,
+      materials,
       {
         headers: { "Content-Type": "multipart/form-data" },
       }

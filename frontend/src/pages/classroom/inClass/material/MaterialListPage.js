@@ -1,6 +1,7 @@
 import React from "react";
 import "./MaterialListPage.css";
 import Button from "../../../../components/Button";
+import MaterialForm from "../../../../components/classroom/inClass/Material/MaterialForm";
 const MaterialListPage = () => {
   return (
     <div>
@@ -8,6 +9,7 @@ const MaterialListPage = () => {
         <h2>자료 목록</h2>
         <Button>자료 추가</Button>
       </div>
+      <MaterialForm />
       <div className="materialListPageContent">
         <div className="materialListPageItem">
           <h3>제목</h3>
