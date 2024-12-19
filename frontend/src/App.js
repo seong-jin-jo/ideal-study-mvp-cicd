@@ -18,9 +18,13 @@ import "./App.css"; // 스타일 파일 import
 import Sidebar from "./components/Sidebar";
 import ClassroomListPage from "./pages/classroom/ClassroomListPage";
 import ClassroomPage from "./pages/classroom/ClassroomPage";
-import InquiyBoard from "./pages/classroom/inquiry/InquiryBoardPage";
-import InquiryForm from "./components/classroom/Inquiry/InquiryForm";
-import InquiryDetailPage from "./pages/classroom/inquiry/InquiryDetailPage";
+import InquiyBoard from "./pages/classroom/preClass/inquiry/InquiryBoardPage";
+import InquiryForm from "./components/classroom/preClass/inquiry/InquiryForm";
+import InquiryDetailPage from "./pages/classroom/preClass/inquiry/InquiryDetailPage";
+import ClassroomForm from "./components/classroom/ClassroomForm";
+import RecordedLecturePage from "./pages/classroom/inClass/RecordedLecture/RecordedLecturePage";
+import RecordedLectureListPage from "./pages/classroom/inClass/RecordedLecture/RecordedLectureListPage";
+import RecordedLectureDetailPage from "./pages/classroom/inClass/RecordedLecture/RecordedLectureDetailPage";
 
 const App = () => {
   return (
@@ -31,6 +35,21 @@ const App = () => {
           <Sidebar />
           <div className="page-content">
             <Routes>
+              {/* 인강 업로드 */}
+              <Route
+                path="/recordedLecture/new"
+                element={<RecordedLecturePage />}
+              />
+              {/* 인강 목록 */}
+              <Route
+                path="/recordedLecture/list"
+                element={<RecordedLectureListPage />}
+              />
+              {/* 인강 상세 */}
+              <Route
+                path="/recordedLecture/:id"
+                element={<RecordedLectureDetailPage />}
+              />
               {/* main */}
               <Route path="/" element={<HomePage />} />
               {/* auth */}
@@ -50,9 +69,23 @@ const App = () => {
                 path="/officialPageUpdate"
                 element={<OfficialProfilePageUpdate />}
               />
+
               {/* classroom */}
               <Route path="/classes" element={<ClassroomListPage />} />
               <Route path="/classes/:classId" element={<ClassroomPage />} />
+
+              {/* 클래스 목록 */}
+              <Route path="/classes" element={<ClassroomListPage />} />
+              {/* 클래스 생성 */}
+              <Route path="/classes/new" element={<ClassroomForm />} />
+              {/* 클래스 수정 */}
+              <Route
+                path="/classes/:classId/edit"
+                element={<ClassroomForm />}
+              />
+              {/* 클래스 상세 */}
+              <Route path="/classes/:classId" element={<ClassroomPage />} />
+
               {/* classroom - inquiry */}
               {/* 문의 목록 */}
               <Route

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { readFAQsByClassId } from '../../../services/classroom/FAQService.mjs';
+import React, { useState, useEffect } from "react";
+import { readFAQsByClassId } from "../../../../services/classroom/FAQService.mjs";
 
 const FAQBoard = ({ classId }) => {
   const [faqs, setFaqs] = useState([]);
@@ -11,7 +11,7 @@ const FAQBoard = ({ classId }) => {
       setFaqs(data);
     };
     fetchClasses();
-  },[])
+  }, []);
 
   return (
     <div className="faq-board">
@@ -29,7 +29,7 @@ const FAQBoard = ({ classId }) => {
           </tr>
         </thead>
         <tbody>
-          {faqs.map(faq =>(
+          {faqs.map((faq) => (
             <tr key={faq.id}>
               <td>{faq.id}</td>
               <td>{faq.title}</td>

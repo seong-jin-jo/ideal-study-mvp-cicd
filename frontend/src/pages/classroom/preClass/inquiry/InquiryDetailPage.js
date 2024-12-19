@@ -1,17 +1,17 @@
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
-import InquiryContent from "../../../components/classroom/Inquiry/InquiryContent";
-import CommentList from "../../../components/comment/CommentList";
 import {
   createComment,
   deleteComment,
   readCommentsByPostId,
   updateComment,
-} from "../../../services/CommentService.mjs";
-import { toggleCommentLike } from "../../../services/LikeService.mjs";
-import { AuthContext } from "../../../context/AuthContext";
-import { readInquiry } from "../../../services/classroom/InquiryService.mjs";
+} from "../../../../services/CommentService.mjs";
+import { toggleCommentLike } from "../../../../services/LikeService.mjs";
+import { AuthContext } from "../../../../context/AuthContext";
+import { readInquiry } from "../../../../services/classroom/InquiryService.mjs";
 import "./InquiryDetailPage.css";
+import InquiryContent from "../../../../components/classroom/preClass/inquiry/InquiryContent";
+import CommentList from "../../../../components/comment/CommentList";
 
 const InquiryDetailPage = () => {
   const { inquiryId } = useParams();

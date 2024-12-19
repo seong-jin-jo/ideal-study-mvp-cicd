@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   deleteInquiry,
   readInquiry,
-} from "../../../services/classroom/InquiryService.mjs";
+} from "../../../../services/classroom/InquiryService.mjs";
 import { useNavigate, useParams } from "react-router-dom";
-import { AuthContext } from "../../../context/AuthContext";
-import Button from "../../../components/Button.js";
+import { AuthContext } from "../../../../context/AuthContext";
+import Button from "../../../../components/Button.js";
 
 // 문의 상세정보 및 수정삭제
 const InquiryContent = () => {

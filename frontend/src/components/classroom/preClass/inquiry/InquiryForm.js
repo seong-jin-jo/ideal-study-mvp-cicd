@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {
   createInquiry,
   updateInquiry,
-} from "../../../services/classroom/InquiryService.mjs";
+} from "../../../../services/classroom/InquiryService.mjs";
 import { useNavigate, useParams } from "react-router-dom";
 
 const InquiryForm = ({ initialData = null }) => {
