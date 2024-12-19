@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import ClassroomCard from '../../components/classroom/ClassroomCard';
-import { readClasses } from '../../services/classroom/ClassroomService.mjs';
+import React, { useEffect, useState } from "react";
+import ClassroomCard from "../../components/classroom/ClassroomCard";
+import { readClasses } from "../../services/classroom/ClassroomService.mjs";
+import { useNavigate } from "react-router-dom";
+import "./ClassroomListPage.css";
+import Button from "../../components/Button";
 
-import './ClassroomListPage.css';
-
-const ClassroomList = () => {
+const ClassroomListPage = () => {
   const [classrooms, setClassrooms] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // API 호출로 클래스 목록 가져오기
@@ -16,9 +18,17 @@ const ClassroomList = () => {
     fetchClasses();
   }, []);
 
+  const handleCreateClass = () => {
+    navigate("/classes/new");
+  };
+
   return (
     <div>
-      <h1>클래스 목록</h1>
+      <div className="classroom-list-header">
+        <h1>클래스 목록</h1>
+        <Button onClick={handleCreateClass}>클래스 생성</Button>
+      </div>
+
       <div className="classroom-grid">
         {classrooms.map((classroom) => (
           <ClassroomCard key={classroom.id} classroom={classroom} />
@@ -28,4 +38,4 @@ const ClassroomList = () => {
   );
 };
 
-export default ClassroomList;
+export default ClassroomListPage;

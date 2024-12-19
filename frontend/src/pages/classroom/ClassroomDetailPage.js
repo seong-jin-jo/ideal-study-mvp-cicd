@@ -9,10 +9,17 @@ import ClassFAQ from "../../components/classroom/preClass/FAQ/FAQBoard";
 import ClassInquiry from "./preClass/inquiry/InquiryBoardPage";
 import ClassSchedule from "../../components/classroom/inClass/schedule/ScheduleBoard";
 
-import "./ClassroomPage.css";
+import "./ClassroomDetailPage.css";
 import PostBoard from "../../components/classroom/inClass/post/PostBoard";
+import RecordedLectureListPage from "./inClass/recordedLecture/RecordedLectureListPage";
+import LiveLectureListPage from "./inClass/liveLecture/LiveLectureListPage";
+import MaterialListPage from "./inClass/material/MaterialListPage";
+import AttendancePage from "./inClass/attendance/AttendancePage";
+import AssignmentPage from "./inClass/assignment/AssignmentPage";
+import StudyGroupPage from "./inClass/studygroup/StudyGroupPage";
+import ExamPage from "./inClass/exam/ExamPage";
 
-const ClassroomPage = () => {
+const ClassroomDetailPage = () => {
   const { classId } = useParams();
   const [classroomInfo, setClassroomInfo] = useState(null);
 
@@ -59,12 +66,47 @@ const ClassroomPage = () => {
         <ClassSchedule classId={classId} />
       </div>
 
+      {/* 인강 섹션 */}
+      <div className="section recordedLecture-section">
+        <RecordedLectureListPage />
+      </div>
+
+      {/* 실시간특강 섹션 */}
+      <div className="section liveLecture-section">
+        <LiveLectureListPage />
+      </div>
+
+      {/* 자료 섹션 */}
+      <div className="section material-section">
+        <MaterialListPage />
+      </div>
+
+      {/* 과제 섹션 */}
+      <div className="section assignment-section">
+        <AssignmentPage />
+      </div>
+
+      {/* 시험 섹션 */}
+      <div className="section exam-section">
+        <ExamPage />
+      </div>
+
       {/* 게시물 섹션 */}
       <div className="section post-section">
         <PostBoard classId={classId} />
+      </div>
+
+      {/* 출석 섹션 */}
+      <div className="section attendance-section">
+        <AttendancePage />
+      </div>
+
+      {/* 스터디 그룹 섹션 */}
+      <div className="section studyGroup-section">
+        <StudyGroupPage />
       </div>
     </div>
   );
 };
 
-export default ClassroomPage;
+export default ClassroomDetailPage;

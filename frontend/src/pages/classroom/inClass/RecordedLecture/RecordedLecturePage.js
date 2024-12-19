@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import RecordedLectureDetail from "../../../../components/classroom/inClass/RecordedLecture/RecordedLectureDetail";
-import RecordedLectureList from "../../../../components/classroom/inClass/RecordedLecture/RecordedLectureList";
+import React from "react";
 import RecordedLectureForm from "../../../../components/classroom/inClass/RecordedLecture/RecordedLectureForm";
 
 const RecordedLecturePage = () => {
