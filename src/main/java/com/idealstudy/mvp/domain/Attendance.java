@@ -1,5 +1,7 @@
 package com.idealstudy.mvp.domain;
 
+import com.idealstudy.mvp.enums.error.SystemErrorMsg;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,7 +18,10 @@ public class Attendance {
      * @param month
      * @return
      */
-    public Map<String, LocalDate> getDate(int year, int month){
+    public Map<String, LocalDate> getDate(int year, int month) throws IllegalArgumentException{
+
+        if(month < 1 || month > 12)
+           throw new IllegalArgumentException(SystemErrorMsg.ILLEGAL_ARGUMENT_EXCEPTION.toString());
 
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -32,9 +37,10 @@ public class Attendance {
         return map;
     }
 
-    public Map<String, LocalDate> getDate(LocalDateTime time){
+    @Deprecated
+    public Map<String, LocalDate> getDate(LocalDate time){
 
-        LocalDate now = time.toLocalDate();
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         LocalDate startDate = LocalDate.of(time.getYear(), time.getMonthValue(), 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 

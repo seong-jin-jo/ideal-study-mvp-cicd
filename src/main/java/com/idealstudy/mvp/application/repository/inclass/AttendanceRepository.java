@@ -15,6 +15,8 @@ public interface AttendanceRepository {
 
     List<AttendanceDto> getIndividualAttendance(String studentId, LocalDate startDate, LocalDate endDate);
 
+    List<AttendanceDto> getIndividualAttendanceInClassroom(String classroomId, LocalDate startDate, LocalDate endDate);
+
     List<AttendanceDto> getTodayClassroomAttendance(String classroomId, LocalDate date);
 
     AttendanceDto findById(Long id);

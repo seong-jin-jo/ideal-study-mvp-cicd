@@ -1,5 +1,6 @@
 package com.idealstudy.mvp.infrastructure.impl.classroom.inclass;
 
+import com.idealstudy.mvp.application.dto.PageRequestDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.AttendanceDto;
 import com.idealstudy.mvp.application.repository.inclass.AttendanceRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
@@ -10,6 +11,8 @@ import com.idealstudy.mvp.mapstruct.AttendanceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -54,7 +57,18 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     @Override
     public List<AttendanceDto> getIndividualAttendance(String studentId, LocalDate startDate, LocalDate endDate) {
 
-        List<AttendanceEntity> list = attendanceJpaRepository.findAttendanceByMonth(startDate, endDate, studentId);
+        List<AttendanceEntity> list = attendanceJpaRepository.findAttendanceByMonth(startDate, endDate, studentId,
+                Sort.by("regDate", "id").ascending());
+
+        return list.stream().map(AttendanceMapper.INSTANCE::toDto).toList();
+    }
+
+    @Override
+    public List<AttendanceDto> getIndividualAttendanceInClassroom(String classroomId, LocalDate startDate,
+                                                                  LocalDate endDate) {
+
+        List<AttendanceEntity> list = attendanceJpaRepository.findAttendanceByMonthAndClassroomId(startDate, endDate,
+                classroomId, Sort.by("regDate", "id").ascending());
 
         return list.stream().map(AttendanceMapper.INSTANCE::toDto).toList();
     }
@@ -62,7 +76,8 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     @Override
     public List<AttendanceDto> getTodayClassroomAttendance(String classroomId, LocalDate date) {
 
-        List<AttendanceEntity> list = attendanceJpaRepository.findTodayAttendance(date, classroomId);
+        List<AttendanceEntity> list = attendanceJpaRepository.findTodayAttendance(date, classroomId,
+                Sort.by("id").ascending());
 
         return list.stream().map(AttendanceMapper.INSTANCE::toDto).toList();
     }
@@ -78,7 +93,8 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     @Override
     public Optional<AttendanceDto> todayVisitInfo(LocalDateTime now, String studentId) {
 
-        Optional<AttendanceEntity> entity = attendanceJpaRepository.findAttendanceByDate(now.toLocalDate(), studentId);
+        Optional<AttendanceEntity> entity = attendanceJpaRepository.findAttendanceByDateAndStudent(now.toLocalDate(),
+                studentId, Sort.by("id").ascending());
 
         if(entity.isEmpty())
             return Optional.empty();

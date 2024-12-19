@@ -62,12 +62,19 @@ public class AttendanceService {
             if( !dto.getCreatedBy().equals(studentId))
                 throw new SecurityException(SecurityErrorMsg.NOT_YOURS.toString());
 
+            if( dto.getRegDate().toLocalDate().isBefore(LocalDate.now()))
+                throw new IllegalStateException("이미 지난 날짜입니다.");
+
+            if( dto.getCheckOutDate() != null)
+                throw new RuntimeException("이미 퇴실처리 하셨습니다.");
+
             return attendanceRepository.checkOut(id, studentId, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         },
         null, DBErrorMsg.UPDATE_ERROR);
     }
 
-    public List<AttendanceDto> getIndividualAttendance(String studentId, LocalDateTime time) {
+    @Deprecated
+    public List<AttendanceDto> getIndividualAttendance(String studentId, LocalDate time) {
 
         return TryCatchServiceTemplate.execute(() -> {
             Map<String, LocalDate> dateMap = attendance.getDate(time);
@@ -75,6 +82,27 @@ public class AttendanceService {
             return attendanceRepository.getIndividualAttendance(studentId,
                     dateMap.get("startDate"), dateMap.get("endDate"));
         }, null, DBErrorMsg.SELECT_ERROR);
+    }
+
+    public List<AttendanceDto> getIndividualAttendance(String studentId, int year, int month) {
+
+        return TryCatchServiceTemplate.execute(() -> {
+            Map<String, LocalDate> dateMap = attendance.getDate(year, month);
+
+            return attendanceRepository.getIndividualAttendance(studentId,
+                    dateMap.get("startDate"), dateMap.get("endDate"));
+        }, null, DBErrorMsg.SELECT_ERROR);
+    }
+
+    public List<AttendanceDto> getIndividualAttendanceInClassroom(String teacherId, String classroomId,
+                                                                  int year, int month) {
+
+        return TryCatchServiceTemplate.execute(() -> {
+            Map<String, LocalDate> dateMap = attendance.getDate(year, month);
+
+            return attendanceRepository.getIndividualAttendanceInClassroom(classroomId,
+                    dateMap.get("startDate"), dateMap.get("endDate"));
+        }, () -> classroomComponent.checkMyClassroom(teacherId, classroomId), DBErrorMsg.SELECT_ERROR);
     }
 
     public List<AttendanceDto> getTodayClassroomAttendance(String classroomId, LocalDate date, String teacherId) {

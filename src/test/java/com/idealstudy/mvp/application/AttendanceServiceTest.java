@@ -87,14 +87,39 @@ public class AttendanceServiceTest {
     public void testGetIndividualAttendance() {
 
         String studentId = STUDENT_ID;
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
 
         createDummy(studentId);
 
         List<AttendanceDto> list = attendanceService.getIndividualAttendance(studentId, now);
         Assertions.assertThat(list.size()).isEqualTo(1);
-        Assertions.assertThat(list.getFirst().getRegDate().toLocalDate()).isEqualTo(now.toLocalDate());
+        Assertions.assertThat(list.getFirst().getRegDate().toLocalDate()).isEqualTo(now);
         Assertions.assertThat(list.getFirst().getCreatedBy()).isEqualTo(studentId);
+    }
+
+    /*
+    DB에 직접 테스트 데이터 삽입하고 진행
+    INSERT INTO attendance
+VALUES (1, '98a12345-ad7e-11ef-8e5c-0242ac140002', 'c99fd58f-b0ae-11ef-89d8-0242ac140003', '2024-12-17 11:00:00', NULL, NULL, NULL, NULL, NULL);
+     */
+    @Test
+    public void testGetIndividualAttendanceInClassroom() {
+
+        String teacherId = TEACHER_ID;
+        String classroomId = CLASSROOM_ID;
+        int year = 2024;
+        int month = 12;
+
+        setTokenId(teacherId);
+
+        createDummy(STUDENT_ID);
+        createDummy(OTHER_STUDENT_ID);
+
+        List<AttendanceDto> list = attendanceService.getIndividualAttendanceInClassroom(teacherId, classroomId, year, month);
+        System.out.println(list);
+        Assertions.assertThat(list.size()).isEqualTo(3);
+        Assertions.assertThat(list.getFirst().getClassroomId()).isEqualTo(classroomId);
+        Assertions.assertThat(list.getFirst().getRegDate().toLocalDate()).isEqualTo(LocalDate.of(2024, 12, 17));
     }
 
     @Test
@@ -106,10 +131,6 @@ public class AttendanceServiceTest {
 
         createDummy(STUDENT_ID);
         createDummy(OTHER_STUDENT_ID);
-
-        List<AttendanceDto> list = attendanceService.getTodayClassroomAttendance(classroomId, now, teacherId);
-        Assertions.assertThat(list.size()).isEqualTo(2);
-        Assertions.assertThat(list.getFirst().getClassroomId()).isEqualTo(classroomId);
     }
 
     private void setTokenId(String userId) {
@@ -121,12 +142,12 @@ public class AttendanceServiceTest {
         request.setAttribute("jwtPayload", dto);
     }
 
-    private void createDummy(String userId) {
+    private void createDummy(String studentId) {
 
-        setTokenId(userId);
+        setTokenId(studentId);
 
         String classroomId = CLASSROOM_ID;
 
-        attendanceService.checkIn(classroomId, userId);
+        attendanceService.checkIn(classroomId, studentId);
     }
 }
