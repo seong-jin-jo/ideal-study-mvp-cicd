@@ -30,13 +30,13 @@ services:
       - redis-data:/data
 
   # 리액트 서버
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80" # Nginx 80포트를 사용
+#  frontend:
+#    container_name: frontend
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:80" # Nginx 80포트를 사용
 #    networks:
 #      - idealstudy-network
 # 없어도 될듯
