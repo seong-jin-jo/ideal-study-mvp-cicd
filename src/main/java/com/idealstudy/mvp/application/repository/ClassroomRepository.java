@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ClassroomRepository {
 
-    ClassroomResponseDto save(String title, String description, Integer capacity, String thumbnail);
+    ClassroomResponseDto save(String title, String description, Integer capacity, String thumbnail, String teacherId);
 
     ClassroomResponseDto findById(String id); // ID로 수업 찾기
 

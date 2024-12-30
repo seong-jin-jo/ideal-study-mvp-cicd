@@ -21,10 +21,11 @@ const ClassroomForm = ({ initialData = null, onSubmit }) => {
       description: form.description,
       capacity: form.capacity,
     };
-    formData.append("dto", JSON.stringify(dto)); // DTO를 FormData에 추가
+    formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json"})); // DTO를 FormData에 추가
 
     if (form.thumbnail) {
-      formData.append("image", form.thumbnail); // 이미지 별도로 전송
+      const imageBlob = new Blob ([form.thumbnail], {type:form.thumbnail.type })
+      formData.append("image", imageBlob, form.thumbnail.name ); // 이미지 별도로 전송
     }
     onSubmit(formData);
   };

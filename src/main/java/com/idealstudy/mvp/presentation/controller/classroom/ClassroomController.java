@@ -15,13 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +27,15 @@ public class ClassroomController {
     private final ClassroomService service;
 
     @ForTeacher
-    @PostMapping("/api/classes")
-    public ResponseEntity<ClassroomResponseDto> createClass(@RequestBody ClassroomRequestDto request) {
+    @PostMapping(value = "/api/classes", consumes = "multipart/form-data")
+    public ResponseEntity<ClassroomResponseDto> createClass(@RequestPart("dto") ClassroomRequestDto dto,
+                                                            @RequestPart("image") MultipartFile image,
+                                                            HttpServletRequest request) {
 
-        return TryCatchControllerTemplate.execute(() -> service.createClassroom(request));
+        JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
+        String teacherId = payload.getSub();
+
+        return TryCatchControllerTemplate.execute(() -> service.createClassroom(dto, teacherId, image.getInputStream()));
     }
 
     @GetMapping("/api/classes")
@@ -51,16 +51,17 @@ public class ClassroomController {
     }
 
     @ForTeacher
-    @PatchMapping("/api/classes/{classId}")
+    @PatchMapping(value = "/api/classes/{classId}", consumes = "multipart/form-data")
     public ResponseEntity<ClassroomResponseDto> updateClass(@PathVariable String classId,
-                                                            @RequestBody ClassroomRequestDto requestDto,
+                                                            @RequestPart("dto") ClassroomRequestDto requestDto,
+                                                            @RequestPart("image") MultipartFile image,
                                                             HttpServletRequest request) {
 
-        // client의 JSON 데이터를 신뢰할 수 없어서 token에서도 추출함.
         JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
         String teacherId = payload.getSub();
 
-        return TryCatchControllerTemplate.execute(() -> service.updateClassroom(classId, requestDto, teacherId));
+        return TryCatchControllerTemplate.execute(() -> service.updateClassroom(classId, requestDto, teacherId,
+                image.getInputStream()));
     }
 
     @ForTeacher

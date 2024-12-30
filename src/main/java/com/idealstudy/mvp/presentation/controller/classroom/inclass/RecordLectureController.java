@@ -34,6 +34,8 @@ public class RecordLectureController {
             JwtPayloadDto payload = (JwtPayloadDto) request.getAttribute("jwtPayload");
             String teacherId = payload.getSub();
 
+            log.info("teacherID : " + teacherId);
+
             return recordLectureService.create(
                     dto.getClassroomId(),
                     dto.getTitle(),

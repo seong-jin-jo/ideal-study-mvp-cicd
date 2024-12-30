@@ -3,7 +3,7 @@ package com.idealstudy.mvp.application.service.classroom.inclass;
 import com.idealstudy.mvp.application.dto.classroom.inclass.MaterialsDto;
 import com.idealstudy.mvp.application.dto.classroom.inclass.MaterialsPageResultDto;
 import com.idealstudy.mvp.application.component.ClassroomComponent;
-import com.idealstudy.mvp.domain.Materials;
+import com.idealstudy.mvp.application.service.domain_service.FileManager;
 import com.idealstudy.mvp.enums.classroom.MaterialsStatus;
 import com.idealstudy.mvp.enums.error.DBErrorMsg;
 import com.idealstudy.mvp.enums.error.SecurityErrorMsg;
@@ -31,19 +31,18 @@ public class MaterialsService {
     // 해당 클래스에 소속되어 있는지 체크하는 용도로 사용
     private final EnrollmentRepository enrollmentRepository;
 
-    private final Materials materials;
-
     private final ClassroomComponent classroom;
+
+    private final FileManager fileManager;
 
     @Autowired
     public MaterialsService(MaterialsRepository materialsRepository, ClassroomRepository classroomRepository, EnrollmentRepository enrollmentRepository,
-                            @Value("${upload.path}") String uploadPath) {
+                            @Value("${upload.materials-path}") String uploadPath) {
         this.materialsRepository = materialsRepository;
         this.enrollmentRepository = enrollmentRepository;
 
-        materials = new Materials(materialsRepository, enrollmentRepository
-                , classroomRepository, uploadPath);
         classroom = new ClassroomComponent(classroomRepository);
+        fileManager = new FileManager(uploadPath);
     }
 
     public MaterialsDto uploadPublic(String teacherId, String classroomId, String description, MultipartFile file,
@@ -149,14 +148,14 @@ public class MaterialsService {
     public File getFile(String materialUri, Long id, String userId, Role role)
             throws RuntimeException {
 
-        return materials.getFile(materialUri, id, userId, role);
+        return fileManager.getFile(materialUri);
     }
 
     private MaterialsDto tryCatchUpload(String classroomId, String studentId, Integer orderNum, MaterialsStatus status,
                                         String description, MultipartFile multipartFile, String title
     ) throws RuntimeException, IOException {
 
-        String filePath = materials.saveFile(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+        String filePath = fileManager.saveFile(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
         try {
             return materialsRepository.upload(classroomId, studentId, orderNum, status, title, description,
                     filePath);
@@ -178,7 +177,7 @@ public class MaterialsService {
 
             final String materialUri;
             if(multipartFile != null)
-                materialUri = materials.saveFile(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
+                materialUri = fileManager.saveFile(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
             else
                 materialUri = null;
 
