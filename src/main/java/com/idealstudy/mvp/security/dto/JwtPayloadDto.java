@@ -20,4 +20,8 @@ public class JwtPayloadDto {
     private final Date exp;
 
     private final Date iat;
+
+    private final String name;
+
+    private final int level;
 }

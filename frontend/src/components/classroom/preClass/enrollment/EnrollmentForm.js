@@ -10,11 +10,11 @@ const EnrollmentForm = ({ classId, isClose }) => {
   const { userInfo } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
-    currentGrade: "",
-    targetGrade: "",
-    concerns: "",
-    goals: "",
-    requests: "",
+    classroomId: classId,
+    curScore: "",
+    targetScore: "",
+    request: "",
+    determination: ""
   });
 
   // 수업신청이력이 있다면 정보가져오기
@@ -49,8 +49,8 @@ const EnrollmentForm = ({ classId, isClose }) => {
           <label>현재 성적</label>
           <input
             type="text"
-            name="currentGrade"
-            value={formData.currentGrade}
+            name="curScore"
+            value={formData.curScore}
             onChange={handleChange}
           />
         </div>
@@ -58,32 +58,24 @@ const EnrollmentForm = ({ classId, isClose }) => {
           <label>목표 성적</label>
           <input
             type="text"
-            name="targetGrade"
-            value={formData.targetGrade}
+            name="targetScore"
+            value={formData.targetScore}
             onChange={handleChange}
           />
         </div>
         <div>
-          <label>고민되는 점</label>
+          <label>고민되는 점, 선생님께 바라는 점</label>
           <textarea
-            name="concerns"
-            value={formData.concerns}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>수업에서 얻고 싶은 것</label>
-          <textarea
-            name="goals"
-            value={formData.goals}
+            name="request"
+            value={formData.request}
             onChange={handleChange}
           />
         </div>
         <div>
           <label>요청사항 및 한마디</label>
           <textarea
-            name="requests"
-            value={formData.requests}
+            name="determination"
+            value={formData.determination}
             onChange={handleChange}
           />
         </div>
