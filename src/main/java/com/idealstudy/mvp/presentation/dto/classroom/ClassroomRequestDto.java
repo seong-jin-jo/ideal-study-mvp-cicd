@@ -11,8 +11,6 @@ public class ClassroomRequestDto {
     private String title;
     private String description;
     private int capacity;
-    private String thumbnail;
-    private String teacherId;
 
     /*
     // 엔티티 생성 메서드

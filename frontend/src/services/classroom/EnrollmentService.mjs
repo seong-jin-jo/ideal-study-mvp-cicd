@@ -50,11 +50,6 @@ export const createEnrollment = async (enrollmentData) => {
 
       // 실패 시 기본 형식에 맞는 더미 데이터 반환
       return {
-        currentGrade: '',
-        targetGrade: '',
-        concerns: '',
-        goals: '',
-        requests: '',
       };
     }
   };

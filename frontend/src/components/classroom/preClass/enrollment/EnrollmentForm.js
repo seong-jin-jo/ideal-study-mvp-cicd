@@ -10,7 +10,6 @@ const EnrollmentForm = ({ classId, isClose }) => {
   const { userInfo } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
-    classroomId: classId,
     curScore: "",
     targetScore: "",
     request: "",
@@ -30,6 +29,7 @@ const EnrollmentForm = ({ classId, isClose }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
+      classroomId: classId,
       [name]: value,
     }));
   };

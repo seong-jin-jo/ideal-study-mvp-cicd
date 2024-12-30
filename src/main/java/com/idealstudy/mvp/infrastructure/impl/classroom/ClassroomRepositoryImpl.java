@@ -6,10 +6,12 @@ import com.idealstudy.mvp.application.dto.classroom.ClassroomPageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.application.repository.ClassroomRepository;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
+import com.idealstudy.mvp.infrastructure.jpa.entity.member.TeacherEntity;
 import com.idealstudy.mvp.infrastructure.jpa.repository.classroom.ClassroomJpaRepository;
 
 import java.util.function.Function;
 
+import com.idealstudy.mvp.infrastructure.jpa.repository.member.TeacherJpaRepository;
 import com.idealstudy.mvp.mapstruct.ClassroomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,19 @@ public class ClassroomRepositoryImpl implements ClassroomRepository {
     @Autowired
     private final ClassroomJpaRepository classroomJpaRepository;
 
+    @Autowired
+    private final TeacherJpaRepository teacherJpaRepository;
+
     private final static int SIZE = 10;
 
     @Override
-    public ClassroomResponseDto save(String title, String description, Integer capacity, String thumbnail) {
+    public ClassroomResponseDto save(String title, String description, Integer capacity, String thumbnail,
+                                     String teacherId) {
+
+        TeacherEntity teacher = teacherJpaRepository.findById(teacherId).orElseThrow();
 
         ClassroomEntity entity = ClassroomEntity.builder()
+                .teacher(teacher)
                 .title(title)
                 .description(description)
                 .capacity(capacity)
@@ -68,7 +77,7 @@ public class ClassroomRepositoryImpl implements ClassroomRepository {
 
     @Override
     public ClassroomResponseDto update(String id, String title, String description, Integer capacity,
-                                       String thumbnail) {
+                                       String thumbnailUri) {
 
         ClassroomEntity entity = classroomJpaRepository.findById(id).orElseThrow();
 
@@ -81,8 +90,8 @@ public class ClassroomRepositoryImpl implements ClassroomRepository {
         if (capacity != null) {
             entity.setCapacity(capacity);
         }
-        if (thumbnail != null) {
-            entity.setThumbnail(thumbnail);
+        if (thumbnailUri != null) {
+            entity.setThumbnail(thumbnailUri);
         }
 
         return ClassroomMapper.INSTANCE.toDto(classroomJpaRepository.save(entity));
