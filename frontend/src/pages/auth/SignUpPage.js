@@ -9,9 +9,10 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    // TODO : userRole 도 이 때 넘김?
-    await signUpUser(userEmail);
-    navigate("/signup-complete"); // 회원가입 완료 페이지로 이동
+    const response = await signUpUser({ userEmail, userRole });
+    console.log(response);
+    // TODO : response 에 따라 완료 or 오류 써야함
+    navigate("/signup-complete");
   };
 
   return (
