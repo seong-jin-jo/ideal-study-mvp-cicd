@@ -9,9 +9,11 @@ const ClassroomCreatePage = () => {
 
   const handleSubmit = async (formData) => {
     try {
-      await createClass(formData);
-      alert("클래스 생성 완료");
-      navigate("/classes/user/:userId"); // 클래스 목록 페이지로 이동
+      const response = await createClass(formData);
+      if (response) {
+        alert("클래스 생성 완료");
+        navigate("/classes/user/:userId"); // 클래스 목록 페이지로 이동
+      }
     } catch (error) {
       alert("클래스 생성 실패");
     }

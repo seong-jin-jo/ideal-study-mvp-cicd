@@ -8,12 +8,25 @@ import Button from "../Button";
 
 const ClassroomForm = ({ initialData = null, onSubmit }) => {
   const [form, setForm] = useState(
-    initialData || { title: "", description: "" }
+    initialData || { title: "", description: "", capacity: "", image: null }
   );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(form);
+
+    // DTO 객체 생성 및 FormData 객체에 추가
+    const formData = new FormData();
+    const dto = {
+      title: form.title,
+      description: form.description,
+      capacity: form.capacity,
+    };
+    formData.append("dto", JSON.stringify(dto)); // DTO를 FormData에 추가
+
+    if (form.thumbnail) {
+      formData.append("image", form.thumbnail); // 이미지 별도로 전송
+    }
+    onSubmit(formData);
   };
 
   return (
@@ -22,6 +35,12 @@ const ClassroomForm = ({ initialData = null, onSubmit }) => {
         <img src={form.thumbnail} alt="썸네일 이미지" />
       </div>
       <div className={styles.inputContainer}>
+        <h2>썸네일 이미지</h2>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setForm({ ...form, thumbnail: e.target.files[0] })}
+        />
         <h2>클래스 제목</h2>
         <input
           type="text"
@@ -34,6 +53,13 @@ const ClassroomForm = ({ initialData = null, onSubmit }) => {
           placeholder="클래스 설명"
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
+        />
+        <h2>모집 인원</h2>
+        <input
+          type="number"
+          placeholder="모집 인원"
+          value={form.capacity}
+          onChange={(e) => setForm({ ...form, capacity: e.target.value })}
         />
       </div>
       <Button type="submit">{form.id ? "수정하기" : "생성하기"}</Button>

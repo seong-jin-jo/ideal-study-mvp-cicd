@@ -13,7 +13,7 @@ const EnrollmentForm = ({ classId, isClose }) => {
     curScore: "",
     targetScore: "",
     request: "",
-    determination: ""
+    determination: "",
   });
 
   // 수업신청이력이 있다면 정보가져오기
@@ -36,6 +36,7 @@ const EnrollmentForm = ({ classId, isClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     await createEnrollment(formData);
     alert("수업신청이 완료되었습니다");
     isClose();
