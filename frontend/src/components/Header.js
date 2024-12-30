@@ -1,13 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 
 import "./Header.css";
 
-const Header = () => {
-  const { logout, isAuthenticated, userInfo } = useContext(AuthContext);
+const Header = ({ logout, isAuthenticated, userInfo }) => {
   const navigate = useNavigate(); // useNavigate 훅을 사용하여 네비게이션
 
   const handleLoginNavigate = () => {
@@ -33,27 +31,22 @@ const Header = () => {
           <Link to="/teachers">강사목록</Link>
           <Link to="/students">학생목록</Link>
           <Link to="/classes">클래스목록</Link>
-          {isAuthenticated && (
-            <>
-              {" "}
-              <Link to={`/myPage/${userInfo.id}`}>마이페이지</Link>
-            </>
-          )}
         </div>
 
         <div className="nav-right">
           {isAuthenticated ? (
             <>
+              <Link to={`/myPage/${userInfo.id}`}>마이페이지</Link>
               {userInfo.role === "teacher" && (
                 <>
                   {" "}
-                  <Link to={`/officialPage/${userInfo.id}`}>교무실</Link>
+                  <Link to={`/teacherRoom/${userInfo.id}`}>교무실</Link>
                 </>
               )}
               {userInfo.role === "student" && (
                 <>
                   {" "}
-                  <Link to={`/myPage/${userInfo.id}`}>강의실</Link>
+                  <Link to={`/studentRoom/${userInfo.id}`}>자습실</Link>
                 </>
               )}
               &nbsp; [{userInfo.role}] {userInfo.name} (Lv.{userInfo.level})

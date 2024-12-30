@@ -15,11 +15,11 @@ import RecordedLectureListPage from "./inClass/recordedLecture/RecordedLectureLi
 import LiveLectureListPage from "./inClass/liveLecture/LiveLectureListPage";
 import MaterialListPage from "./inClass/material/MaterialListPage";
 import AttendancePage from "./inClass/attendance/AttendancePage";
-import AssignmentPage from "./inClass/assignment/AssignmentPage";
+import AssignmentPage from "./inClass/assessment/Assignment";
 import StudyGroupPage from "./inClass/studygroup/StudyGroupPage";
-import ExamPage from "./inClass/exam/ExamPage";
+import Button from "../../components/Button";
 
-const ClassroomDetailPage = () => {
+const ClassroomDetailPage = (userInfo) => {
   const { classId } = useParams();
   const [classroomInfo, setClassroomInfo] = useState(null);
 
@@ -36,6 +36,8 @@ const ClassroomDetailPage = () => {
 
   return (
     <div className="classroom-container">
+      {/* 수정 */}
+      {userInfo.id === classId && <Button>수정</Button>}
       {/* 클래스 정보 섹션 */}
       <div className="section class-info-section">
         <ClassInfo classroom={classroomInfo} />
@@ -87,9 +89,7 @@ const ClassroomDetailPage = () => {
       </div>
 
       {/* 시험 섹션 */}
-      <div className="section exam-section">
-        <ExamPage />
-      </div>
+      <div className="section exam-section"></div>
 
       {/* 게시물 섹션 */}
       <div className="section post-section">

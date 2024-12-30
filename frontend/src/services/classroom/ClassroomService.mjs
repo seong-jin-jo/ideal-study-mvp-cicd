@@ -56,7 +56,33 @@ export const readClassesByUserId = async (userId) => {
     return response.data;
   } catch (error) {
     console.error("유저별 클래스 목록 조회 API 실패:", error);
-    return [];
+    return [
+      {
+        id: "1",
+        title: "한석원의 60일 지옥 부트캠프",
+        description: "하루 18시간 공부할 학생들만 참여가능",
+      },
+      {
+        id: "2",
+        title: "현우진의 노베이스 부트캠프",
+        description: "인생 조진거같다 싶으면 드루와 갱생시켜줌",
+      },
+      {
+        id: "3",
+        title: "프로그래밍 기초 클래스",
+        description: "프로그래밍을 처음 배우는 사람들을 위한 클래스",
+      },
+      {
+        id: "4",
+        title: "데이터 분석 부트캠프",
+        description: "데이터 분석의 기초부터 심화까지 배울 수 있는 과정",
+      },
+      {
+        id: "5",
+        title: "웹 개발 종합 과정",
+        description: "프론트엔드와 백엔드를 모두 배울 수 있는 과정",
+      },
+    ];
   }
 };
 
