@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./RecordedLectureForm.module.css";
 import { createRecordedLecture } from "../../../../services/classroom/RecordedLectureService.mjs";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // 1. 파일 선택을 하면 vimeo 에서 form 과 uri 를 받는다.
 // 2. 인강 생성 버튼을 누르면 스프링 서버에 인강 정보를 저장한다.
@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 const RecordedLectureForm = () => {
   const [formData, setFormData] = useState({
+    classroomId: "",
     title: "",
     description: "",
     videoId: null,
@@ -25,6 +26,7 @@ const RecordedLectureForm = () => {
   const [file, setFile] = useState(null); // vimeo 업로드용
   const [uploadForm, setUploadForm] = useState(null); // vimeo 에서 받은 uri와 form
 
+  const { classId } = useParams();
   const navigate = useNavigate();
 
   // 인강정보 입력

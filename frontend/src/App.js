@@ -100,7 +100,7 @@ const AppContent = () => {
 
             {/* 인강 업로드 */}
             <Route
-              path="/recordedLecture/new"
+              path="/recordedLecture/new/:classId"
               element={<RecordedLectureForm />}
             />
             {/* 인강 목록 */}

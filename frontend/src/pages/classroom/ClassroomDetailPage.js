@@ -19,7 +19,7 @@ import AssignmentPage from "./inClass/assessment/Assignment";
 import StudyGroupPage from "./inClass/studygroup/StudyGroupPage";
 import Button from "../../components/Button";
 
-const ClassroomDetailPage = (userInfo) => {
+const ClassroomDetailPage = ({userInfo}) => {
   const { classId } = useParams();
   const [classroomInfo, setClassroomInfo] = useState(null);
 
@@ -27,6 +27,7 @@ const ClassroomDetailPage = (userInfo) => {
     // API 호출로 클래스 상세 정보 가져오기
     const fetchClass = async () => {
       const data = await readClassById(classId);
+
       setClassroomInfo(data);
     };
     fetchClass();
@@ -37,11 +38,11 @@ const ClassroomDetailPage = (userInfo) => {
   return (
     <div className="classroom-container">
       {/* 수정 */}
-      {userInfo.id === classId && <Button>수정</Button>}
       {/* 클래스 정보 섹션 */}
       <div className="section class-info-section">
         <ClassInfo classroom={classroomInfo} />
       </div>
+        {userInfo.id === classroomInfo.createdBy && <Button>수정</Button>}
 
       {/* 좋아요 버튼 */}
       <div className="section like-button">

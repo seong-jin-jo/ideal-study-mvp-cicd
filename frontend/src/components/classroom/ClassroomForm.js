@@ -21,7 +21,7 @@ const ClassroomForm = ({ initialData = null, onSubmit }) => {
       description: form.description,
       capacity: form.capacity,
     };
-    formData.append("dto", JSON.stringify(dto), { type: "application/json"}); // DTO를 FormData에 추가
+    formData.append("dto", new Blob([JSON.stringify(dto)], { type: "application/json"})); // DTO를 FormData에 추가
 
     if (form.thumbnail) {
       const imageBlob = new Blob ([form.thumbnail], {type:form.thumbnail.type })

@@ -35,7 +35,7 @@ const RecordedLectureListPage = () => {
       <div className="recordedLectureListPageHeader">
         <h2> 인강 목록 </h2>
         {isLoggedIn && (
-          <Button onClick={() => navigate("/recordedLecture/new")}>
+          <Button onClick={() => navigate(`/recordedLecture/new/${classId}`)}>
             인강 생성
           </Button>
         )}
