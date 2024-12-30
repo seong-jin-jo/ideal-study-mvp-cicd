@@ -1,5 +1,5 @@
 // 인강생성 폼
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./RecordedLectureForm.module.css";
 import { createRecordedLecture } from "../../../../services/classroom/RecordedLectureService.mjs";
 import axios from "axios";
@@ -20,6 +20,7 @@ const RecordedLectureForm = () => {
     classroomId: "",
     title: "",
     description: "",
+    url: "",
     videoId: null,
     video: null,
   }); // spring 서버 전송용
@@ -28,6 +29,11 @@ const RecordedLectureForm = () => {
 
   const { classId } = useParams();
   const navigate = useNavigate();
+
+  // formData 에 클래스 ID 담기
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, classroomId: classId }));
+  }, [classId]);
 
   // 인강정보 입력
   const handleChange = (e) => {
@@ -70,7 +76,7 @@ const RecordedLectureForm = () => {
         form: response.data.upload.form,
       });
 
-      setFormData((prev) => ({ ...prev, videoUri: response.data.uri }));
+      setFormData((prev) => ({ ...prev, url: response.data.uri }));
 
       console.log(response);
     } catch (error) {
