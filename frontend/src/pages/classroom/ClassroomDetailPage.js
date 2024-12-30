@@ -11,7 +11,7 @@ import ClassSchedule from "../../components/classroom/inClass/schedule/ScheduleB
 
 import "./ClassroomDetailPage.css";
 import PostBoard from "../../components/classroom/inClass/post/PostBoard";
-import RecordedLectureListPage from "./inClass/recordedLecture/RecordedLectureListPage";
+import RecordedLectureListPage from "./inClass/RecordedLecture/RecordedLectureListPage";
 import LiveLectureListPage from "./inClass/liveLecture/LiveLectureListPage";
 import MaterialListPage from "./inClass/material/MaterialListPage";
 import AttendancePage from "./inClass/attendance/AttendancePage";

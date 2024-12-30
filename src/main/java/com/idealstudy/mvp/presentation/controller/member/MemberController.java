@@ -9,7 +9,9 @@ import com.idealstudy.mvp.enums.HttpResponse;
 import com.idealstudy.mvp.enums.member.Role;
 import com.idealstudy.mvp.presentation.dto.member.SignUpUserRequestDto;
 import com.idealstudy.mvp.security.annotation.ForUser;
+import com.idealstudy.mvp.security.dto.JwtPayloadDto;
 import com.idealstudy.mvp.util.HttpResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @RestController
@@ -60,9 +63,13 @@ public class MemberController {
     }
 
     @GetMapping("/users/email-authentication")
-    public ResponseEntity<String> emailAuthentication(@RequestParam String emailToken, @RequestParam String email) {
+    public ResponseEntity<String> emailAuthentication(@RequestParam String emailToken, @RequestParam String email,
+                                                      HttpServletRequest request) {
         log.info("사용자 email: " + email);
         log.info("사용자 토큰값: " + emailToken);
+
+        request.setAttribute("jwtPayload", JwtPayloadDto.builder()
+                .sub(UUID.randomUUID().toString()).build());
 
         String password = null;
         try {

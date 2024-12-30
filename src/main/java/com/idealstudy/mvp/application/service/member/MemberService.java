@@ -90,7 +90,6 @@ public class MemberService {
 
         if(role == Role.ROLE_TEACHER)
             memberRepository.create((TeacherDto) TeacherDto.builder()
-                    .userId(UUID.randomUUID().toString())
                     .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
@@ -99,7 +98,6 @@ public class MemberService {
                     .build());
         if(role == Role.ROLE_STUDENT)
             memberRepository.create((StudentDto) StudentDto.builder()
-                    .userId(UUID.randomUUID().toString())
                     .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
@@ -108,7 +106,6 @@ public class MemberService {
                     .build());
         if(role == Role.ROLE_PARENTS)
             memberRepository.create((ParentsDto) ParentsDto.builder()
-                    .userId(UUID.randomUUID().toString())
                     .password(encodedPassword)
                     .email(email)
                     .fromSocial(0)
