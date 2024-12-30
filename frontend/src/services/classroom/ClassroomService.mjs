@@ -5,6 +5,10 @@ import apiClient from "../apiClient.mjs";
  */
 export const createClass = async (data) => {
   console.log("클래스 생성 API 시도:", data);
+  // FormData 콘솔 출력
+  for (let [key, value] of data.entries()) {
+    console.log(`${key}:`, value);
+  }
   try {
     const response = await apiClient.post("/api/classes", data);
     console.log("클래스 생성 API 성공:", response);
@@ -30,18 +34,20 @@ export const readClasses = async () => {
     return response.data;
   } catch (error) {
     console.error("클래스 목록 조회 API 실패:", error);
-    return [
-      {
-        id: "dummy-1",
-        title: "한석원의 60일 지옥 부트캠프",
-        description: "하루 18시간 공부할 학생들만 참여가능",
-      },
-      {
-        id: "dummy-2",
-        title: "현우진의 노베이스 부트캠프",
-        description: "인생 조진거같다 싶으면 드루와 갱생시켜줌",
-      },
-    ]; // 더미 데이터 반환
+    return {
+      dtoList: [
+        {
+          id: "dummy-1",
+          title: "한석원의 60일 지옥 부트캠프",
+          description: "하루 18시간 공부할 학생들만 참여가능",
+        },
+        {
+          id: "dummy-2",
+          title: "현우진의 노베이스 부트캠프",
+          description: "인생 조진거같다 싶으면 드루와 갱생시켜줌",
+        },
+      ],
+    }; // 더미 데이터 반환
   }
 };
 
