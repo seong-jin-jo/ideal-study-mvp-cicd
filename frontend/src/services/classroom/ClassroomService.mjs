@@ -10,7 +10,12 @@ export const createClass = async (data) => {
     console.log(`${key}:`, value);
   }
   try {
-    const response = await apiClient.post("/api/classes", data);
+    const response = await apiClient.post("/api/classes", data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    }
+    );
     console.log("클래스 생성 API 성공:", response);
     return response.data;
   } catch (error) {
