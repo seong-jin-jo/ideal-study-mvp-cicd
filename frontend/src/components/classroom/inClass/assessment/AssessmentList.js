@@ -3,7 +3,7 @@ import React from "react";
 const AssessmentList = ({ assignments, onEdit, onDelete }) => {
   return (
     <div>
-      <h3>과제 목록</h3>
+      <h3>평가 목록</h3>
       <ul>
         {assignments.map((assignment) => (
           <li key={assignment.id}>

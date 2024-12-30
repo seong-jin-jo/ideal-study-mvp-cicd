@@ -25,7 +25,7 @@ const ClassroomListPage = () => {
   return (
     <div>
       <div className="classroom-list-header">
-        <h1>클래스 목록</h1>
+        <h2>클래스 목록</h2>
         <Button onClick={handleCreateClass}>클래스 생성</Button>
       </div>
 

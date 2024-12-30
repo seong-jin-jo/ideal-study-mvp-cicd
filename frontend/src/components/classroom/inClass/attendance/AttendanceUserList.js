@@ -15,7 +15,7 @@ const AttendanceUserList = () => {
 
   return (
     <div>
-      <h3>출석 현황(유저별)</h3>
+      <h3>출석 현황 컴포넌트(유저별)</h3>
       {attendanceData.map((attendance) => (
         <p>
           {attendance.userId} - {attendance.date}

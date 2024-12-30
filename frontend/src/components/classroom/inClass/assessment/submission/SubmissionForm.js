@@ -11,7 +11,7 @@ const SubmissionForm = ({ assignmentId, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>과제 제출</h3>
+      <h3>평가 제출</h3>
       <textarea
         placeholder="답안 입력"
         value={submission}

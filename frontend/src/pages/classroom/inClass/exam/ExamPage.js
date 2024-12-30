@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ExamCreation from "../../../../components/classroom/inClass/exam/ExamCreation";
-import ExamList from "../../../../components/classroom/inClass/exam/ExamList";
+import ExamCreation from "../../../../components/classroom/inClass/exam_teacher/ExamForm";
+import ExamList from "../../../../components/classroom/inClass/exam_teacher/ExamList";
 
 const ExamPage = () => {
   const [exams, setExams] = useState([]);

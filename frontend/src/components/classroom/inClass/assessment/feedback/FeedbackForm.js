@@ -11,7 +11,7 @@ const FeedbackForm = ({ submissionId, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>과제 피드백</h3>
+      <h3>평가 피드백 폼</h3>
       <textarea
         placeholder="피드백 입력"
         value={feedback}

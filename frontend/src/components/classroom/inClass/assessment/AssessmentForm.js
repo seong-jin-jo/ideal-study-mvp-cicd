@@ -13,7 +13,7 @@ const AssessmentForm = ({ onCreate }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>과제 생성</h3>
+      <h3>평가 생성</h3>
       <input
         type="text"
         placeholder="과제 제목"

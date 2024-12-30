@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import AssignmentCreation from "../../../../components/classroom/inClass/assignment/AssignmentCreation";
-import AssignmentList from "../../../../components/classroom/inClass/assignment/AssignmentList";
+import React, { useState, useEffect } from "react";
+import AssignmentCreation from "../../../../components/classroom/inClass/assessment/AssessmentForm";
+import AssignmentList from "../../../../components/classroom/inClass/assessment/AssessmentList";
 
-const AssignmentPage = () => {
+const AssessmentPage = () => {
   const [assignments, setAssignments] = useState([]);
 
+  useEffect(() => {
+    const fetchAssignments = async () => {};
+  });
   const handleCreateAssignment = (assignment) => {
     setAssignments([...assignments, { id: Date.now(), ...assignment }]);
   };
@@ -30,4 +33,4 @@ const AssignmentPage = () => {
   );
 };
 
-export default AssignmentPage;
+export default AssessmentPage;
