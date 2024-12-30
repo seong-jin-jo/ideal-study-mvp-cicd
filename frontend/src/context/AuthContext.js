@@ -22,11 +22,30 @@ export const AuthProvider = ({ children }) => {
 
     if (token) {
       const decodedToken = JSON.parse(atob(token.split(".")[1])); // JWT의 페이로드 부분 파싱
+
+      // Role mapping
+      let role;
+      console.log(typeof decodedToken.role);
+      switch (decodedToken.role) {
+        case "ROLE_TEACHER":
+          role = "teacher";
+          break;
+        case "ROLE_STUDENT":
+          role = "student";
+          break;
+        case "ROLE_PARENTS":
+          role = "parent";
+          break;
+        default:
+          role = ""; // 기본값 설정
+      }
+      console.log(role);
+
       user = {
         name: username, // 유저 이름은 인자로 받은 username 사용
         id: decodedToken.sub, // 파싱한 userId
         level: "", // 필요에 따라 추가
-        role: decodedToken.role, // 파싱한 userRole
+        role: role, // 파싱한 userRole
       };
 
       console.log("[debug]: 그걸 파싱한 토큰정보", decodedToken);
