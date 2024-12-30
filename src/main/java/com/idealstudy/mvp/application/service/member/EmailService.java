@@ -82,8 +82,8 @@ public class EmailService {
 
     private String getMailContents(String email, String token) {
 
-        String authenticationUrl = backendDomainUrl + "/api/users/email-authentication"
-                + "?token=" + token + "&email=" + email;
+        String authenticationUrl = backendDomainUrl + "/users/email-authentication"
+                + "?emailToken=" + token + "&email=" + email;
 
         return  "<h3>이메일 인증</h3>" +
                 "<img src='cid:"+logoContentId+"'>" +
