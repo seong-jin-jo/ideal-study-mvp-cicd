@@ -13,7 +13,7 @@ const ClassroomListPage = () => {
     // API 호출로 클래스 목록 가져오기
     const fetchClasses = async () => {
       const data = await readClasses();
-      setClassrooms(data);
+      setClassrooms(data.dtoList);
     };
     fetchClasses();
   }, []);

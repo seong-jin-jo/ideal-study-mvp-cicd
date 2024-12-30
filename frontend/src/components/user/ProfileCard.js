@@ -7,7 +7,7 @@ const ProfileCard = ({ user }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/myPage/${user.id}`); // 상세 조회 페이지로 이동
+    user.role === "teacher" ? navigate(`/officialPage/:id`) : navigate(`/myPage/${user.id}`); // 상세 조회 페이지로 이동
   };
 
   // 디버깅

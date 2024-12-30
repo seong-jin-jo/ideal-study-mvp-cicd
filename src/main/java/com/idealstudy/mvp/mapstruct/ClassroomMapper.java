@@ -5,6 +5,7 @@ import com.idealstudy.mvp.application.dto.classroom.ClassroomPageResultDto;
 import com.idealstudy.mvp.application.dto.classroom.ClassroomResponseDto;
 import com.idealstudy.mvp.infrastructure.jpa.entity.classroom.ClassroomEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -17,9 +18,8 @@ public interface ClassroomMapper {
 
     ClassroomMapper INSTANCE = Mappers.getMapper(ClassroomMapper.class);
 
+    @Mapping(source = "classroomId", target = "id")
     ClassroomResponseDto toDto(ClassroomEntity entity);
-
-    ClassroomEntity toEntity(ClassroomResponseDto dto);
 
     ClassroomPageResultDto toPageResultDto(PageResultDto<ClassroomResponseDto, ClassroomEntity> pageResultDto);
 }

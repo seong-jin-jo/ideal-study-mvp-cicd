@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-30T10:56:01+0900",
+    date = "2024-12-30T15:16:50+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21 (Oracle Corporation)"
 )
 @Component
@@ -25,6 +25,7 @@ public class ClassroomMapperImpl implements ClassroomMapper {
 
         ClassroomResponseDto classroomResponseDto = new ClassroomResponseDto();
 
+        classroomResponseDto.setId( entity.getClassroomId() );
         classroomResponseDto.setTitle( entity.getTitle() );
         classroomResponseDto.setDescription( entity.getDescription() );
         if ( entity.getCapacity() != null ) {
@@ -34,23 +35,6 @@ public class ClassroomMapperImpl implements ClassroomMapper {
         classroomResponseDto.setThumbnail( entity.getThumbnail() );
 
         return classroomResponseDto;
-    }
-
-    @Override
-    public ClassroomEntity toEntity(ClassroomResponseDto dto) {
-        if ( dto == null ) {
-            return null;
-        }
-
-        ClassroomEntity.ClassroomEntityBuilder<?, ?> classroomEntity = ClassroomEntity.builder();
-
-        classroomEntity.createdBy( dto.getCreatedBy() );
-        classroomEntity.title( dto.getTitle() );
-        classroomEntity.description( dto.getDescription() );
-        classroomEntity.capacity( dto.getCapacity() );
-        classroomEntity.thumbnail( dto.getThumbnail() );
-
-        return classroomEntity.build();
     }
 
     @Override
