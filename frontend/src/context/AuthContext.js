@@ -15,18 +15,18 @@ export const AuthProvider = ({ children }) => {
   const login = ({ username }) => {
     setIsAuthenticated(true);
 
-    // 로그인 API 에서 헤더에서 jwtToken 을 저장했음
     const token = localStorage.getItem("jwtToken");
     var user;
+    console.log("[debug]: username", username);
     console.log("[debug]: localStorage 에서 꺼내온 토큰", token);
 
     if (token) {
       const decodedToken = JSON.parse(atob(token.split(".")[1])); // JWT의 페이로드 부분 파싱
       user = {
         name: username, // 유저 이름은 인자로 받은 username 사용
-        id: decodedToken.userId, // 파싱한 userId
+        id: decodedToken.sub, // 파싱한 userId
         level: "", // 필요에 따라 추가
-        role: decodedToken.userRole, // 파싱한 userRole
+        role: decodedToken.role, // 파싱한 userRole
       };
 
       console.log("[debug]: 그걸 파싱한 토큰정보", decodedToken);

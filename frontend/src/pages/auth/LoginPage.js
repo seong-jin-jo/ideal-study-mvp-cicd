@@ -12,11 +12,9 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      // 헤더로 토큰 받아옴
-      const { username } = await loginUser(userEmail, password);
+      const { token, user } = await loginUser(userEmail, password);
 
-      // 토큰 파싱해서 context에 저장
-      login({ username });
+      login({ token, user }); // context 를 로그인상태로 등록
       navigate("/"); // 로그인시 메인 페이지로 이동
     } catch (error) {
       console.log(error);
