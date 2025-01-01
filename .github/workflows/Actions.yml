@@ -1,0 +1,65 @@
+# gitAction 이 실행할 workflow 를 정의하는 yml 파일입니다.
+
+name: CI/CD Pipeline
+
+# 이벤트 트리거 (main 브렌치에 push 될 경우 본 파일실행)
+on:
+  push:
+    branches:
+      - main
+
+# 트리거 이후 자동실행될 작업목록 (jobs)
+# 1. build - push 된 코드를 빌드함
+# 2. dockerize - docker 이미지로 빌드후 docker hub에 푸시
+# 3. deploy - EC2에서 해당 이미지를 받아와 실행
+
+jobs:
+  build:
+    name: 프로젝트 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - name: 레포지토리 코드가져오기
+        uses: actions/checkout@v3
+
+      - name: JAVA 21 버젼으로 설정하기
+        uses: actions/setup-java@v3
+        with:
+          java-version: "21"
+
+      - name: Gradle로 빌드하기
+        run: ./gradlew build
+
+  dockerize:
+    name: 도커 이미지화 이후 docker hub 에 푸시
+    needs: build # build 작업 후 실행
+    runs-on: ubuntu-latest
+    steps:
+      - name: 레포지토리 코드가져오기
+        uses: actions/checkout@v3
+
+      - name: 도커 이미지 빌드하기
+        run: docker build -t my-app:latest .
+
+      - name: Docker Hub 로그인하기
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: 이미지에 태그붙여 Docker Hub에 푸시하기
+        run: |
+          docker tag my-app:latest ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+
+  deploy:
+    name: ec2 에서 가져와 배포
+    needs: dockerize # dockerize 작업 후 실행
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH를 통해 EC2에 접속하여 도커 실행
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            docker run -d ${{ secrets.DOCKER_USERNAME }}/my-app:latest
