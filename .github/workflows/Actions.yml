@@ -65,7 +65,7 @@ jobs:
         run: ls
 
       # - name: EC2로 docker-compose.yml 파일 복사
-      #   run: scp -i ${{ secrets.EC2_SSH_KEY }} ./docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/
+      #   run: scp -i ${{ secrets.EC2_SSH_KEY }} ./docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu
 
       - name: EC2로 docker-compose.yml 파일 복사 (외부 액션 써보자)
         uses: appleboy/scp-action@v0.1.7
@@ -87,15 +87,18 @@ jobs:
             cd /home/ubuntu  # docker-compose.yml이 위치한 디렉토리로 이동
             docker-compose down  # 기존 컨테이너 중지 및 제거
 
-      - name: EC2에서 최신 이미지 가져오기
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ubuntu  # docker-compose.yml이 위치한 디렉토리로 이동
-            docker-compose pull  # 최신 이미지 가져오기
+      # - name: EC2에서 최신 이미지 가져오기
+      #   uses: appleboy/ssh-action@v0.1.5
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       cd /home/ubuntu  # docker-compose.yml이 위치한 디렉토리로 이동
+      #       docker-compose pull  # 최신 이미지 가져오기
+
+      - name: Docker Hub에 로그인하기
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: EC2에서 컨테이너 실행
         uses: appleboy/ssh-action@v0.1.5
