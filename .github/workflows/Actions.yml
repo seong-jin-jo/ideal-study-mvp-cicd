@@ -65,8 +65,7 @@ jobs:
         run: ls
 
       - name: EC2로 docker-compose.yml 파일 복사
-        run: |
-          scp -i ${{ secrets.EC2_SSH_KEY }} ./docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/
+        run: scp -i ${{ secrets.EC2_SSH_KEY }} ./docker-compose.yml ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu
 
       - name: EC2에 접속하여 docker-compose down 실행
         uses: appleboy/ssh-action@v0.1.5
