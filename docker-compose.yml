@@ -52,7 +52,7 @@ services:
     #   dockerfile: ./Dockerfile
     ports:
       - "8081:8080"
-      - "19090:19090" # Actuator 엔드포인트 포트 (운영환경)
+      - "19091:19090" # Actuator 엔드포인트 포트 (운영환경)
     volumes:
       - /home/user/logs:/var/log/spring-logs # 호스트와 컨테이너 간 로그 디렉토리 연결
     environment: # 환경변수
