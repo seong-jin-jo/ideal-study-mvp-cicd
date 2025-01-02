@@ -108,4 +108,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu  # docker-compose.yml이 위치한 디렉토리로 이동
-            docker-compose up -d  # 최신 이미지로 컨테이너 실행
+            docker-compose up --build  # 최신 이미지로 컨테이너 실행
