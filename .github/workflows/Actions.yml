@@ -36,6 +36,9 @@ jobs:
   build-frontend:
     name: 프론트엔드 프로젝트 빌드
     runs-on: ubuntu-latest
+    env:
+      CI: false # CI를 false로 설정
+
     steps:
       - name: 레포지토리 코드 가져오기
         uses: actions/checkout@v3
