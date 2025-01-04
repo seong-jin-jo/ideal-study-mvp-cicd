@@ -65,7 +65,7 @@ jobs:
 
   dockerize-backend:
     name: 백엔드 도커 이미지화 이후 Docker hub 에 푸시
-    needs: build # build 작업 후 실행
+    # needs: build # build 작업 후 실행
     runs-on: ubuntu-latest
     steps:
       - name: 레포지토리 코드가져오기
