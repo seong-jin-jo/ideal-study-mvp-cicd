@@ -9,11 +9,11 @@ GRANT ALL PRIVILEGES ON idealstudy.* TO 'manager'@'%';
 
 /* root는 localhost 에서만 접속가능한 상태. 도커 네트워크에서 접속시 오류남 */
 
--- root 사용자 네트워크 제한 제거
-ALTER USER 'root'@'%' IDENTIFIED BY 'root';
+-- -- root 사용자 네트워크 제한 제거
+-- ALTER USER 'root'@'%' IDENTIFIED BY 'root';
 
--- root 사용자 권한 부여
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+-- -- root 사용자 권한 부여
+-- GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 
 -- 권한 변경 사항 적용
 FLUSH PRIVILEGES;
