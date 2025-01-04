@@ -122,8 +122,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: ./init.sql
           target: "/home/ubuntu" # target 디렉토리로 복사
-          debug: true
-
+          debug: true      
+          
       - name: EC2로 monitoring-config 폴더 복사
         uses: appleboy/scp-action@v0.1.7
         with:
