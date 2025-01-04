@@ -6,6 +6,7 @@ LABEL authors="jin66"
 RUN mkdir /app
 WORKDIR /app
 
+COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
 
