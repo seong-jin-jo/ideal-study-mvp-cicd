@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS class_inquiry(
 	classroom_id CHAR(36) NOT NULL,
 	title VARCHAR(255) NOT NULL,
 	content VARCHAR(1000) NOT NULL,
-	visibility ENUM('PUBLIC', 'PRIVATE') NOT NULL,
+	visibility ENUM('PUBLIC', 'PRIVATE', 'VISIBLE') NOT NULL,
 	reg_date DATETIME(6) NOT NULL,
 	mod_date DATETIME(6),
 	created_by CHAR(36)  NOT NULL,
