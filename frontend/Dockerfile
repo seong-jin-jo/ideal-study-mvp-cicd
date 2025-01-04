@@ -24,7 +24,7 @@ FROM nginx:1.23
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Nginx 설정 파일 복사 (필요 시)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Nginx 컨테이너 실행
 EXPOSE 80
