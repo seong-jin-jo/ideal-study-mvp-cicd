@@ -7,6 +7,8 @@ spring:
 # redis 설정
 redis:
   hostname: redis-db
+  port: 6379
+  password: ""
 
 server:
   backend-domain-url: http://localhost:8080 # 이메일 클릭시 이동하는 주소
