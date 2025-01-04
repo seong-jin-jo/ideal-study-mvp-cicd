@@ -133,7 +133,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: ./monitoring-config
-          target: /home/ubuntu/monitoring-config
+          target: /home/ubuntu
           debug: true
 
       - name: EC2로 docker-compose.yml 복사
