@@ -33,32 +33,34 @@ jobs:
   #     - name: Gradle로 빌드하기
   #       run: ./gradlew build
 
-  build-frontend:
-    name: 프론트엔드 프로젝트 빌드
-    runs-on: ubuntu-latest
-    env:
-      CI: false # CI를 false로 설정
+  # build-frontend:
+  #   name: 프론트엔드 프로젝트 빌드
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     CI: false # CI를 false로 설정
 
-    steps:
-      - name: 레포지토리 코드 가져오기
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: 레포지토리 코드 가져오기
+  #       uses: actions/checkout@v3
 
-      - name: Node.js 설정
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+  #     - name: Node.js 설정
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "18"
 
-      - name: 프론트엔드 의존성 설치
-        working-directory: ./frontend
-        run: npm install
+  #     - name: 프론트엔드 의존성 설치
+  #       working-directory: ./frontend
+  #       run: npm install
 
-      - name: 프론트엔드 빌드
-        working-directory: ./frontend
-        run: npm run build
+  #     - name: 프론트엔드 빌드
+  #       working-directory: ./frontend
+  #       run: npm run build
 
-      - name: 빌드 결과 압축
-        working-directory: ./frontend
-        run: tar -czf build.tar.gz build
+  #     - name: 빌드 결과 아티팩트 업로드
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: frontend-build
+  #         path: ./frontend/build
 
   # dockerize-backend:
   #   name: 도커 이미지화 이후 docker hub 에 푸시
@@ -81,9 +83,12 @@ jobs:
 
   dockerize-frontend:
     name: 프론트엔드 도커 이미지화 및 Docker Hub 푸시
-    needs: build-frontend # 프론트엔드 빌드 후 실행
+    # needs: build-frontend # 프론트엔드 빌드 후 실행
     runs-on: ubuntu-latest
     steps:
+      - name: 현재 폴더경로 조회
+        run: ls
+
       - name: Docker 이미지 빌드하기
         run: docker build -t my-frontend-app:latest ./frontend
 
@@ -125,23 +130,39 @@ jobs:
     needs: dockerize-frontend # 프론트엔드 도커 작업 후 실행
     runs-on: ubuntu-latest
     steps:
-      - name: EC2로 빌드 결과 복사
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: ./frontend/build.tar.gz
-          target: "/home/ubuntu/frontend"
-          debug: true
-
-      - name: EC2에서 배포 실행
+      - name: Docker Hub 로그인
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/frontend
-            tar -xzf build.tar.gz
-            # 추가적인 실행 스크립트 작성
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker 이미지 Pull
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/my-frontend-app:latest
+
+      - name: 기존 컨테이너 중지 및 삭제
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker stop my-frontend-app || true
+            docker rm my-frontend-app || true
+
+      - name: 새로운 컨테이너 실행
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker run -d --name my-frontend-app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/my-frontend-app:latest
