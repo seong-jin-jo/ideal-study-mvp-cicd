@@ -26,6 +26,9 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Nginx 설정 파일 복사 (필요 시)
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# 기본 설정 파일 덮어쓰기
+COPY nginx.default.conf /etc/nginx/conf.d/default.conf
+
 # Nginx 컨테이너 실행
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
