@@ -2,6 +2,7 @@
 FROM node:18 AS build
 LABEL authors="jin66"
 
+
 # 작업공간
 RUN mkdir /app
 WORKDIR /app
@@ -28,4 +29,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Nginx 컨테이너 실행
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-ENTRYPOINT ["top", "-b"]
+# ENTRYPOINT ["top", "-b"]

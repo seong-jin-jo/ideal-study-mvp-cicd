@@ -1,33 +1,31 @@
-version: "3.8"
-
 services:
-  # mySQL
-  mysql-db:
-    image: mysql:8.0
-    container_name: mysql-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: idealstudy # 배포용 데이터베이스 이름
-      MYSQL_USER: manager
-      MYSQL_PASSWORD: manager
-    ports:
-      - "3306:3306"
-    networks:
-      - idealstudy-network
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # init.sql 파일을 복사
+  # # mySQL
+  # mysql-db:
+  #   image: mysql:8.0
+  #   container_name: mysql-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: idealstudy # 배포용 데이터베이스 이름
+  #     MYSQL_USER: manager
+  #     MYSQL_PASSWORD: manager
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - idealstudy-network
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #     - ./init.sql:/docker-entrypoint-initdb.d/init.sql # init.sql 파일을 복사
 
-  # redis 컨테이너
-  redis-db:
-    networks:
-      - idealstudy-network
-    image: redis:7.0
-    container_name: redis-db
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
+  # # redis 컨테이너
+  # redis-db:
+  #   networks:
+  #     - idealstudy-network
+  #   image: redis:7.0
+  #   container_name: redis-db
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
 
   # 리액트 서버
   frontend:
