@@ -5,6 +5,12 @@ spring:
     username: manager
     password: manager
     #    url: jdbc:mysql://172.17.129.27:3306/idealstudy (성진 wsl 주소)
+  jpa:
+    properties:
+      hibernate:
+        # DiscriminatorColumn 관련 경고를 무시하도록 설정
+        discriminator:
+          ignore_explicit_for_joined: true # 이를 true로 설정하면 경고를 해결
 
 # redis 설정
 redis:
