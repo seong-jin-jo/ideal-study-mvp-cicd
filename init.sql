@@ -48,6 +48,10 @@ VALUES
     ('e8445639-917a-4396-8aaa-4a68dd11e4c7', '$2a$10$kdG9XoA8h0J7UirQ1xuUfuzVfa/BgGzZtEjmPc063.vrevHZfM6oK', '조학생', '010-1234-1234', 'otherstudent@gmail.com', 'MALE', null, 1, 'ROLE_STUDENT', 0, 1, 0, NOW(), 'S'),
     ('c2862de7-e8ef-4aa8-bf7d-711cd712279b', '$2a$10$S3rRiFdZMWjtaOsKeD6HxOsdq9pJqvlc6vI1wofESR1s13RUkj0PG', '조학생 학부모', '010-1234-1234', 'otherparents@gmail.com', 'FEMALE', null, 1, 'ROLE_PARENTS', 0, 1, 0, NOW(), 'P');
 
+-- 관라자 테이블 생성
+CREATE TABLE IF NOT EXISTS admin (
+    
+);
 
 -- 깅사 테이블 생성
 CREATE TABLE IF NOT EXISTS teacher (
